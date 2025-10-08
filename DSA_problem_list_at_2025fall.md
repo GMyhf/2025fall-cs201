@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-10-08 01:04 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-10-09 01:01 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,6 +19,8 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1009 | 1472.设计浏览器历史记录  | doubly-linked list       | Medium | https://leetcode.cn/problems/design-browser-history/          |
+| 1009 | 146.LRU缓存      | doubly-linked list, hash table   | Medium | https://leetcode.cn/problems/lru-cache/          |
 | 1008 | 23.合并k个升序链表  | linked list, divide and conquer, merge sort       | Tough | https://leetcode.cn/problems/merge-k-sorted-lists/           |
 | 1008 | 148.排序链表    | linked list, two pointers, divide and conquer, sorting, merge sort    | Medium | https://leetcode.cn/problems/sort-list/          |
 | 1007 | 138.随机链表的复制      | hashing, linked list       | Medium | https://leetcode.cn/problems/copy-list-with-random-pointer/          |

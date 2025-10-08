@@ -1,13 +1,13 @@
 #  Problems in OJ, CF & others
 
-*Updated 2025-10-07 20:00 GMT+8*
+*Updated 2025-10-08 23:31 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
 
 > Logs:
 >
-> 2025/10/2: 加了些 数算 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】同学的CPP代码。
+> 2025/10/2: 加了些 数算 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】同学的CPP代码。
 >
 > 鉴于每学期都有同学偏好C++编程，本学期除维护Python题解外，也开始提供C++题解支持。
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                   
+>                                                                      
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                   
+>                                                                      
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                   
+>                                                                      
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                   
+>                                                                      
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                   
+>                                                                      
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -3653,6 +3653,43 @@ int main() {
 
 stack, https://leetcode.cn/problems/valid-parentheses/
 
+思路：括号匹配问题 简单的一个栈数据结构即可
+
+```python
+class Solution {
+public:
+    bool isValid(string s) {
+        //括号匹配问题 简单的一个栈数据结构即可
+        stack<char> st;
+        int n=s.size();
+        int flag=0;
+        for(int i=0;i<n;i++){
+            //左进右出
+            if(s[i]=='('||s[i]=='{'||s[i]=='['){
+                st.push(s[i]);
+            }else{
+                if(st.empty()) return false;
+                char tmp=st.top();
+                if(s[i]==')'&&tmp!='('){
+                    return false;
+                }else if(s[i]==']'&&tmp!='['){
+                    return false;
+                }else if(s[i]=='}'&&tmp!='{'){
+                    return false;
+                }
+                st.pop();
+
+            }
+        }
+        if(st.empty())
+            return true;
+        else return false;
+    }
+};
+```
+
+
+
 思路：注意到括号的匹配与栈的后入先出是一样的，因此用栈的思路去解决，很顺利，用时约10min
 
 ```cpp
@@ -3731,6 +3768,40 @@ public:
 
 
 
+思路：经典全排列构造思路,那就是依次将每个数字放在开头,然后考虑后面的从而进行递归,时间复杂度是n!
+
+```c++
+class Solution {
+public:
+    void backtrack(vector<vector<int>>& res, vector<int>& nums, int first, int len){
+        // 所有数都填完了
+        if (first == len) {
+            res.emplace_back(nums);
+            return;
+        }
+        for (int i = first; i < len; ++i) {
+            // 动态维护数组
+            swap(nums[i], nums[first]);
+            // 继续递归填下一个数
+            backtrack(res, nums, first + 1, len);
+            // 撤销操作
+            swap(nums[i], nums[first]);
+        }
+    }
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int> > res;
+        backtrack(res, nums, 0, (int)nums.size());
+        return res;
+    }
+};
+
+
+```
+
+
+
+
+
 ## M78.子集
 
 backtracking, https://leetcode.cn/problems/subsets/
@@ -3739,11 +3810,41 @@ backtracking, https://leetcode.cn/problems/subsets/
 
 
 
+思路：最棒的思路就是利用二进制关系,每个数字只有0/1两个状态,某一个子集中,那么这个子集就一共有2^n个,然后利用二进制枚举来实现,同样也可以进行递归考虑问题,也是每个位置进行0/1两种状态dfs,然后记录长度输出即可
+
+```c++
+class Solution {
+public:
+    vector<int> t;
+    vector<vector<int>> ans;
+
+    vector<vector<int>> subsets(vector<int>& nums) {
+        int n = nums.size();
+        for (int mask = 0; mask < (1 << n); ++mask) {
+            t.clear();
+            for (int i = 0; i < n; ++i) {
+                if (mask & (1 << i)) {
+                    t.push_back(nums[i]);
+                }
+            }
+            ans.push_back(t);
+        }
+        return ans;
+    }
+};
+
+
+```
+
+
+
+
+
 ## E118.杨辉三角
 
 dp, https://leetcode.cn/problems/pascals-triangle/
 
-思路：写两个循环即可,用时约10min
+思路：写两个循环即可
 
 ```cpp
 class Solution 
@@ -3837,8 +3938,32 @@ public:
 
 stack, two pinters, https://leetcode.cn/problems/move-zeroes/
 
+思路：双指针处理即可,主要是考虑到各自的位置进行swap
 
-思路：只需要将0放到最后即可，用时约10min
+```c++
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        //要保证相对顺序不变 双指针来记录
+        //左指针指向处理好的尾部  右指针指向待处理的头部
+        //要实现把0都放到最后面 只需要每次左指针指向处理好的第一个0,右指针把非0转移即可
+        int l=0;
+        int r;
+        for(r=0;r<nums.size();r++){
+            if(nums[r]!=0){
+                swap(nums[l],nums[r]);
+                l++;
+            }
+        }
+    }
+};
+```
+
+
+
+
+
+思路：只需要将0放到最后即可
 
 ```cpp
 class Solution
@@ -3871,8 +3996,7 @@ public:
 
 https://leetcode.cn/problems/occurrences-after-bigram/
 
-思路：
-注意到text是以空格分割的，因此可以用流函数来构建wordList，再寻找符合条件的答案插入到结果列表即可，用时约10min
+思路：注意到text是以空格分割的，因此可以用流函数来构建wordList，再寻找符合条件的答案插入到结果列表即可
 
 ```cpp
 class Solution
@@ -3897,6 +4021,39 @@ public:
             }
         }
         return result;
+    }
+};
+```
+
+
+
+思路：分词后遍历即可
+
+```c++
+class Solution {
+public:
+    vector<string> findOcurrences(string text, string first, string second) {
+        //遍历即可
+        //将text分词
+        vector<string> dic;
+        string tmp="";
+        for(int i=0;i<text.size();i++){
+            if(text[i]!=' ') tmp+=text[i];
+            else{
+                dic.push_back(tmp);
+                tmp="";
+            }
+        }
+        dic.push_back(tmp);
+        vector<string> ans;
+        for(int i=0;i<dic.size();i++){
+            if(dic[i]==first){
+                if(i+2<dic.size()&&dic[i+1]==second){
+                    ans.push_back(dic[i+2]);
+                }
+            }
+        }
+        return ans;
     }
 };
 ```

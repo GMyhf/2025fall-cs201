@@ -18,7 +18,7 @@ https://github.com/python/cpython/blob/main/Lib/bisect.py
 - 关键：讲优化问题转化为判定问题（“能否达到？”）
 - 应用：袋子分球、预算分配、资源分配类问题
 
-
+二分不只是查找，更是“缩小解空间”的通用策略。
 
 ## 相关题目：
 

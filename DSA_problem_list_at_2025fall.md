@@ -19,6 +19,8 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1012 | 200.岛屿数量  | dfs, bfs     | Medium  | https://leetcode.cn/problems/number-of-islands/           |
+| 1012 | 994.腐烂的橘子| bfs      | Medium | https://leetcode.cn/problems/rotting-oranges/          |
 | 1011 | 239.滑动窗口最大值   | sliding window, monotonic queue   | Tough | https://leetcode.cn/problems/sliding-window-maximum/          |
 | 1011 | 42.接雨水     | monotonic stack       | Tough | https://leetcode.cn/problems/trapping-rain-water/          |
 | 1010 | 189A.Cut Ribbon  | brute force, dp   | 1300 | https://codeforces.com/problemset/problem/189/A          |

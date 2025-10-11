@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-10-09 23:14 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-10-11 08:40 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,8 +19,10 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1011 | 239.滑动窗口最大值   | sliding window, monotonic queue   | Tough | https://leetcode.cn/problems/sliding-window-maximum/          |
+| 1011 | 42.接雨水     | monotonic stack       | Tough | https://leetcode.cn/problems/trapping-rain-water/          |
 | 1010 | 189A.Cut Ribbon  | brute force, dp   | 1300 | https://codeforces.com/problemset/problem/189/A          |
-| 1010 | 1781.所有子字符串美丽值之和 | 1781.所有子字符串美丽值之和 | Medium | https://leetcode.cn/problems/sum-of-beauty-of-all-substrings/    |
+| 1010 | 1781.所有子字符串美丽值之和 | hash table, string, counting | Medium | https://leetcode.cn/problems/sum-of-beauty-of-all-substrings/    |
 | 1009 | 1472.设计浏览器历史记录  | doubly-linked list       | Medium | https://leetcode.cn/problems/design-browser-history/          |
 | 1009 | 146.LRU缓存      | doubly-linked list, hash table   | Medium | https://leetcode.cn/problems/lru-cache/          |
 | 1008 | 23.合并k个升序链表  | linked list, divide and conquer, merge sort       | Tough | https://leetcode.cn/problems/merge-k-sorted-lists/           |

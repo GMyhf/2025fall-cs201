@@ -7,7 +7,7 @@
 
 > Logs:
 >
-> 2025/10/2: 加了些 数算 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】同学的CPP代码。
+> 2025/10/2: 加了些 数算 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】同学的CPP代码。
 >
 > 鉴于每学期都有同学偏好C++编程，本学期除维护Python题解外，也开始提供C++题解支持。
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                      
+>                                                                         
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                      
+>                                                                         
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                      
+>                                                                         
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                      
+>                                                                         
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                      
+>                                                                         
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -1307,6 +1307,50 @@ int main()
 
 
 
+## E29895: 分解因数
+
+implementation, http://cs101.openjudge.cn/practice/29895/
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+long long n;
+int main(){
+    scanf("%lld",&n);
+    for(long long i=2;i<=n/i;i++){
+        if(n%i==0){
+            printf("%lld",n/i);
+            return 0;
+        }
+    }
+    return 0;
+}
+```
+
+
+
+## E29940: 机器猫斗恶龙
+
+greedy, http://cs101.openjudge.cn/practice/29940/
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int n,ans,a,sum=-1;
+int main(){
+    scanf("%d",&n);
+    for(int i=1;i<=n;i++){
+        scanf("%d",&a);
+        sum+=a;
+        ans=min(ans,sum);
+    }
+    printf("%d",-ans);
+    return 0;
+}
+```
+
+
+
 
 
 # Medium
@@ -1413,7 +1457,7 @@ if __name__ == "__main__":
 
 
 
-### M01008: Maya Calendar
+## M01008: Maya Calendar
 
 implementation, http://cs101.openjudge.cn/practice/01008/
 
@@ -2906,6 +2950,101 @@ int main()
 
 
 
+## M29917: 牛顿迭代法
+
+implementation, http://cs101.openjudge.cn/practice/29917/
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+double const c=1e-6;
+double a,x1,x2;
+int cnt;
+int main(){
+    while(scanf("%lf",&a)!=EOF){
+        cnt=0;
+        x1=1;
+        while(1){
+            cnt++;
+            x2=x1-(x1*x1-a)/(2*x1);
+            if(abs(x1-x2)<=c)
+                break;
+            x1=x2;
+        }
+        printf("%d %.2lf\n",cnt,x2);
+    }
+    return 0;
+}
+```
+
+
+
+## M29918: 求亲和数
+
+implementation, http://cs101.openjudge.cn/practice/29918/
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int n,a[100005];
+int main(){
+    scanf("%d",&n);
+    for(int i=1;i<=n;i++){
+        for(int j=2;j<=n/i;j++)
+            a[i*j]+=i;
+    }
+    for(int i=1;i<=n;i++){
+        if(a[i]<=n && a[a[i]]==i && i<a[i])
+            printf("%d %d\n",i,a[i]);
+    }
+    return 0;
+}
+```
+
+
+
+## M29949: 贪婪的哥布林
+
+greedy, http://cs101.openjudge.cn/practice/29949/
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int n,m;
+double ans;
+struct A{
+    int v,w;
+    double p;
+}a[105];
+bool cmp(A &x,A &y){
+    return x.p>y.p;
+}
+int main(){
+    scanf("%d %d",&n,&m);
+    for(int i=1;i<=n;i++){
+        scanf("%d %d",&a[i].v,&a[i].w);
+        a[i].p=1.0*a[i].v/a[i].w;
+    }
+    sort(a+1,a+1+n,cmp);
+    for(int i=1;i<=n;i++){
+        if(a[i].w<=m){
+            ans+=a[i].v;
+            m-=a[i].w;
+        }
+        else{
+            ans+=m*a[i].p;
+            break;
+        }
+    }
+    printf("%.2lf",ans);
+    return 0;
+}
+```
+
+
+
+
+
 # Tough
 
 ## T02488: A Knight's Journey
@@ -3023,6 +3162,47 @@ int main()
 ```
 
 
+
+### T29947:校门外的树又来了（选做）
+
+http://cs101.openjudge.cn/practice/29947/
+
+
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+#define pii pair<int,int>
+int L,n,r=-1,sum;
+pii d[105];
+bool cmp(pii &x,pii &y){
+    if(x.first==y.first)
+        return x.second>y.second;
+    return x.first<y.first;
+}
+int main(){
+    scanf("%d %d",&L,&n);
+    for(int i=1;i<=n;i++)
+        scanf("%d %d",&d[i].first,&d[i].second);
+    sort(d+1,d+1+n,cmp);
+    d[0].first=-1;
+    for(int i=1;i<=n;i++){
+        if(d[i].first==d[i-1].first || d[i].second<=r)
+            continue;
+        if(r>=d[i].first)
+            sum+=d[i].second-r;
+        else
+            sum+=d[i].second-d[i].first+1;
+        r=d[i].second;
+    }
+    printf("%d",L+1-sum);
+    return 0;
+}
+```
+
+
+
+## 
 
 
 

@@ -1,6 +1,6 @@
 # Week4～5 线性数据结构&时间复杂度
 
-Updated 2025-09-29 16:36 GMT+8*  
+Updated 2025-09-29 18:20 GMT+8*  
  *Compiled by Hongfei Yan (2025 Spring)*  
 
 
@@ -1014,7 +1014,7 @@ The lists [21] and [1] are the first two base cases encountered by mergesort and
 
 
 
-> ## 归并排序如果自上而下是递归，自下而上是迭代？
+> **归并排序如果自上而下是递归，自下而上是迭代？**
 >
 > 是的，**归并排序**有两种常见的实现方式，对应不同的思维方式：
 >
@@ -1274,7 +1274,7 @@ merge sort, http://cs101.openjudge.cn/practice/02299/
 
 **链表**是一种存储结构，它是线性表的链式存储方式。链表通过节点的相互链接来实现元素的存储。每个节点包含元素本身以及指向下一个节点的指针。链表的插入和删除操作非常高效，时间复杂度为$O(1)$，因为只需要调整节点的指针。然而，访问元素的时间复杂度较高，平均为$O(n)$，因为必须从头节点开始遍历链表直到找到目标元素。
 
-选择使用数组还是链表作为存储方式取决于具体问题的需求和限制。如果需要频繁进行随机访问操作，数组是更好的选择。如果需要频繁进行插入和删除操作，链表更适合。通过了解它们的特点和性能，可以根据实际情况做出选择。
+选择使用数组还是链表作为存储方式取决于具体问题的需求和限制。<mark>如果需要频繁进行随机访问操作，数组是更好的选择</mark>。如果需要频繁进行插入和删除操作，链表更适合。通过了解它们的特点和性能，可以根据实际情况做出选择。
 
 
 
@@ -1310,7 +1310,7 @@ $$
 
 ## 4.1 顺序表
 
-python中的顺序表就是列表，元素在内存中连续存放，每个元素都有唯一序号（下标），且根据序号访问（包括读取和修改）元素的时间复杂度是$$O(1)$$的（**随机访问**）。
+Python中的顺序表就是列表，元素在内存中连续存放，每个元素都有唯一序号（下标），且根据序号访问（包括读取和修改）元素的时间复杂度是$$O(1)$$的（**随机访问**）。
 
 代码使用Python的内置列表来实现
 
@@ -1697,7 +1697,7 @@ if __name__ == "__main__":
 **单链表的应用**
 
 - 动态内存管理：链表可以灵活地分配内存空间，特别适用于内存空间不固定的场景。
-- 实现队列和栈：链表能够有效地支持栈（LIFO）和队列（FIFO）的实现，因为其在插入和删除操作上有优势。
+- 实现队列和栈：<mark>链表能够有效地支持栈（LIFO）和队列（FIFO）的实现</mark>，因为其在插入和删除操作上有优势。
 - 动态集合管理：对于集合操作（如动态插入和删除元素）非常高效。
 
 
@@ -1847,9 +1847,9 @@ dll.print_list()    # 5 <-> 20 <-> 30 <-> None
 
 
 
-### 示例1472.设计浏览器历史记录
+### 示例M1472.设计浏览器历史记录
 
-双向链表，https://leetcode.cn/problems/design-browser-history/
+Doubly-linked list，https://leetcode.cn/problems/design-browser-history/
 
 你有一个只支持单个标签页的 **浏览器** ，最开始你浏览的网页是 `homepage` ，你可以访问其他的网站 `url` ，也可以在浏览历史中后退 `steps` 步或前进 `steps` 步。
 
@@ -2073,7 +2073,7 @@ def reverse_linked_list(head: ListNode) -> ListNode:
 
 
 
-#### 示例206.反转链表
+#### 示例E206.反转链表
 
 linked list, https://leetcode.cn/problems/reverse-linked-list/
 
@@ -2139,8 +2139,6 @@ class Solution:
 
 
 
-
-
 ### 2 **合并两个排序的链表**
 
 合并两个已经排序的链表是一种常见的操作，特别是在归并排序中。
@@ -2168,7 +2166,7 @@ def merge_sorted_lists(l1, l2):
 
 
 
-#### 示例21.合并两个有序链表
+#### 示例E21.合并两个有序链表
 
 https://leetcode.cn/problems/merge-two-sorted-lists/
 
@@ -2260,7 +2258,7 @@ def find_middle_node(head):
 
 
 
-#### 示例234.回文链表
+#### 示例E234.回文链表
 
 linked-list, https://leetcode.cn/problems/palindrome-linked-list/
 
@@ -2294,7 +2292,7 @@ linked-list, https://leetcode.cn/problems/palindrome-linked-list/
 
 **提示：**
 
-- 链表中节点数目在范围`[1, 105]` 内
+- 链表中节点数目在范围`[1, 10^5]` 内
 - `0 <= Node.val <= 9`
 
  
@@ -2415,14 +2413,14 @@ for i in range(t):
 	print("----------------")
 ```
 
-输入
+**输入**
 
 第一行为整数t，表示有t组数据。
 每组数据2行
 第一行是若干个整数，构成了一张链表
 第二行是若干整数，是要从链表中删除的数。
 
-输出
+**输出**
 
 对每组数据第二行中的每个整数x:
 
@@ -2619,11 +2617,11 @@ lkList.insertCat()
 lkList.printLk()
 ```
 
-输入
+**输入**
 
 一行，若干个整数，组成一个链表。
 
-输出
+**输出**
 
 一行，在链表中间位置插入数字6后得到的新链表
 
@@ -2888,7 +2886,7 @@ Compare those with the following, which are not balanced:
 
 区分括号是否正确平衡是识别许多编程语言结构的重要部分。
 
-接下来的挑战是编写一个算法，该算法能够从左到右读取一串括号，并判断这些符号是否平衡。为了解决这个问题，我们需要做一个重要的观察。当你从左到右处理符号时，最近的开括号必须与下一个闭括号匹配（见图4）。同时，第一个被处理的开括号可能需要等到最后一个符号才能找到它的匹配项。闭括号与开括号的匹配顺序与其出现顺序相反，它们从内到外进行匹配。这一点提示我们可以使用栈来解决这个问题。
+接下来的挑战是编写一个算法，该算法能够从左到右读取一串括号，并判断这些符号是否平衡。为了解决这个问题，我们需要做一个重要的观察。当你从左到右处理符号时，最近的开括号必须与下一个闭括号匹配（见图4）。同时，第一个被处理的开括号可能需要等到最后一个符号才能找到它的匹配项。<mark>闭括号与开括号的匹配顺序与其出现顺序相反</mark>，它们从内到外进行匹配。这一点提示我们可以使用栈来解决这个问题。
 
 > The ability to differentiate between parentheses that are correctly balanced and those that are unbalanced is an important part of recognizing many programming language structures.
 >
@@ -2897,7 +2895,7 @@ Compare those with the following, which are not balanced:
 
 ![../_images/simpleparcheck.png](https://raw.githubusercontent.com/GMyhf/img/main/img/simpleparcheck.png)
 
-Figure 4: Matching Parentheses
+<center>Figure 4: Matching Parentheses</center>
 
 
 
@@ -2934,9 +2932,83 @@ print(par_checker('(()'))
 
 
 
+### 示例E20.有效的括号
+
+stack, https://leetcode.cn/problems/valid-parentheses/
+
+给定一个只包括 `'('`，`')'`，`'{'`，`'}'`，`'['`，`']'` 的字符串 `s` ，判断字符串是否有效。
+
+有效字符串需满足：
+
+1. 左括号必须用相同类型的右括号闭合。
+2. 左括号必须以正确的顺序闭合。
+3. 每个右括号都有一个对应的相同类型的左括号。
+
+ 
+
+**示例 1：**
+
+**输入：**s = "()"
+
+**输出：**true
+
+**示例 2：**
+
+**输入：**s = "()[]{}"
+
+**输出：**true
+
+**示例 3：**
+
+**输入：**s = "(]"
+
+**输出：**false
+
+**示例 4：**
+
+**输入：**s = "([])"
+
+**输出：**true
+
+ 
+
+**提示：**
+
+- `1 <= s.length <= 10^4`
+- `s` 仅由括号 `'()[]{}'` 组成
+
+
+
+```python
+from typing import List
+class Solution:
+    def isValid(self, s: str) -> bool:
+        stack = []
+        for c in s:
+            if c == '(' or c == '[' or c == '{':
+                stack.append(c)
+            else:
+                if not stack:
+                    return False
+                if c == ')' and stack[-1] != '(':
+                    return False
+                if c == ']' and stack[-1] != '[':
+                    return False
+                if c == '}' and stack[-1] != '{':
+                    return False
+                stack.pop()
+        return not stack
+```
+
+
+
+
+
 ### 1 Balanced Symbols (A General Case)
 
 上述的平衡括号问题是出现在许多编程语言中的一种更普遍情况的具体案例。平衡和嵌套不同类型的开符号和闭符号的一般问题频繁出现。例如，在Python中，方括号`[`和`]`用于列表；花括号`{`和`}`用于字典；圆括号`(`和`)`用于元组和算术表达式。只要每种符号都保持自身的开和关关系，就可以混合使用这些符号。例如，如下所示的符号字符串：
+
+> 看大括号 `{}` 内部是否有冒号 `:`。有冒号的是字典，没有冒号、只有逗号分隔的元素的是集合。而创建空集合时，必须使用 `set()` 函数。
 
 > The balanced parentheses problem shown above is a specific case of a more general situation that arises in many programming languages. The general problem of balancing and nesting different kinds of opening and closing symbols occurs frequently. For example, in Python square brackets, `[` and `]`, are used for lists; curly braces, `{` and `}`, are used for dictionaries; and parentheses, `(` and `)`, are used for tuples and arithmetic expressions. It is possible to mix symbols as long as each maintains its own open and close relationship. Strings of symbols such as
 
@@ -3236,7 +3308,7 @@ else:
 
 A + B * C 在前缀中会被写作 + A * B C。乘法操作符直接出现在操作数 B 和 C 之前，表示 * 的优先级高于 +。然后加法操作符出现在 A 和乘法的结果之前。
 
-在后缀中，表达式会是 A B C * +。再次，操作顺序被保留，因为 * 紧接在 B 和 C 之后出现，表明 * 有更高的优先级，随后是 +。虽然操作符移动了，现在要么出现在各自操作数之前，要么出现在之后，但操作数之间的相对顺序保持不变。
+在后缀中，表达式会是 A B C * +。再次，操作顺序被保留，因为 * 紧接在 B 和 C 之后出现，表明 * 有更高的优先级，随后是 +。虽然操作符移动了，现在要么出现在各自操作数之前，要么出现在之后，但<mark>操作数之间的相对顺序保持不变</mark>。
 
 > When you write an arithmetic expression such as B * C, the form of the expression provides you with information so that you can interpret it correctly. In this case we know that the variable B is being multiplied by the variable C since the multiplication operator * appears between them in the expression. This type of notation is referred to as **infix** since the operator is *in between* the two operands that it is working on.
 >
@@ -3331,7 +3403,7 @@ Here is a more complex expression: (A + B) * C - (D - E) * (F + G). Figure 8 sho
 
 ![../_images/complexmove.png](https://raw.githubusercontent.com/GMyhf/img/main/img/complexmove.png)
 
-Figure 8: Converting a Complex Expression to Prefix and Postfix Notations
+<mark>Figure 8: Converting a Complex Expression to Prefix and Postfix Notations</mark>
 
 
 

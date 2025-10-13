@@ -1,6 +1,6 @@
 # Week4～5 线性数据结构&时间复杂度
 
-Updated 2025-09-29 18:20 GMT+8*  
+Updated 2025-10-13 18:20 GMT+8*  
  *Compiled by Hongfei Yan (2025 Spring)*  
 
 
@@ -186,7 +186,7 @@ DeepSeek-R1-Distill-Qwen-32B-GGUF/DeepSeek-R1-Distill-Qwen-32B-Q4_K_M.gguf
 
 > In the RAM model, we do not attempt to model the memory hierarchy that is common in contemporary computers. That is, we do not model caches or virtual memory. Several computational models attempt to account for memory-hierarchy effects, which are sometimes significant in real programs on real machines. A handful of problems in this book examine memory-hierarchy effects, but for the most part, the analyses in this book will not consider them. Models that include the memory hierarchy are quite a bit more complex than the RAM model, and so they can be difficult to work with. Moreover, RAM-model analyses are usually excellent predictors of performance on actual machines.
 
-即使是在RAM模型中分析一个简单的算法也可能是一项挑战。所需的数学工具可能包括组合数学、概率论、代数技巧以及识别公式中最重要项的能力。由于一个算法的行为可能对每个可能的输入都是不同的，需要一种方式来用简单且易于理解的公式概括这种行为。
+即使是在RAM模型中分析一个简单的算法也可能是一项挑战。所需的数学工  具可能包括组合数学、概率论、代数技巧以及识别公式中最重要项的能力。由于一个算法的行为可能对每个可能的输入都是不同的，需要一种方式来用简单且易于理解的公式概括这种行为。
 
 > Analyzing even a simple algorithm in the RAM model can be a challenge. The mathematical tools required may include combinatorics, probability theory, algebraic dexterity, and the ability to identify the most significant terms in a formula. Because the behavior of an algorithm may be different for each possible input, we need a means for summarizing that behavior in simple, easily understood formulas.
 
@@ -4557,7 +4557,7 @@ True
 
 
 
-## 练习05902: 双端队列
+## 示例05902: 双端队列
 
 http://cs101.openjudge.cn/practice/05902/
 
@@ -4627,7 +4627,7 @@ for _ in range(int(input())):
 
 
 
-## 练习04067: 回文数字（Palindrome Number）
+## 示例04067: 回文数字（Palindrome Number）
 
 http://cs101.openjudge.cn/practice/04067/
 
@@ -4688,9 +4688,64 @@ while True:
 
 
 
-## 练习04099: 队列和栈
+## 示例04099: 队列和栈
 
 http://cs101.openjudge.cn/practice/04099/
+
+队列和栈是两种重要的数据结构，它们具有push k和pop操作。push k是将数字k加入到队列或栈中，pop则是从队列和栈取一个数出来。队列和栈的区别在于取数的位置是不同的。
+
+队列是先进先出的：把队列看成横向的一个通道，则push k是将k放到队列的最右边，而pop则是从队列的最左边取出一个数。
+
+栈是后进先出的：把栈也看成横向的一个通道，则push k是将k放到栈的最右边，而pop也是从栈的最右边取出一个数。
+
+假设队列和栈当前从左至右都含有1和2两个数，则执行push 5和pop操作示例图如下：
+
+​     push 5     pop
+
+队列 1 2 -------> 1 2 5 ------> 2 5
+
+​     push 5     pop
+
+栈  1 2 -------> 1 2 5 ------> 1 2
+
+现在，假设队列和栈都是空的。给定一系列push k和pop操作之后，输出队列和栈中存的数字。若队列或栈已经空了，仍然接收到pop操作，则输出error。
+
+
+
+输入
+
+第一行为m，表示有m组测试输入，m<100。
+每组第一行为n，表示下列有n行push k或pop操作。（n<150）
+接下来n行，每行是push k或者pop，其中k是一个整数。
+（输入保证同时在队列或栈中的数不会超过100个）
+
+输出
+
+对每组测试数据输出两行，正常情况下，第一行是队列中从左到右存的数字，第二行是栈中从左到右存的数字。若操作过程中队列或栈已空仍然收到pop，则输出error。输出应该共2*m行。
+
+样例输入
+
+```
+2
+4
+push 1
+push 3
+pop
+push 5
+1
+pop
+```
+
+样例输出
+
+```
+3 5
+1 5
+error
+error
+```
+
+
 
 ```python
 from collections import deque

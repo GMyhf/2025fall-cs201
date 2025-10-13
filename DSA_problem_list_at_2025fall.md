@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-10-12 23:44 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-10-13 23:34 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,6 +19,8 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1014 | 1520D. Same Differences   | data structures, hashing, math   | 1200 | https://codeforces.com/problemset/problem/1520/D          |
+| 1014 | 1883D. In Love  | data structure, greedy       | 1500 | https://codeforces.com/problemset/problem/1883/D          |
 | 1013 | 20.有效的括号      | stack       | Easy | https://leetcode.cn/problems/valid-parentheses/          |
 | 1013 | 27217: 有多少种合法的出栈顺序  | stack    | Medium | http://cs101.openjudge.cn/practice/27217/          |
 | 1012 | 200.岛屿数量  | dfs, bfs     | Medium  | https://leetcode.cn/problems/number-of-islands/           |

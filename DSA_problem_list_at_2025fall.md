@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-10-15 09:51 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-10-15 22:37 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,6 +19,8 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1016 | sy314: 指定步数的迷宫问题  | dfs   | Medium | https://sunnywhy.com/sfbj/8/1/314         |
+| 1016 | sy313: 迷宫可行路径数   | dfs      | Easy | https://sunnywhy.com/sfbj/8/1/313          |
 | 1015 | sy299:简单的计算器      | stack       | Tough | https://sunnywhy.com/sfbj/7/1/299          |
 | 1015 | sy297:后缀表达式-有优先级    | stack     | Medium | https://sunnywhy.com/sfbj/7/1/297          |
 | 1014 | 1520D. Same Differences   | data structures, hashing, math   | 1200 | https://codeforces.com/problemset/problem/1520/D          |

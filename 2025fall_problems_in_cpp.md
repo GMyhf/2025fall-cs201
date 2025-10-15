@@ -1,13 +1,13 @@
 #  Problems in OJ, CF & others
 
-*Updated 2025-10-08 23:31 GMT+8*
+*Updated 2025-10-15 20:42 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
 
 > Logs:
 >
-> 2025/10/2: 加了些 数算 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】同学的CPP代码。
+> 2025/10/15: 加了些 数算 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】、【罗锐，25工学院，】同学的CPP代码。
 >
 > 鉴于每学期都有同学偏好C++编程，本学期除维护Python题解外，也开始提供C++题解支持。
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                         
+>                                                                            
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                         
+>                                                                            
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                         
+>                                                                            
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                         
+>                                                                            
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                         
+>                                                                            
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -1351,6 +1351,52 @@ int main(){
 
 
 
+### E29952 咒语序列
+
+思路：
+
+- 考虑对每个位置 $i$，**可能**存在一个**最大的** $j \leq i$，使得 $[j, i]$ 为一个合法括号序列，如 `()(())` 中 $i = 6$ 对应的最大的 $j$ 为 $3$，$i = 4$ 时不存在这样的 $j$。
+- 考虑 dp：设 $dp_i$ 表示 $s[1, i]$ 的最长合法**后缀**括号序列。
+- 从前到后扫一遍，维护一个栈，当 $s_i$ 为 `(` 时将 $i$ 压入，当 $s_i$  为 `)` 时，若栈非空则 $j$ 为栈顶下标，然后弹栈，此时更新 $dp_i = dp_{j - 1} + (i - j + 1)$。
+- 答案即为 $\max(dp_i)$。时间复杂度为 $O(n)$。
+- 如上面的例子中，$dp_2 = dp_0 + 2 = 2, dp_5 = dp_3 + 2 = 2, dp_6 = dp_2 + 4 = 6$，答案为 $\max(dp_2, dp_5, dp_6) = 6$。
+
+代码：
+
+```cpp
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+int dp[30001];
+stack<int> stk;
+
+int main(){
+	int len, ans = 0;
+	string s;
+	cin >> s;
+	len = s.size();
+	s = " " + s;
+	for (int i = 1; i <= len; i++){
+		if (s[i] == '('){
+			stk.push(i);
+		} else {
+			if (!stk.empty()){
+				int cur = stk.top();
+				stk.pop();
+				dp[i] = dp[cur - 1] + (i - cur + 1);
+				ans = max(ans, dp[i]);
+			}
+		}
+	}
+	cout << ans;
+	return 0;
+}
+```
+
+
+
 
 
 # Medium
@@ -1725,6 +1771,82 @@ int main() {
 
 
 
+### M01328 Radar Installation
+
+思路：
+
+- 若 $\exists 1 \leq i \leq n, \text{s.t. } y_i > d$，显然无解；否则，$\forall 1 \leq i \leq n$，令 $r_i = \sqrt{d^2 - y_i^2}$，我们要求 $[x_i - r_i, x_i + r_i]$ 中至少存在一个雷达。
+- 因此问题抽象为：给定数轴上若干线段 $[L_i, R_i]$，要求在数轴上选出尽可能少的点，使得每一条线段中都至少含有一个点。
+- 考虑按 $R_i$ 将线段升序排序，记录当前选的最靠右的点的位置 $t$，若 $t < L_i$ 则在 $R_i$ 处新选一个点。
+- 时间复杂度为 $O(\sum n \log n)$。
+
+代码：
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
+typedef long long ll;
+
+struct Requirement {
+	double l;
+	double r;
+};
+
+const double eps = 1e-9;
+int x[1001], y[1001];
+Requirement req[1001];
+
+bool operator <(const Requirement a, const Requirement b){
+	return a.r < b.r;
+}
+
+bool myless(double a, double b){
+	return fabs(a - b) > eps && a < b;
+}
+
+bool solve(int cas){
+	int n, d;
+	cin >> n >> d;
+	if (n == 0 && d == 0) return false;
+	bool flag = true;
+	for (int i = 1; i <= n; i++){
+		cin >> x[i] >> y[i];
+		if (y[i] > d) flag = false;
+	}
+	if (!flag){
+		cout << "Case " << cas << ": " << -1 << endl;
+		return true;
+	}
+	int ans = 0;
+	double lst = -1e10;
+	for (int i = 1; i <= n; i++){
+		double r = sqrt((ll)d * d - (ll)y[i] * y[i]);
+		req[i].l = x[i] - r;
+		req[i].r = x[i] + r;
+	}
+	sort(req + 1, req + n + 1);
+	for (int i = 1; i <= n; i++){
+		if (myless(lst, req[i].l)){
+			lst = req[i].r;
+			ans++;
+		}
+	}
+	cout << "Case " << cas << ": " << ans << endl;
+	return true;
+}
+
+int main(){
+	for (int i = 1; solve(i); i++) ;
+	return 0;
+}
+```
+
+
+
 ## M1760.袋子里最少数目的球
 
 binary search, https://leetcode.cn/problems/minimum-limit-of-balls-in-a-bag/
@@ -1819,6 +1941,65 @@ int main() {
     return 0;
 }
 
+```
+
+
+
+### M02754 八皇后
+
+思路：
+
+- 枚举全排列 $p$，表示第 $i$ 行的皇后在第 $p_i$ 列。
+- 我们可以用 $i + p_i, i - p_i$ 分别代表某一个皇后所在的左上-右下、左下-右上两条对角线。
+- 分别判断有无重复的 $i + p_i, i - p_i$ 即可，笔者通过压位实现。
+- 时间复杂度为 $O(N! \cdot N + nN)$，其中 $N = 8$。
+
+代码：
+
+```cpp
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int p[9], ans[93][9];
+
+int main(){
+	int cnt = 0;
+	for (int i = 1; i <= 8; i++){
+		p[i] = i;
+	}
+	do {
+		int st1 = 0, st2 = 0;
+		bool flag = true;
+		for (int i = 1; i <= 8; i++){
+			int x = i + p[i], y = i - p[i] + 8;
+			if ((st1 >> x & 1) || (st2 >> y & 1)){
+				flag = false;
+				break;
+			}
+			st1 |= 1 << x;
+			st2 |= 1 << y;
+		}
+		if (flag){
+			cnt++;
+			for (int i = 1; i <= 8; i++){
+				ans[cnt][i] = p[i];
+			}
+		}
+	} while (next_permutation(p + 1, p + 9));
+	int n;
+	cin >> n;
+	for (int i = 1; i <= n; i++){
+		int b;
+		cin >> b;
+		for (int j = 1; j <= 8; j++){
+			cout << ans[b][j];
+		}
+		cout << endl;
+	}
+	return 0;
+}
 ```
 
 
@@ -2630,6 +2811,55 @@ int main() {
 
 
 
+### M25570 洋葱
+
+思路：
+
+- 枚举 $1 \leq i \leq \lceil \frac{n}{2} \rceil$，令 $j = n - i + 1$，则第 $i$ 层包含以 $(i, i)$ 为左上角、以 $(j, j)$ 为右下角的正方形边框上的数。
+- 对每一层，把这些数加起来，再取所有层中的最大值即可。
+- 时间复杂度为 $O(n^2)$。
+
+代码：
+
+```cpp
+#include <stdio.h>
+
+int a[101][101];
+
+int main(){
+	int n, mid, ans = 0;
+	scanf("%d", &n);
+	mid = (n + 1) / 2;
+	for (int i = 1; i <= n; i++){
+		for (int j = 1; j <= n; j++){
+			scanf("%d", &a[i][j]);
+		}
+	}
+	for (int i = 1, j = n; i <= mid; i++, j--){
+		int cur_ans = 0;
+		for (int k = i; k <= j; k++){
+			cur_ans += a[i][k];
+		}
+		for (int k = i + 1; k <= j; k++){
+			cur_ans += a[k][i];
+		}
+		if (i < j){
+			for (int k = i + 1; k <= j; k++){
+				cur_ans += a[j][k];
+			}
+			for (int k = i + 1; k < j; k++){
+				cur_ans += a[k][j];
+			}
+		}
+		if (ans < cur_ans) ans = cur_ans;
+	}
+	printf("%d", ans);
+	return 0;
+}
+```
+
+
+
 ## M27300: 模型整理
 
 sortings, AI, http://cs101.openjudge.cn/pctbook/M27300/
@@ -3043,6 +3273,91 @@ int main(){
 
 
 
+### M29954 逃离紫罗兰监狱
+
+思路：
+
+- 某一时刻的状态可以描述为 $(x, y, cnt)$，表示位于 $(x, y)$ 且现在已经使用了 $cnt$ 次闪现术。
+- 则接下来可以消耗一单位时间移动到 $(x, y, cnt) \to (x + dx, y + dy, cnt + [mp_{x + dx, y + dy} = \text{\#}])$，当且仅当：
+
+$$
+\begin{cases}
+|dx| + |dy| = 1 \\
+0 \leq x + dx < r, 0 \leq y + dy < c \\
+cnt + [mp_{x + dx, y + dy} = \text{\#}] \leq k
+\end{cases}
+$$
+
+- 进而不难抽象为一个图论模型：边权均为 $1$ 的分层图单源最短路问题，起点为 $(x_S, y_S, 0)$，所有可能的终点为 $(x_E, y_E, \_)$。
+- bfs 即可。时间复杂度为 $O(rck)$。
+
+代码：
+
+```cpp
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+struct Node {
+	int x;
+	int y;
+	int cnt;
+	int dis;
+	
+	Node(int _x, int _y, int _cnt, int _dis) : x(_x), y(_y), cnt(_cnt), dis(_dis) {}
+};
+
+bool vis[100][100][11];
+string mp[100];
+queue<Node> q;
+
+void update(int x, int y, int cnt, int dis, int k){
+	if (cnt <= k && !vis[x][y][cnt]){
+		vis[x][y][cnt] = true;
+		q.push(Node(x, y, cnt, dis));
+	}
+}
+
+int main(){
+	int r, c, k, sx = -1, sy;
+	cin >> r >> c >> k;
+	for (int i = 0; i < r; i++){
+		cin >> mp[i];
+		if (sx == -1){
+			for (int j = 0; j < c; j++){
+				if (mp[i][j] == 'S'){
+					sx = i;
+					sy = j;
+					break;
+				}
+			}
+		}
+	}
+	update(sx, sy, 0, 0, 0);
+	while (!q.empty()){
+		Node cur = q.front();
+		q.pop();
+		if (mp[cur.x][cur.y] == 'E'){
+			cout << cur.dis;
+			return 0;
+		}
+		for (int i : {-1, 1}){
+			int new_x = cur.x + i;
+			if (new_x >= 0 && new_x < r) update(new_x, cur.y, cur.cnt + (mp[new_x][cur.y] == '#' ? 1 : 0), cur.dis + 1, k);
+		}
+		for (int i : {-1, 1}){
+			int new_y = cur.y + i;
+			if (new_y >= 0 && new_y < c) update(cur.x, new_y, cur.cnt + (mp[cur.x][new_y] == '#' ? 1 : 0), cur.dis + 1, k);
+		}
+	}
+	cout << -1;
+	return 0;
+}
+```
+
+
+
 
 
 # Tough
@@ -3197,6 +3512,150 @@ int main(){
     }
     printf("%d",L+1-sum);
     return 0;
+}
+```
+
+
+
+### T27256 当前队列中位数
+
+思路：
+
+- 题意即维护一个队列，有如下三种操作：(1) 在队尾添加；(2) 弹出队首；(3) 查询队列中的数集的中位数。
+- 现在把队列的壳去掉，问题变为对一个**可重集合**的操作：有如下三种操作：(1) 插入一个数；(2) 删除一个数；(3) 查询集合的中位数。
+- 思路 A：最好写的做法就是用 vector 维护一个**有序**数列，每次 lower_bound 到插入 / 删除位置并用 vector.insert / vector.erase 执行相应操作。Python 玩家的话可以使用 bisect。但这样做的时间复杂度为 $O(n^2)$，本不应该通过。~~虽然我赛时过了 /youl~~
+- 思路 B：考虑“中位数”的性质：注意到我们总是可以将原集合分成两个集合 $\mathbb{P}, \mathbb{Q}$，其中：(1) $\mathbb{P}$ 中的元素都**不大于**中位数，$\mathbb{Q}$ 中的元素都**不小于**中位数；(2) $|\mathbb{P}| - |\mathbb{Q}| \in \{0, 1\}$。分别用大根堆和小根堆维护两个集合。
+- 插入时，不难得知插入到哪个集合中可以维持性质 (1)，插入完成后若不再满足 (2)，则将其中一方的堆顶弹出，并放到另一方的堆顶。
+- 删除时，打个标记，并维护 $|\mathbb{P}|, |\mathbb{Q}|$ 的实际值即可。
+- 查询时，若 $|\mathbb{P}| = |\mathbb{Q}|$ 则答案为两个堆顶的平均数，若 $|\mathbb{P}| - |\mathbb{Q}| = 1$ 则答案为 $\mathbb{P}$ 的堆顶。
+- 思路 C：注意到平衡树可以胜任以上三种操作（第三种是求第 k 小的特殊情况）。当然，这题 $n$ 并不太大，写值域线段树也可以通过。
+
+代码（思路 A）：
+
+```cpp
+#include <algorithm>
+#include <queue>
+#include <vector>
+#include <cstdio>
+
+using namespace std;
+
+char op[7];
+queue<int> q;
+vector<int> v;
+
+void insert(int x){
+	v.insert(lower_bound(v.begin(), v.end(), x), x);
+}
+
+void erase(int x){
+	v.erase(lower_bound(v.begin(), v.end(), x));
+}
+
+int main(){
+	int n, len = 0;
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++){
+		scanf("%s", op);
+		if (op[0] == 'a'){
+			int x;
+			scanf("%d", &x);
+			len++;
+			q.push(x);
+			insert(x);
+		} else if (op[0] == 'd'){
+			len--;
+			erase(q.front());
+			q.pop();
+		} else {
+			if (len % 2 == 1){
+				printf("%d\n", v[len / 2]);
+			} else {
+				int sum = v[len / 2] + v[len / 2 - 1];
+				printf("%d", sum / 2);
+				if (sum % 2 == 1) printf(".5");
+				printf("\n");
+			}
+		}
+	}
+	return 0;
+}
+```
+
+
+
+代码（思路 C，值域线段树）：
+
+```cpp
+#include <queue>
+#include <cstdio>
+
+using namespace std;
+
+struct Node {
+	int ls;
+	int rs;
+	int size;
+};
+
+int root = 0, id = 0;
+char op[7];
+Node tree[3100001];
+queue<int> q;
+
+void update(int x){
+	tree[x].size = tree[tree[x].ls].size + tree[tree[x].rs].size;
+}
+
+void add(int &x, int l, int r, int pos, int val){
+	if (x == 0) x = ++id;
+	if (l == r){
+		tree[x].size += val;
+		return;
+	}
+	int mid = (l + r) >> 1;
+	if (pos <= mid){
+		add(tree[x].ls, l, mid, pos, val);
+	} else {
+		add(tree[x].rs, mid + 1, r, pos, val);
+	}
+	update(x);
+}
+
+int get_kth_number(int x, int l, int r, int k){
+	if (l == r) return l;
+	int ls = tree[x].ls;
+	if (k <= tree[ls].size) return get_kth_number(ls, l, (l + r) >> 1, k);
+	return get_kth_number(tree[x].rs, ((l + r) >> 1) + 1, r, k - tree[ls].size);
+}
+
+int main(){
+	int n, len = 0;
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++){
+		scanf("%s", op);
+		if (op[0] == 'a'){
+			int x;
+			scanf("%d", &x);
+			len++;
+			q.push(x);
+			add(root, 0, 1e9, x, 1);
+		} else if (op[0] == 'd'){
+			len--;
+			add(root, 0, 1e9, q.front(), -1);
+			q.pop();
+		} else {
+			if (len % 2 == 1){
+				printf("%d\n", get_kth_number(root, 0, 1e9, (len + 1) / 2));
+			} else {
+				int sum = get_kth_number(root, 0, 1e9, len / 2) + get_kth_number(root, 0, 1e9, len / 2 + 1);
+				printf("%d", sum / 2);
+				if (sum % 2 == 1) printf(".5");
+				printf("\n");
+			}
+		}
+	}
+	return 0;
 }
 ```
 

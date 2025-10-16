@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & others
 
-*Updated 2025-10-15 20:42 GMT+8*
+*Updated 2025-10-16 20:42 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                               
+>                                                                                  
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                               
+>                                                                                  
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                               
+>                                                                                  
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                               
+>                                                                                  
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                               
+>                                                                                  
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -1138,6 +1138,104 @@ int main() {
 
 
 
+## E24588: 后序表达式求值
+
+Stack, http://cs101.openjudge.cn/practice/24588/
+
+思路：按照课上讲的用栈解决即可，忘记处理单走一个数字的情形了，花了点时间找bug，用时约20min，由于代码全部手敲，因此运行时间很短，仅1ms
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <iomanip>
+using namespace std;
+
+vector<double> st;
+
+bool isNumber(char s) 
+{
+    return (s >= '0' && s <= '9');
+}
+
+void calc(char c) 
+{
+    double a = st.back(); st.pop_back();
+    double b = st.back(); st.pop_back();
+    switch (c) 
+    {
+    case '+': st.push_back(b + a); break;
+    case '-': st.push_back(b - a); break;
+    case '*': st.push_back(b * a); break;
+    case '/': st.push_back(b / a); break;
+    }
+}
+
+double calculate() 
+{
+    st.clear();
+    char c;
+    double tmp = 0;
+    bool isNum = false;
+    double frac = 0;
+    while ((c = getchar())) 
+    {
+        if (c == '\n' || c == EOF) 
+        {
+            if (isNum) st.push_back(tmp);
+            break;
+        }
+        if (isNumber(c)) 
+        {
+            isNum = true;
+            if (frac == 0) tmp = tmp * 10 + (c - '0');
+            else 
+            {
+                tmp += (c - '0') * frac;
+                frac *= 0.1;
+            }
+        }
+        else if (c == '.') 
+        {
+            frac = 0.1;
+        }
+        else if (c == ' ') 
+        {
+            if (isNum) 
+            {
+                st.push_back(tmp);
+                tmp = 0; frac = 0; isNum = false;
+            }
+        }
+        else if (c == '+' || c == '-' || c == '*' || c == '/') 
+        {
+            if (isNum) 
+            {
+                st.push_back(tmp);
+                tmp = 0; frac = 0; isNum = false;
+            }
+            calc(c);
+        }
+    }
+    return st.back();
+}
+
+int main() 
+{
+    int N;
+    cin >> N;
+    cin.ignore();
+    while (N--) 
+    {
+        double ans = calculate();
+        cout << fixed << setprecision(2) << ans << endl;
+    }
+}
+
+```
+
+
+
 ## E27653: Fraction类
 
 http://cs101.openjudge.cn/pctbook/E27653/
@@ -1874,6 +1972,63 @@ public:
     }
 };
 ```
+
+
+
+## M02299:Ultra-QuickSort
+
+merge sort, http://cs101.openjudge.cn/practice/02299/
+
+思路：问题等价于求逆序数，写一个递归函数即可，用时约25min（又去写bug去了）
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+long long merge_count(vector<long long>& a, int left, int right) 
+{
+    if (left >= right) return 0;
+    int mid = (left + right) / 2;
+    long long count = 0;
+    count += merge_count(a, left, mid);
+    count += merge_count(a, mid + 1, right);
+
+    vector<long long> temp;
+    int i = left, j = mid + 1;
+    while (i <= mid && j <= right) 
+    {
+        if (a[i] <= a[j]) temp.push_back(a[i++]);
+        else 
+        {
+            temp.push_back(a[j++]);
+            count += (mid - i + 1); // 左边剩下的都比a[j]大
+        }
+    }
+    while (i <= mid) temp.push_back(a[i++]);
+    while (j <= right) temp.push_back(a[j++]);
+    for (int k = 0; k < temp.size(); k++) 
+        a[left + k] = temp[k];
+    return count;
+}
+
+int main() 
+{
+    int n;
+    while (cin >> n && n != 0) 
+    {
+        vector<long long> a(n);
+        for (int i = 0; i < n; i++) cin >> a[i];
+        long long ans = merge_count(a, 0, n - 1);
+        cout << ans << "\n";
+    }
+    return 0;
+}
+
+
+```
+
+
 
 
 
@@ -2756,6 +2911,129 @@ int main()
 
 
 
+## M24591:中序表达式转后序表达式
+
+http://cs101.openjudge.cn/practice/24591/
+
+思路：按照课上讲解，给符号设置等级即可，用时约20min，但是值得高兴的是一遍ac，我终于没在写bug了，代码也是十分高效，2ms
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Solution
+{
+    public:
+        string s;
+        vector<string> res;//以后缀表达式存储
+        //给运算符设置等级
+        bool isSymbal(char c)
+        {
+            return (c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')');
+        }
+        int level(char c)
+        {
+            if (c == '*' || c == '/')
+                return 2;
+            if (c == '+' || c == '-')
+                return 1;
+            if (c == '(')
+                return -1;
+            return 0;
+        }
+        void get()
+        {
+            getline(cin, s);
+        }
+        void translate()
+        {
+            string temp="";
+            vector<char> symbalStack;
+            for (int i = 0; i < s.size(); i++)
+            {
+                if (isSymbal(s[i]))
+                {
+                    temp = "";
+                    if (s[i] == '(')
+                        symbalStack.push_back(s[i]);
+                    else if (s[i] == ')')
+                    {
+                        while (!symbalStack.empty() && symbalStack.back() != '(')
+                        {
+                            temp = "";
+                            temp += symbalStack.back();
+                            symbalStack.pop_back();
+                            res.push_back(temp);
+                        }
+                        symbalStack.pop_back();//去掉'('
+                    }
+                    else
+                    {
+                        while (!symbalStack.empty() && level(s[i]) <= level(symbalStack.back()))
+                        {
+                            temp = "";
+                            temp += symbalStack.back();
+                            symbalStack.pop_back();
+                            res.push_back(temp);
+                        }
+                        symbalStack.push_back(s[i]);//将当前运算符入栈
+                    }
+                    temp = "";
+                }
+                else
+                {
+                    temp = "";
+                    while (i < s.size() && !isSymbal(s[i]))
+                    {
+                        temp += s[i];
+                        i++;
+                    }
+                    i--;//回退一步
+                    res.push_back(temp);
+                }
+            }
+            while (!symbalStack.empty())
+            {
+                temp = "";
+                temp += symbalStack.back();
+                symbalStack.pop_back();
+                res.push_back(temp);
+            }
+        }
+        void print()
+        {
+            for (int i = 0; i < res.size(); i++)
+            {
+                if (res[i]=="") continue;
+                if(i) cout << " ";
+                cout << res[i];
+            }
+            cout << endl;
+        }
+};
+
+
+int main() 
+{
+    int N;
+    cin >> N;
+    cin.ignore();
+    while (N--)
+    {
+        Solution s;
+        s.get();
+        s.translate();
+        s.print();
+    }
+    return 0;
+}
+
+```
+
+
+
 ## 24684: 直播计票
 
 http://cs101.openjudge.cn/practice/24684/
@@ -2855,6 +3133,85 @@ int main(){
 	}
 	printf("%d", ans);
 	return 0;
+}
+```
+
+
+
+## M27217: 有多少种合法的出栈顺序
+
+http://cs101.openjudge.cn/practice/27217/
+
+
+
+```c++
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> ans = {1};
+vector<int> prime;
+int n, m, expo[1000], num;
+bool b[2001];
+
+vector<int> multiply(const vector<int>& ans, int x) {
+    vector<int> c;
+    int carry = 0;
+    for (int i = 0; i < ans.size() || carry; i++) {
+        if (i < ans.size()) carry += ans[i] * x;
+        c.push_back(carry % 10);
+        carry /= 10;
+    }
+    return c;
+}
+
+// 计算 n! 中质数 p 的指数（勒让德公式）
+int getExponent(int n, int p) {
+    int count = 0;
+    while (n > 0) {
+        n /= p;
+        count += n;
+    }
+    return count;
+}
+
+int main() {
+    scanf("%d", &n);
+    
+    // 筛法求素数
+    memset(b, true, sizeof(b));
+    for (int i = 2; i <= n * 2; i++) {
+        if (b[i]) {
+            prime.push_back(i);
+            for (int j = i * i; j <= n * 2; j += i) {
+                b[j] = false;
+            }
+        }
+    }
+    m = prime.size();
+    
+    // 计算卡特兰数的质因数分解
+    // C_n = (2n)! / (n! * (n+1)!)
+    for (int i = 0; i < m; i++) {
+        int p = prime[i];
+        // 分子：(2n)!
+        expo[i] += getExponent(2 * n, p);
+        // 分母：n! 和 (n+1)!
+        expo[i] -= getExponent(n, p);
+        expo[i] -= getExponent(n + 1, p);
+    }
+    
+    // 根据质因数分解计算结果
+    for (int i = 0; i < m; i++) {
+        for (int j = 1; j <= expo[i]; j++) {
+            ans = multiply(ans, prime[i]);
+        }
+    }
+    
+    // 输出结果
+    for (int i = ans.size() - 1; i >= 0; i--) {
+        printf("%d", ans[i]);
+    }
+    return 0;
 }
 ```
 
@@ -4511,6 +4868,101 @@ public:
 
 
 
+### M146.LRU缓存
+
+hash table, doubly-linked list, https://leetcode.cn/problems/lru-cache/
+
+思路：先自己写一个链表，用字典存储键值和其对应的地址，然后完成函数即可，加上学习，用时约30min
+
+```cpp
+struct Listnode
+{
+    int key, value;
+    Listnode* next, * prev;
+    Listnode(int k, int v) :key(k), value(v), next(NULL), prev(NULL) {}
+    Listnode() :key(0), value(0), next(NULL), prev(NULL) {}
+};
+
+class LRUCache 
+{
+private:
+    unordered_map<int, Listnode*> map;
+    Listnode* head, * tail;
+    int capacity, size;
+public:
+    
+    LRUCache(int capacity)
+    {
+        this->capacity = capacity;
+        this->size = 0;
+        head = new Listnode();//伪头节点
+        tail = new Listnode();
+        head->next = tail;
+        tail->prev = head;
+    }
+
+    int get(int key)
+    {
+        if (map.find(key) == map.end())
+            return -1;
+        Listnode* node = map[key];
+        toHead(node);
+        return node->value;
+    }
+
+    void put(int key, int value)
+    {
+        if (map.find(key) == map.end())//不存在
+        {
+            Listnode* node = new Listnode(key, value);
+            map[key] = node;
+            addNodeToHead(node);
+            size++;
+            if (size > capacity)//超出容量
+            {
+                map.erase(tail->prev->key);
+                removeTail();
+                size--;
+            }
+        }
+        else//存在
+        {
+            Listnode* node = map[key];
+            node->value = value;
+            toHead(node);
+        }
+    }
+
+    void removeNode(Listnode* node)
+    {
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+    }
+
+    void addNodeToHead(Listnode* node)
+    {
+        node->prev = head;
+        node->next = head->next;
+        head->next->prev = node;
+        head->next = node;
+    }
+
+    void toHead(Listnode* node)
+    {
+        removeNode(node);
+        addNodeToHead(node);
+    }
+
+    void removeTail()
+    {
+        Listnode* node = tail->prev;
+        removeNode(node);
+    }
+};
+```
+
+
+
 ## E160.相交链表
 
 two pinters, https://leetcode.cn/problems/intersection-of-two-linked-lists/
@@ -4693,6 +5145,64 @@ public:
             }
         }
         return ans;
+    }
+};
+```
+
+
+
+## M234.回文链表
+
+linked list, https://leetcode.cn/problems/palindrome-linked-list/
+
+<mark>请用快慢指针实现</mark> `O(1)` 空间复杂度。
+
+
+思路：用快慢指针找出链表中间的地址，反转中间往后的链表，再查即可，用时约15Min
+
+```cpp
+class Solution 
+{
+public:
+    //中间指针
+    ListNode* midnote(ListNode* head)
+    {
+        ListNode* slow = head;
+        ListNode* fast = head;
+        while (fast->next != nullptr && fast->next->next != nullptr)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return slow;
+    }
+    //反转中间后面的
+    void reverse(ListNode* head)
+    {
+        ListNode* pre = nullptr;
+        ListNode* cur = head->next;
+        while (cur != nullptr)
+        {
+            ListNode* temp = cur->next;
+            cur->next = pre;
+            pre = cur;
+            cur = temp;
+        }
+        head->next = pre;
+    }
+
+    bool isPalindrome(ListNode* head) 
+    {
+        ListNode* mid = midnote(head);
+        reverse(mid);
+        while (head != nullptr && mid->next != nullptr)
+        {
+            if (head->val != mid->next->val)
+                return false;
+            head = head->next;
+            mid = mid->next;
+        }
+        return true;
     }
 };
 ```

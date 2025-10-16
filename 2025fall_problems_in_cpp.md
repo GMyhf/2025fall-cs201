@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                            
+>                                                                               
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                            
+>                                                                               
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                            
+>                                                                               
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                            
+>                                                                               
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                            
+>                                                                               
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -1351,7 +1351,7 @@ int main(){
 
 
 
-### E29952 咒语序列
+## E29952 咒语序列
 
 思路：
 
@@ -1771,7 +1771,7 @@ int main() {
 
 
 
-### M01328 Radar Installation
+## M01328 Radar Installation
 
 思路：
 
@@ -1945,7 +1945,7 @@ int main() {
 
 
 
-### M02754 八皇后
+## M02754 八皇后
 
 思路：
 
@@ -2811,7 +2811,7 @@ int main() {
 
 
 
-### M25570 洋葱
+## M25570 洋葱
 
 思路：
 
@@ -3273,7 +3273,7 @@ int main(){
 
 
 
-### M29954 逃离紫罗兰监狱
+## M29954 逃离紫罗兰监狱
 
 思路：
 
@@ -3478,7 +3478,7 @@ int main()
 
 
 
-### T29947:校门外的树又来了（选做）
+## T29947:校门外的树又来了
 
 http://cs101.openjudge.cn/practice/29947/
 
@@ -3517,7 +3517,7 @@ int main(){
 
 
 
-### T27256 当前队列中位数
+## T27256 当前队列中位数
 
 思路：
 

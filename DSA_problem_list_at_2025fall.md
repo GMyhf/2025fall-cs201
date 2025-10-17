@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-10-16 22:21 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-10-18 00:48 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,6 +19,8 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1018 | 07206: 我是最快的马     | bfs       | Tough | http://cs101.openjudge.cn/pctbook/T07206/           |
+| 1018 | 37.解数独   | backtracking, set | Tough    | https://leetcode.cn/problems/sudoku-solver/      |
 | 1017 | 39.组合总和      | backtracking      | Medium | https://leetcode.cn/problems/combination-sum/          |
 | 1017 | 17.电话号码的字母组合      | backtracking      | Medium | https://leetcode.cn/problems/letter-combinations-of-a-phone-number/          |
 | 1016 | sy314: 指定步数的迷宫问题  | dfs   | Medium | https://sunnywhy.com/sfbj/8/1/314         |
@@ -30,7 +32,7 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 | 1013 | 20.有效的括号      | stack       | Easy | https://leetcode.cn/problems/valid-parentheses/          |
 | 1013 | 27217: 有多少种合法的出栈顺序  | stack    | Medium | http://cs101.openjudge.cn/practice/27217/          |
 | 1012 | 200.岛屿数量  | dfs, bfs     | Medium  | https://leetcode.cn/problems/number-of-islands/           |
-| 1012 | 994.腐烂的橘子| bfs      | Medium | https://leetcode.cn/problems/rotting-oranges/          |
+| 1012 | 19930: 寻宝| bfs      | Medium | http://cs101.openjudge.cn/pctbook/M19930          |
 | 1011 | 239.滑动窗口最大值   | sliding window, monotonic queue   | Tough | https://leetcode.cn/problems/sliding-window-maximum/          |
 | 1011 | 42.接雨水     | monotonic stack       | Tough | https://leetcode.cn/problems/trapping-rain-water/          |
 | 1010 | 189A.Cut Ribbon  | brute force, dp   | 1300 | https://codeforces.com/problemset/problem/189/A          |

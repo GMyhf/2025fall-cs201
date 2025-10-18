@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-10-18 00:48 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-10-19 23:48 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,6 +19,8 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1019 | 79.单词搜索   | backtracking      | Medium | https://leetcode.cn/problems/word-search/          |
+| 1019 | 22.括号生成   | backtracking      | Medium | https://leetcode.cn/problems/generate-parentheses/          |
 | 1018 | 07206: 我是最快的马     | bfs       | Tough | http://cs101.openjudge.cn/pctbook/T07206/           |
 | 1018 | 37.解数独   | backtracking, set | Tough    | https://leetcode.cn/problems/sudoku-solver/      |
 | 1017 | 39.组合总和      | backtracking      | Medium | https://leetcode.cn/problems/combination-sum/          |

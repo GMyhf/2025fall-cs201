@@ -1,13 +1,13 @@
 #  Problems in OJ, CF & others
 
-*Updated 2025-10-16 20:42 GMT+8*
+*Updated 2025-10-19 20:42 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
 
 > Logs:
 >
-> 2025/10/15: 加了些 数算 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】、【罗锐，25工学院，】同学的CPP代码。
+> 2025/10/15: 加了些 数算、计概 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】、【罗锐，25工学院，】同学的CPP代码。
 >
 > 鉴于每学期都有同学偏好C++编程，本学期除维护Python题解外，也开始提供C++题解支持。
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                  
+>                                                                                     
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                  
+>                                                                                     
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                  
+>                                                                                     
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                  
+>                                                                                     
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                  
+>                                                                                     
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -3034,6 +3034,77 @@ int main()
 
 
 
+思路：我上网查了中序表达式转后序表达式的理论方法，自己编了程序。将数字直接加入结果，遇到运算符则将前面入栈的优先级不低于它的运算符全部弹出，随后将它入栈，最后把栈清空。每次调用.top()函数几乎都必须查找.empty()，不然就会RTE，需要注意。
+
+```c++
+#include<iostream>
+#include<string>
+#include<stack>
+using namespace std;
+int n;
+string conv(string s) {
+    stack<char> ss;
+    string ans = "";
+    for(int i = 0; i < s.size(); i ++) {
+        if(s[i] == '(') ss.push('(');
+        else if(s[i] == ')') {
+            while(!ss.empty() && ss.top() != '(') {
+                ans += ss.top();
+                ans += ' ';
+                ss.pop();
+            }
+            if(!ss.empty()) ss.pop();
+        } else if(s[i] == '+' || s[i] == '-') {
+            while(!ss.empty() && ss.top() != '(') {
+                ans += ss.top();
+                ans += ' ';
+                ss.pop();
+            }
+            ss.push(s[i]);
+        } else if(s[i] == '*' || s[i] == '/') {
+            if(!ss.empty()) {
+                while(ss.top() == '*' || ss.top() == '/') {
+                    ans += ss.top();
+                    ans += ' ';
+                    ss.pop();
+                    if(ss.empty()) break;
+                }
+            }
+            ss.push(s[i]);
+        }
+        else {
+            while((s[i] >= '0' && s[i] <= '9') || s[i] == '.') {
+                ans += s[i];
+                i ++;
+            }
+            i --;
+            ans += ' ';
+        }
+    }
+    while(!ss.empty()) {
+        ans += ss.top();
+        ans += ' ';
+        ss.pop();
+    }
+    if(!ans.empty() && ans.back() == ' ')
+        ans = ans.substr(0, ans.size() - 1);
+    return ans;
+}
+string s;
+int main() {
+    cin >> n;
+    for(int i = 0; i < n; i ++) {
+        cin >> s;
+        cout << conv(s) << endl;
+    }
+    return 0;
+}
+```
+
+
+
+
+
 ## 24684: 直播计票
 
 http://cs101.openjudge.cn/practice/24684/
@@ -4868,7 +4939,7 @@ public:
 
 
 
-### M146.LRU缓存
+## M146.LRU缓存
 
 hash table, doubly-linked list, https://leetcode.cn/problems/lru-cache/
 

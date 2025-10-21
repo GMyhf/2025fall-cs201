@@ -23,6 +23,7 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 | 1022 | 101.对称二叉树    | dfs      | Easy | https://leetcode.cn/problems/symmetric-tree/         |
 | 1021 | 226.翻转二叉树    | dfs      | Easy | https://leetcode.cn/problems/invert-binary-tree/          |
 | 1021 | 94.二叉树的中序遍历      | dfs    | Easy | https://leetcode.cn/problems/binary-tree-inorder-traversal/          |
+|  |       | tree begin | |         |
 | 1020 | 51.N皇后      | backtracking      | Tough | https://leetcode.cn/problems/n-queens/          |
 | 1020 | 131.分割回文串| backtracking      | Medium | https://leetcode.cn/problems/palindrome-partitioning/          |
 | 1019 | 79.单词搜索   | backtracking      | Medium | https://leetcode.cn/problems/word-search/          |

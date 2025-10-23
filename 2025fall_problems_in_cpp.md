@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & others
 
-*Updated 2025-10-23 10:27 GMT+8*
+*Updated 2025-10-23 23:27 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                        
+>                                                                                           
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                        
+>                                                                                           
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                        
+>                                                                                           
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                        
+>                                                                                           
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                        
+>                                                                                           
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -966,7 +966,9 @@ int main() {
 
 
 
-## E02753
+## E02753:菲波那契数列
+
+http://cs101.openjudge.cn/pctbook/E02753
 
 ```cpp
 //dp
@@ -1058,6 +1060,54 @@ int main()
 }
 
 ```
+
+
+
+## E23555: 节省存储的矩阵乘法
+
+implementation, matrices, http://cs101.openjudge.cn/pctbook/E23555
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+    vector<vector<int>> x(n, vector<int>(n, 0));
+    vector<vector<int>> y(n, vector<int>(n, 0));
+
+    int m1, m2;
+    scanf("%d%d", &m1, &m2);
+    for (int i = 0; i < m1; i++)
+    {
+        int a, b, v;
+        scanf("%d%d%d", &a, &b, &v);
+        x[a][b] = v;
+    }
+    for (int i = 0; i < m2; i++)
+    {
+        int a, b, v;
+        scanf("%d%d%d", &a, &b, &v);
+        y[a][b] = v;
+    }
+    
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+        {
+            int ans = 0;
+            for (int k = 0; k < n; k++)
+                ans += x[i][k] * y[k][j];
+            if (ans != 0)
+                printf("%d %d %d\n", i, j, ans);
+        }
+    return 0;
+}
+```
+
+>
 
 
 
@@ -4111,7 +4161,7 @@ int main()
 
 
 
-## T29947:校门外的树又来了
+## T29947: 校门外的树又来了
 
 http://cs101.openjudge.cn/practice/29947/
 
@@ -4150,7 +4200,7 @@ int main(){
 
 
 
-## T27256 当前队列中位数
+## T27256: 当前队列中位数
 
 思路：
 
@@ -4302,7 +4352,7 @@ int main(){
 
 
 
-## 20B,Equation
+## 20B. Equation
 
 math, 2000, https://codeforces.com/problemset/problem/20/B
 
@@ -4783,7 +4833,9 @@ int main(){
 
 
 
-## 313B
+## 313B. Ilya and Queries
+
+https://codeforces.com/problemset/problem/313/B
 
 ```cpp
 #include <iostream>
@@ -4845,7 +4897,9 @@ int main()
 
 
 
-## 508A
+## 508A. Pasha and Pixels
+
+https://codeforces.com/problemset/problem/508/A
 
 ```cpp
 #include <iostream>
@@ -4874,6 +4928,50 @@ int main()
 ```
 
 
+
+## 545C. Woodcutters
+
+dp, greedy, 1500, https://codeforces.com/problemset/problem/545/C
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+int main()
+{
+    int n;
+    cin >> n;
+    vector<pair<long long, long long>> range;
+    while (n--)
+    {
+        long long x, h;
+        cin >> x >> h;
+        range.emplace_back(x - h, x + h);
+    }
+
+    long long currR = -1e9;
+    int ans = 0;
+    for (int i = 0; i < range.size(); i++)
+    {
+        if (i == 0 || range[i].first > currR)
+        {
+            ans++;
+            currR = (range[i].first + range[i].second) / 2;
+        }
+        else if (i == range.size() - 1 || range[i].second < (range[i + 1].first + range[i + 1].second) / 2)
+        {
+            ans++;
+            currR = range[i].second;
+        }
+        else
+            currR = (range[i].first + range[i].second) / 2;
+    }
+    cout << ans << endl;
+    return 0;
+}
+```
 
 
 

@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & others
 
-*Updated 2025-10-19 20:42 GMT+8*
+*Updated 2025-10-23 10:27 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                     
+>                                                                                        
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                     
+>                                                                                        
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                     
+>                                                                                        
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                     
+>                                                                                        
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                     
+>                                                                                        
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -1945,6 +1945,76 @@ int main(){
 
 
 
+```c++
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+using namespace std;
+
+struct loc{
+ int x;
+ int y;
+};
+struct range{
+ float l;
+ float r;
+};
+range f(loc a,int d){
+ float w=sqrt(d*d-a.y*a.y);
+ return {a.x-w, a.x+w};
+}
+bool cmp(range a,range b){
+ return a.r<b.r;
+}
+int main(){
+ int count=0;
+ bool noans=0;
+ while(true){
+     count++;
+     int n,d;
+     cin>>n>>d;
+     if(n==0&&d==0) {break;}
+     vector<loc> locs(n);
+     vector<range> ranges(n);
+     for(int i=0;i<n;i++){
+         cin>>locs[i].x>>locs[i].y;
+     }
+     for(int i=0;i<n;i++){
+         if(locs[i].y>d){
+             cout<<"Case "<<count<<": "<<-1<<'\n';
+             noans=1;
+             break;
+         }
+     }
+     //就只是因为这两行代码交换了位置，改了半天的错。。。
+
+     if(noans==1){noans=0;continue;}
+     if(n==1) {cout<<"Case "<<count<<": "<<1<<'\n';continue;}
+
+     //就只是因为这两行代码交换了位置，改了半天的错。。。
+     for(int i=0;i<n;i++){
+         ranges[i]=f(locs[i], d);
+     }
+     sort(ranges.begin(),ranges.end(),cmp);
+     int ans=1;
+     float rad=ranges[0].r;
+     for(int i=1;i<n;i++){
+         if(rad<ranges[i].l){
+             rad=ranges[i].r;
+             ans++;
+         }
+     }
+     cout<<"Case "<<count<<": "<<ans<<'\n';
+ }
+ return 0;
+}
+```
+
+
+
+
+
 ## M1760.袋子里最少数目的球
 
 binary search, https://leetcode.cn/problems/minimum-limit-of-balls-in-a-bag/
@@ -2819,6 +2889,57 @@ int main() {
 
 
 
+## M12558: 岛屿周⻓
+
+matrices, http://cs101.openjudge.cn/pctbook/M12558
+
+```python
+# 
+#include <iostream>
+#include <vector>
+
+using namespace std;
+int countp(vector<vector<int>> vec,int i, int j,int n,int m){
+    int ret=0;
+    if(j==0||vec[i][j-1]==0){
+        ret++;
+    }
+    if(j==m-1||vec[i][j+1]==0){
+        ret++;
+    }
+    if(i==0||vec[i-1][j]==0){
+        ret++;
+    }
+    if(i==n-1||vec[i+1][j]==0){
+        ret++;
+    }
+    return ret;
+}
+
+int main(){
+    int n,m;
+    cin>>n>>m;
+    vector<vector<int>> vec(n, vector<int>(m,0));
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            cin>>vec[i][j];
+        }
+    }
+    int ans=0;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(vec[i][j]==1){
+                ans+=countp(vec,i,j,n,m);
+            }
+        }
+    }
+    cout<<ans<<'\n';
+    return 0;
+}
+```
+
+
+
 ## M18164: 剪绳子
 
 Heap, http://cs101.openjudge.cn/pctbook/M18164/
@@ -2908,6 +3029,90 @@ int main()
     return 0;
 }
 ```
+
+
+
+## M18211: 军备竞赛
+
+greedy, two pointers, http://cs101.openjudge.cn/pctbook/M18211
+
+思路：需要注意到可以存在没有被制造也没有被卖掉的图纸
+
+```python
+# 
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main(){
+    int n,a;
+    cin>>n;
+    vector<int> vec;
+    while(cin>>a){
+        vec.push_back(a);
+    }
+    int m=vec.size()-1;
+    vector<int> sum(m+1);
+    sort(vec.begin(),vec.end());
+    if(n<vec[0]){
+        cout<<0;
+        return 0;
+    }
+    sum[0]=vec[0];
+    for(int i=1;i<=m;i++){
+        sum[i]=sum[i-1]+vec[i];
+    }
+    int id=0;
+    for(int j=0;j<m;j++){
+        for(int i=0;i<=m;i++){
+            if(sum[i]>n+sum[m]-sum[m-j]){
+                id=max(id,i-j);
+                break;
+            }
+        }
+    }
+    cout<<id<<'\n';
+    return 0;
+}
+```
+
+
+
+## M21554: 排队做实验
+
+greedy, http://cs101.openjudge.cn/pctbook/M21554/
+
+思路：cpp对pair的sort完美适配此题，不用重写cmp函数
+
+```python
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iomanip>
+using namespace std;
+
+int main(){
+    int n;
+    cin>>n;
+    vector<pair<int,int>> vec;
+    for(int i=0;i<n;i++){
+        int x;
+        cin>>x;
+        vec.push_back({x,i});
+    }
+    sort(vec.begin(),vec.end());
+    float time=0;
+    for(int i=0;i<n;i++){
+        cout<<vec[i].second+1<<' ';
+        time+=vec[i].first*(n-i-1);
+    }
+    cout<<'\n'<<fixed<<setprecision(2)<<time/n<<'\n';
+    return 0;
+}
+```
+
+
 
 
 

@@ -19,6 +19,8 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1024 | 437.路径总和III   | dfs, prefix      | Medium | https://leetcode.cn/problems/path-sum-iii/          |
+| 1024 | 236.二叉树的最近公共祖先 | dfs     | Medium | https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/          |
 | 1023 | 199.二叉树的右视图      | bfs      | Medium | https://leetcode.cn/problems/binary-tree-right-side-view/          |
 | 1023 | 114.二叉树展开为链表    | dfs, linked list      | Medium | https://leetcode.cn/problems/flatten-binary-tree-to-linked-list/          |
 | 1022 | 543.二叉树的直径  | dfs      | Easy | https://leetcode.cn/problems/diameter-of-binary-tree/          |

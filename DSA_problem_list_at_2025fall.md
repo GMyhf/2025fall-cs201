@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-10-22 23:34 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-10-25 00:12 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,6 +19,8 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1025 | 27638: 求二叉树的高度和叶子数目     | tree      | Medium | http://cs101.openjudge.cn/practice/27638/          |
+| 1025 | 6646: 二叉树的深度      | tree      | Medium | http://cs101.openjudge.cn/practice/06646/         |
 | 1024 | 437.路径总和III   | dfs, prefix      | Medium | https://leetcode.cn/problems/path-sum-iii/          |
 | 1024 | 236.二叉树的最近公共祖先 | dfs     | Medium | https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/          |
 | 1023 | 199.二叉树的右视图      | bfs      | Medium | https://leetcode.cn/problems/binary-tree-right-side-view/          |

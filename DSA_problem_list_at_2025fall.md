@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-10-25 23:12 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-10-26 23:12 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,10 +19,12 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1027 | 27928:遍历树      | tree       | Medium | http://cs101.openjudge.cn/practice/27928/          |
+| 1027 | 24729: 括号嵌套树      | dfs, stack       | Tough | http://cs101.openjudge.cn/practice/24729/          |
 | 1026 | 27637:括号嵌套二叉树      | dfs, stack      | Tough | http://cs101.openjudge.cn/practice/27637          |
 | 1026 | 124.二叉树中的最大路径和     | dfs   | Tough | https://leetcode.cn/problems/binary-tree-maximum-path-sum/          |
 | 1025 | 27638: 求二叉树的高度和叶子数目     | tree      | Medium | http://cs101.openjudge.cn/practice/27638/          |
-| 1025 | 6646: 二叉树的深度      | tree      | Medium | http://cs101.openjudge.cn/practice/06646/         |
+| 1025 | 06646: 二叉树的深度      | tree      | Medium | http://cs101.openjudge.cn/practice/06646/         |
 | 1024 | 437.路径总和III   | dfs, prefix      | Medium | https://leetcode.cn/problems/path-sum-iii/          |
 | 1024 | 236.二叉树的最近公共祖先 | dfs     | Medium | https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/          |
 | 1023 | 199.二叉树的右视图      | bfs      | Medium | https://leetcode.cn/problems/binary-tree-right-side-view/          |

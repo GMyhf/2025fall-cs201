@@ -5525,11 +5525,7 @@ public:
 
 dfs, bfs, https://leetcode.cn/problems/number-of-islands/ 
 
-思路：
-
-通过dfs，bfs遍历算法，在遇到陆地('1')时进行连通分量标记并计数，利用搜索过程将相邻陆地沉没为水域从而避免重复统计。
-
-代码
+思路：通过dfs，bfs遍历算法，在遇到陆地('1')时进行连通分量标记并计数，利用搜索过程将相邻陆地沉没为水域从而避免重复统计。
 
 ```c++
 class Solution {

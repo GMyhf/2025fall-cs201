@@ -7,7 +7,7 @@
 
 > Logs:
 >
-> 2025/10/15: 加了些 数算、计概 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】、【罗锐，25工学院，】同学的CPP代码。
+> 2025/10/15: 加了些 数算、计概 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】、【罗锐，25工学院，】、【海博治 城市与环境学院】同学的CPP代码。
 >
 > 鉴于每学期都有同学偏好C++编程，本学期除维护Python题解外，也开始提供C++题解支持。
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                           
+>                                                                                              
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                           
+>                                                                                              
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                           
+>                                                                                              
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                           
+>                                                                                              
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                           
+>                                                                                              
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -3164,6 +3164,61 @@ int main(){
 
 
 
+## M23555: 节省存储的矩阵乘法
+
+implementation, matrices, http://cs101.openjudge.cn/practice/23555
+
+要求用节省内存的方式实现，不能还原矩阵的方式实现。
+
+思路：利用STL容器思路，对矩阵Y采用行优先的存储方式，实现稀疏矩阵的存储与计算，本题难度可以接受，算上思考时间使用20分钟左右。
+
+```c++
+#include <iostream>
+#include <vector>
+#include <map>
+#include <tuple>
+
+using namespace std;
+
+int main() {
+    int n, m1, m2;
+    cin >> n >> m1 >> m2;
+
+    vector<tuple<int, int, int>> X;
+    for (int i = 0; i < m1; ++i) {
+        int row, col, val;
+        cin >> row >> col >> val;
+        X.emplace_back(row, col, val);
+    }
+
+    vector<vector<pair<int, int>>> Y_rows(n);
+    for (int i = 0; i < m2; ++i) {
+        int row, col, val;
+        cin >> row >> col >> val;
+        Y_rows[row].emplace_back(col, val);
+    }
+    map<pair<int, int>, int> Z;
+    for (const auto& x : X) {
+        int i = get<0>(x);    
+        int k = get<1>(x);    
+        int a = get<2>(x);    
+        for (const auto& y : Y_rows[k]) {
+            int j = y.first;  
+            int b = y.second; 
+            Z[{i, j}] += a * b;
+        }
+    }
+    for (const auto& entry : Z) {
+        if (entry.second != 0) {
+            cout << entry.first.first << " " << entry.first.second << " " << entry.second << endl;
+        }
+    }
+    return 0;
+}
+```
+
+
+
 
 
 ## M24591:中序表达式转后序表达式
@@ -5208,6 +5263,50 @@ public:
 
 
 
+## M102.二叉树的层序遍历
+
+bfs, https://leetcode.cn/problems/binary-tree-level-order-traversal/
+
+
+思路：利用bfs完成层序遍历，学过二叉树的前中后遍历之后就不算是很困难，但是还是不是很熟练，时间也是大多花在了代码优化，花费半个小时
+
+```c++
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+    vector<vector<int>> result; 
+        if (root == nullptr) {
+            return result;
+        }
+        
+        queue<TreeNode*> q; 
+        q.push(root); 
+        while (!q.empty()) {
+            int levelSize = q.size(); 
+            vector<int> currentLevel; 
+            
+            for (int i = 0; i < levelSize; ++i) {
+                TreeNode* node = q.front(); 
+                q.pop();
+                currentLevel.push_back(node->val); 
+                if (node->left != nullptr) {
+                    q.push(node->left);
+                }
+                if (node->right != nullptr) {
+                    q.push(node->right);
+                }
+            }
+            
+            result.push_back(currentLevel); 
+        }
+        
+        return result;
+    }
+};
+```
+
+
+
 
 
 ## E118.杨辉三角
@@ -5236,6 +5335,58 @@ public:
         }
         return ans;
 
+    }
+};
+```
+
+
+
+## M131.分割回文串
+
+dp, backtracking, https://leetcode.cn/problems/palindrome-partitioning/
+
+思路：
+
+dp预先计算字符串所有子串的回文信息并存储在DP表中，然后通过回溯算法进行深度优先搜索，在每一步利用DP表快速判断子串是否回文来指导分割决策，当搜索到字符串末尾时将当前分割方案加入结果集，用时一个小时（还是不熟练，小错误不断，太菜了）
+
+代码：
+
+```c++
+class Solution {
+public:
+    vector<vector<string>> partition(string s) {
+        int n = s.size();
+        vector<vector<bool>> dp(n, vector<bool>(n, false));
+        for (int i = n - 1; i >= 0; --i) {
+            for (int j = i; j < n; ++j) {
+                if (i == j) {
+                    dp[i][j] = true;  
+                } else if (j == i + 1) {
+                    dp[i][j] = (s[i] == s[j]);  
+                } else {
+                    dp[i][j] = (s[i] == s[j]) && dp[i + 1][j - 1]; 
+                }
+            }
+        }
+
+        vector<vector<string>> result;
+        vector<string> path;  
+        backtrack(s, 0, dp, path, result);
+        return result;
+    }
+    void backtrack(const string& s, int start, const vector<vector<bool>>& dp, 
+                   vector<string>& path, vector<vector<string>>& result) {
+        if (start == s.size()) {  
+            result.push_back(path);
+            return;
+        }
+        for (int end = start; end < s.size(); ++end) {
+            if (dp[start][end]) {  
+                path.push_back(s.substr(start, end - start + 1));  
+                backtrack(s, end + 1, dp, path, result);           
+                path.pop_back();  
+            }
+        }
     }
 };
 ```
@@ -5364,6 +5515,51 @@ public:
 		}
         return NULL;
 
+    }
+};
+```
+
+
+
+## M200.岛屿数量
+
+dfs, bfs, https://leetcode.cn/problems/number-of-islands/ 
+
+思路：
+
+通过dfs，bfs遍历算法，在遇到陆地('1')时进行连通分量标记并计数，利用搜索过程将相邻陆地沉没为水域从而避免重复统计。
+
+代码
+
+```c++
+class Solution {
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        if (grid.empty()) return 0; 
+        int m = grid.size();     
+        int n = grid[0].size();     
+        int count = 0;             
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (grid[i][j] == '1') { 
+                    count++;             
+                    dfs(grid, i, j, m, n); 
+                }
+            }
+        }
+        return count;
+    }
+
+private:
+    void dfs(vector<vector<char>>& grid, int i, int j, int m, int n) {
+        if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] != '1') {
+            return;
+        }
+        grid[i][j] = '0'; 
+        dfs(grid, i - 1, j, m, n);
+        dfs(grid, i + 1, j, m, n); 
+        dfs(grid, i, j - 1, m, n); 
+        dfs(grid, i, j + 1, m, n); 
     }
 };
 ```

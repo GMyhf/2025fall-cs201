@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-10-30 22:00 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-10-31 23:26 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,6 +19,8 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1101 | 03720: 文本二叉树     | tree    | Medium    | http://cs101.openjudge.cn/practice/03720/      |
+|  |       | one problem per day |  |        |
 | 1031 | 108.将有序数组转换为二叉搜索树    | tree       | Easy | https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/           |
 | 1031 | 7161:森林的带度数层次序列存储      | tree       | Medium | http://cs101.openjudge.cn/practice/07161          |
 | 1030 | 337.打家劫舍III     | tree dp    | Medium    | https://leetcode.cn/problems/house-robber-iii/description/      |

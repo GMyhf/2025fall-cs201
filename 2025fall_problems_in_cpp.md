@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & others
 
-*Updated 2025-10-23 23:27 GMT+8*
+*Updated 2025-11-01 17:50 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                              
+>                                                                                                 
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                              
+>                                                                                                 
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                              
+>                                                                                                 
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                              
+>                                                                                                 
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                              
+>                                                                                                 
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -5263,6 +5263,61 @@ public:
 
 
 
+## M79.单词搜索
+
+回溯，https://leetcode.cn/problems/word-search/
+
+思路：最暴力的就是直接dfs每一个点,然后进行判断即可,每个点dfs,长度为K(单词长度),然后一个个来找
+
+```c++
+class Solution {
+public:
+    bool check(vector<vector<char>>& board, vector<vector<int>>& visited, int i, int j, string& s, int k) {
+        if (board[i][j] != s[k]) {
+            return false;
+        } else if (k == s.length() - 1) {
+            return true;
+        }
+        visited[i][j] = true;
+        vector<pair<int, int>> directions{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        bool result = false;
+        for (const auto& dir: directions) {
+            int newi = i + dir.first, newj = j + dir.second;
+            if (newi >= 0 && newi < board.size() && newj >= 0 && newj < board[0].size()) {
+                if (!visited[newi][newj]) {
+                    bool flag = check(board, visited, newi, newj, s, k + 1);
+                    if (flag) {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+        }
+        visited[i][j] = false;
+        return result;
+    }
+
+    bool exist(vector<vector<char>>& board, string word) {
+        int h = board.size(), w = board[0].size();
+        vector<vector<int>> visited(h, vector<int>(w));
+        for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                bool flag = check(board, visited, i, j, word, 0);
+                if (flag) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
+
+```
+
+
+
+
+
 ## M102.二叉树的层序遍历
 
 bfs, https://leetcode.cn/problems/binary-tree-level-order-traversal/
@@ -5589,6 +5644,64 @@ public:
 
 
 
+## M234.回文链表
+
+linked list, https://leetcode.cn/problems/palindrome-linked-list/
+
+<mark>请用快慢指针实现</mark> `O(1)` 空间复杂度。
+
+
+思路：用快慢指针找出链表中间的地址，反转中间往后的链表，再查即可，用时约15Min
+
+```cpp
+class Solution 
+{
+public:
+    //中间指针
+    ListNode* midnote(ListNode* head)
+    {
+        ListNode* slow = head;
+        ListNode* fast = head;
+        while (fast->next != nullptr && fast->next->next != nullptr)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return slow;
+    }
+    //反转中间后面的
+    void reverse(ListNode* head)
+    {
+        ListNode* pre = nullptr;
+        ListNode* cur = head->next;
+        while (cur != nullptr)
+        {
+            ListNode* temp = cur->next;
+            cur->next = pre;
+            pre = cur;
+            cur = temp;
+        }
+        head->next = pre;
+    }
+
+    bool isPalindrome(ListNode* head) 
+    {
+        ListNode* mid = midnote(head);
+        reverse(mid);
+        while (head != nullptr && mid->next != nullptr)
+        {
+            if (head->val != mid->next->val)
+                return false;
+            head = head->next;
+            mid = mid->next;
+        }
+        return true;
+    }
+};
+```
+
+
+
 
 
 ## E283.移动零
@@ -5717,60 +5830,42 @@ public:
 
 
 
-## M234.回文链表
+## M1123.最深叶节点的最近公共祖先
 
-linked list, https://leetcode.cn/problems/palindrome-linked-list/
+dfs, https://leetcode.cn/problems/lowest-common-ancestor-of-deepest-leaves/
 
-<mark>请用快慢指针实现</mark> `O(1)` 空间复杂度。
+思路：如果直接想还挺难,但是如果考虑到二叉树的通用递归思路,那么就可以有很好的解决方法,即利用递归的思路
 
+如果左子树更深，最深叶节点在左子树中，我们返回 {左子树深度 + 1，左子树的 lca 节点}
+如果右子树更深，最深叶节点在右子树中，我们返回 {右子树深度 + 1，右子树的 lca 节点}
+如果左右子树一样深，左右子树都有最深叶节点，我们返回 {左子树深度 + 1，当前节点}
 
-思路：用快慢指针找出链表中间的地址，反转中间往后的链表，再查即可，用时约15Min
-
-```cpp
-class Solution 
-{
+```c++
+class Solution {
 public:
-    //中间指针
-    ListNode* midnote(ListNode* head)
-    {
-        ListNode* slow = head;
-        ListNode* fast = head;
-        while (fast->next != nullptr && fast->next->next != nullptr)
-        {
-            slow = slow->next;
-            fast = fast->next->next;
+    pair<TreeNode*, int> f(TreeNode* root) {
+        if (!root) {
+            return {root, 0};
         }
-        return slow;
-    }
-    //反转中间后面的
-    void reverse(ListNode* head)
-    {
-        ListNode* pre = nullptr;
-        ListNode* cur = head->next;
-        while (cur != nullptr)
-        {
-            ListNode* temp = cur->next;
-            cur->next = pre;
-            pre = cur;
-            cur = temp;
+
+        auto left = f(root->left);
+        auto right = f(root->right);
+
+        if (left.second > right.second) {
+            return {left.first, left.second + 1};
         }
-        head->next = pre;
+        if (left.second < right.second) {
+            return {right.first, right.second + 1};
+        }
+        return {root, left.second + 1};
+
     }
 
-    bool isPalindrome(ListNode* head) 
-    {
-        ListNode* mid = midnote(head);
-        reverse(mid);
-        while (head != nullptr && mid->next != nullptr)
-        {
-            if (head->val != mid->next->val)
-                return false;
-            head = head->next;
-            mid = mid->next;
-        }
-        return true;
+    TreeNode* lcaDeepestLeaves(TreeNode* root) {
+        return f(root).first;
     }
 };
+
 ```
 
 

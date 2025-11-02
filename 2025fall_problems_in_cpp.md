@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                    
+>                                                                                                       
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                    
+>                                                                                                       
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                    
+>                                                                                                       
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                    
+>                                                                                                       
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                    
+>                                                                                                       
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -2990,6 +2990,48 @@ int main(){
 
 
 
+## M12560: 生存游戏
+
+matrices, http://cs101.openjudge.cn/pctbook/M12560/
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+const int N=105;
+int n,m,cnt;
+bool a[N][N];
+int main(){
+    scanf("%d %d",&n,&m);
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=m;j++)
+            scanf("%d",&a[i][j]);
+    }
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=m;j++){
+            cnt=a[i-1][j-1]+a[i-1][j]+a[i-1][j+1]+a[i][j-1]+a[i][j+1]+a[i+1][j-1]+a[i+1][j]+a[i+1][j+1];
+            if(a[i][j]){
+                if(cnt<2 || cnt>3)
+                    printf("0 ");
+                else
+                    printf("1 ");
+            }
+            else{
+                if(cnt==3)
+                    printf("1 ");
+                else
+                    printf("0 ");
+            }
+        }
+        printf("\n");
+    }
+    return 0;
+}
+```
+
+
+
+
+
 ## M18164: 剪绳子
 
 Heap, http://cs101.openjudge.cn/pctbook/M18164/
@@ -5030,11 +5072,44 @@ int main()
 
 
 
+## 1868A. Fill in the Matrix
+
+constructive algorithms, implementation, 1300, https://codeforces.com/problemset/problem/1868/A
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int T,n,m,a;
+int main(){
+    scanf("%d",&T);
+    while(T--){
+        scanf("%d %d",&n,&m);
+        if(m==1)
+            printf("0\n");
+        else
+            printf("%d\n",min(n+1,m));
+        for(int i=1;i<=n;i++){
+            a=m-i;
+            if(a<=0)
+                a=m-1;
+            for(int j=1;j<=m;j++){
+                printf("%d ",a);
+                a=(a+1)%m;
+            }
+            printf("\n");
+        }
+    }
+    return 0;
+}
+```
+
+
+
+
+
 ## 1879B. Chips on the Board
 
 constructive algorithms, greedy, 900, https://codeforces.com/problemset/problem/1879/B
-
-
 
 ```c++
 #include <bits/stdc++.h>

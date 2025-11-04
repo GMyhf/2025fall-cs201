@@ -20,7 +20,7 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
 | 1104 | 20576: printExp（逆波兰表达式建树）  | shunting yard, parse tree    | Tough | http://cs101.openjudge.cn/practice/20576/           |
-| 1103 | 12029:水淹七军    | bfs    | Medium    | http://cs101.openjudge.cn/pctbook/M12029/      |
+| 1103 | 12029:水淹七军    | bfs, dfs    | Medium    | http://cs101.openjudge.cn/pctbook/M12029/      |
 | 1102 | 24637:宝藏二叉树     | tree dp    | Medium    | http://cs101.openjudge.cn/practice/24637/      |
 | 1101 | 03720: 文本二叉树     | tree    | Medium    | http://cs101.openjudge.cn/practice/03720/      |
 |  |       | one problem per day |  |        |

@@ -1,6 +1,6 @@
-#  Problems in OJ, CF & others
+#  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2025-11-02 11:48 GMT+8*
+*Updated 2025-11-04 08:46 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                       
+>                                                                                                          
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                       
+>                                                                                                          
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                       
+>                                                                                                          
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                       
+>                                                                                                          
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                       
+>                                                                                                          
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -1746,7 +1746,7 @@ int main(){
 
 
 
-```python
+```c++
 # 
 #include <iostream>
 using namespace std;
@@ -2800,6 +2800,93 @@ int main() {
 
 
 
+## M07161: 森林的带度数层次序列存储
+
+tree, http://cs101.openjudge.cn/practice/07161/
+
+
+思路：根据**带度数的层次序列**恢复树，再进行后根遍历输出
+
+```c++
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+struct Node {
+    char val;
+    vector<Node*> children;
+    Node(char c) : val(c) {}
+};
+
+
+void postorder(Node* root) {
+    if (!root) return;
+    for (int i = 0; i < (int)root->children.size(); ++i)
+        postorder(root->children[i]);
+    cout << root->val << " ";
+}
+
+
+Node* buildTree() {
+    vector<char> vals;
+    vector<int> degs;
+    char c;
+    int d;
+
+
+    while (cin >> c >> d) {
+        vals.push_back(c);
+        degs.push_back(d);
+        if (cin.peek() == '\n') break; 
+    }
+
+    if (vals.empty()) return nullptr;
+
+    queue<Node*> q;
+    Node* root = new Node(vals[0]);
+    q.push(root);
+
+    int idx = 1;
+    for (int i = 0; !q.empty() && idx < (int)vals.size(); ++i) {
+        Node* parent = q.front();
+        q.pop();
+
+        int cnt = degs[i]; 
+        for (int j = 0; j < cnt && idx < (int)vals.size(); ++j) {
+            Node* child = new Node(vals[idx]);
+            parent->children.push_back(child);
+            q.push(child);
+            idx++;
+        }
+    }
+    return root;
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    vector<Node*> forest;
+    forest.reserve(n);
+
+
+    for (int i = 0; i < n; ++i) {
+        Node* t = buildTree();
+        forest.push_back(t);
+    }
+
+
+    for (int i = 0; i < n; ++i)
+        postorder(forest[i]);
+
+    cout << endl;
+    return 0;
+}
+```
+
+
+
 ## M08210: 河中跳房子
 
 binary search, greedy, http://cs101.openjudge.cn/pctbook/M08210
@@ -2943,7 +3030,7 @@ int main() {
 
 matrices, http://cs101.openjudge.cn/pctbook/M12558
 
-```python
+```c++
 # 
 #include <iostream>
 #include <vector>
@@ -3130,7 +3217,7 @@ greedy, two pointers, http://cs101.openjudge.cn/pctbook/M18211
 
 思路：需要注意到可以存在没有被制造也没有被卖掉的图纸
 
-```python
+```c++
 # 
 #include <iostream>
 #include <vector>
@@ -3867,11 +3954,96 @@ int main()
 
 
 
+## M27928: 遍历树
+
+ adjacency list, dfs, http://cs101.openjudge.cn/practice/27928/
+
+思路：对每个节点，将它与所有子节点的值一起按从小到大排序，先递归遍历比它小的子节点，最后输出自己，这样整棵树按规则完成遍历。
+
+```c++
+#include <iostream>
+#include <map>
+#include <vector>
+#include <set>
+#include <algorithm>
+using namespace std;
+
+void dfs(int u, map<int, vector<int>>& son) {
+
+    vector<int> tmp = son[u];
+    tmp.push_back(u);
+    sort(tmp.begin(), tmp.end());
+    
+    for (int v : tmp) {
+        if (v == u) {
+            cout << u << "\n";  
+        } else {
+            dfs(v, son);       
+        }
+    }
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    map<int, vector<int>> son;  
+    set<int> all_nodes;         
+    set<int> non_roots;         
+
+
+    for (int i = 0; i < n; ++i) {
+        int parent;
+        cin >> parent;
+        all_nodes.insert(parent);
+        string line;
+        getline(cin, line);  
+        int num = 0;
+        bool has_num = false;
+
+
+        for (char c : line) {
+            if (isdigit(c)) {
+                num = num * 10 + (c - '0');
+                has_num = true;
+            } else if (has_num) {
+                son[parent].push_back(num);
+                non_roots.insert(num);
+                all_nodes.insert(num);
+                num = 0;
+                has_num = false;
+            }
+        }
+        if (has_num) { 
+            son[parent].push_back(num);
+            non_roots.insert(num);
+            all_nodes.insert(num);
+        }
+    }
+
+
+    vector<int> roots;
+    for (int x : all_nodes)
+        if (!non_roots.count(x))
+            roots.push_back(x);
+
+    sort(roots.begin(), roots.end());
+
+
+    for (int r : roots)
+        dfs(r, son);
+
+    return 0;
+}
+```
+
+
+
+
+
 ## M28664: 验证身份证号 
 
 http://cs101.openjudge.cn/pctbook/M28664/
-
-
 
 思路：打表，优化时间复杂度
 
@@ -4258,6 +4430,162 @@ int main()
 
 
 
+## T02775: 文件结构“图”
+
+tree, http://cs101.openjudge.cn/practice/02775/
+
+思路：用栈维护当前目录层次，每遇到目录就入栈、遇到 ] 出栈，递归输出目录与文件。
+
+```c++
+#include <iostream>
+#include <vector>
+#include <string>
+#include <stack>
+#include <algorithm>
+using namespace std;
+
+bool isDir(const string& name) {
+    return !name.empty() && name[0] == 'd';
+}
+
+void dfs(int dir, const string& prefix,
+         const vector<string>& name,
+         const vector<vector<int>>& subdirs,
+         const vector<vector<string>>& subfiles) {
+    cout << prefix << name[dir] << "\n";
+    string subprefix = prefix + "|     ";
+    for (int subdir : subdirs[dir]) {
+        dfs(subdir, subprefix, name, subdirs, subfiles);
+    }
+    vector<string> files = subfiles[dir];
+    sort(files.begin(), files.end());
+    for (const string& f : files) {
+        cout << prefix << f << "\n";
+    }
+}
+
+bool solve(int cas) {
+    int id = 0;
+    vector<string> name(1, "ROOT");
+    vector<vector<int>> subdirs(1);
+    vector<vector<string>> subfiles(1);
+    stack<int> stk;
+    stk.push(0);
+    string line;
+
+    while (true) {
+        if (!getline(cin, line))
+            return false;
+        if (line == "#") return false;
+        if (line == "*") break;
+
+        if (isDir(line)) {
+            ++id;
+            name.push_back(line);
+            subdirs.push_back({});
+            subfiles.push_back({});
+            subdirs[stk.top()].push_back(id);
+            stk.push(id);
+        } else if (line == "]") {
+            stk.pop();
+        } else {
+            subfiles[stk.top()].push_back(line);
+        }
+    }
+
+    cout << "DATA SET " << cas << ":\n";
+    dfs(0, "", name, subdirs, subfiles);
+    cout << "\n";
+    return true;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int cas = 1;
+    while (solve(cas)) {
+        ++cas;
+    }
+    return 0;
+}
+```
+
+
+
+
+
+## M24729: 括号嵌套树
+
+dfs, stack, http://cs101.openjudge.cn/practice/24729/
+
+思路：用栈解析括号表达式建树，再递归输出前序与后序序列。
+
+```c++
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <cctype>
+using namespace std;
+
+struct Node {
+    char val;
+    vector<Node*> children;
+    Node(char c) : val(c) {}
+};
+
+void preorder(Node* root) {
+    if (!root) return;
+    cout << root->val;
+    for (auto child : root->children)
+        preorder(child);
+}
+
+void postorder(Node* root) {
+    if (!root) return;
+    for (auto child : root->children)
+        postorder(child);
+    cout << root->val;
+}
+
+int main() {
+    string s;
+    cin >> s;
+    stack<Node*> st;
+    Node* root = nullptr;
+    Node* last = nullptr;
+
+    for (int i = 0; i < (int)s.size(); ++i) {
+        char c = s[i];
+        if (isupper(c)) { 
+            Node* node = new Node(c);
+            if (!st.empty())
+                st.top()->children.push_back(node);
+            else
+                root = node;
+            last = node;
+        } else if (c == '(') {
+            st.push(last);
+        } else if (c == ')') {
+            st.pop();
+        } else if (c == ',') {
+            continue;
+        }
+    }
+
+    preorder(root);
+    cout << "\n";
+    postorder(root);
+    cout << "\n";
+
+    return 0;
+}
+```
+
+
+
+
+
 ## T29947: 校门外的树又来了
 
 http://cs101.openjudge.cn/practice/29947/
@@ -4498,7 +4826,7 @@ greedy, sorting, 900, https://codeforces.com/problemset/problem/34/B
 
 
 
-```python
+```c++
 # #include <iostream>
 #include <queue>
 using namespace std;
@@ -4805,7 +5133,7 @@ greedy, sortings, 900, https://codeforces.com/problemset/problem/160/A
 
 思路：怎么全是一个pq能解决的问题
 
-```python
+```c++
 #include <iostream>
 #include <queue>
 using namespace std;
@@ -4891,7 +5219,7 @@ int main() {
 
 思路：确实体会到了cpp处理大整数太麻烦了。。。
 
-```python
+```c++
 #include<iostream>
 #include<cmath>
 #include<unordered_set>
@@ -5155,7 +5483,7 @@ stack, https://leetcode.cn/problems/valid-parentheses/
 
 思路：括号匹配问题 简单的一个栈数据结构即可
 
-```python
+```c++
 class Solution {
 public:
     bool isValid(string s) {
@@ -5190,7 +5518,7 @@ public:
 
 
 
-思路：注意到括号的匹配与栈的后入先出是一样的，因此用栈的思路去解决，很顺利，用时约10min
+思路：注意到括号的匹配与栈的后入先出是一样的，因此用栈的思路去解决，很顺利
 
 ```cpp
 class Solution 
@@ -5437,6 +5765,37 @@ public:
 
 
 
+## E108.将有序数组转换为二叉搜索树
+
+https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/
+
+思路：mid = (left + right) / 2 选中间元素作为根节点；
+
+左子数组递归生成左子树；
+
+右子数组递归生成右子树；
+
+```c++
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return build(nums, 0, nums.size() - 1);
+    }
+
+private:
+    TreeNode* build(const vector<int>& nums, int left, int right) {
+        if (left > right) return nullptr;  // 递归终止条件
+        int mid = left + (right - left) / 2;  // 取中点
+        TreeNode* root = new TreeNode(nums[mid]);
+        root->left = build(nums, left, mid - 1);
+        root->right = build(nums, mid + 1, right);
+        return root;
+    }
+};
+```
+
+
+
 
 
 ## E118.杨辉三角
@@ -5471,15 +5830,37 @@ public:
 
 
 
+## M129.求根节点到叶节点数字之和
+
+dfs, https://leetcode.cn/problems/sum-root-to-leaf-numbers/
+
+思路：在遍历时，把当前路径代表的数字累计下去（上一层的值 × 10 + 当前节点值），到叶子节点时就把这条路径的数字加入总和。
+
+```c++
+class Solution {
+public:
+    int sumNumbers(TreeNode* root) {
+        return dfs(root, 0);
+    }
+
+private:
+    int dfs(TreeNode* node, int current) {
+        if (!node) return 0;
+        int val = current * 10 + node->val;
+        if (!node->left && !node->right)  // 到达叶子
+            return val;
+        return dfs(node->left, val) + dfs(node->right, val);
+    }
+};
+```
+
+
+
 ## M131.分割回文串
 
 dp, backtracking, https://leetcode.cn/problems/palindrome-partitioning/
 
-思路：
-
-dp预先计算字符串所有子串的回文信息并存储在DP表中，然后通过回溯算法进行深度优先搜索，在每一步利用DP表快速判断子串是否回文来指导分割决策，当搜索到字符串末尾时将当前分割方案加入结果集，用时一个小时（还是不熟练，小错误不断，太菜了）
-
-代码：
+思路：dp预先计算字符串所有子串的回文信息并存储在DP表中，然后通过回溯算法进行深度优先搜索，在每一步利用DP表快速判断子串是否回文来指导分割决策，当搜索到字符串末尾时将当前分割方案加入结果集，用时一个小时（还是不熟练，小错误不断，太菜了）
 
 ```c++
 class Solution {
@@ -6043,7 +6424,7 @@ https://programming.pku.edu.cn/problem/7f89efad1537471fae528e9c88601ee6/
 
 从标准输入读取多行，每行格式如 `H W C F`，当遇到单独一行 `0` 时结束。`F` 为 `1` 表示实心，`0` 表示空心。输出各个矩形，矩形之间不额外插入空行（与题目样例一致）。
 
-```python
+```c++
 import sys
 
 def draw_rectangle(h, w, ch, filled):

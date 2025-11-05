@@ -106,9 +106,8 @@ print(result["answer"])  # 输出应为：艾伦·图灵
 
 上述代码中，我们指定了本地下载的中文问答模型目录，通过pipeline接口直接进行抽取式问答推理。在真实应用中，可替换为更强大的模型（如GPT-4）并结合语言提示（Prompt）实现更复杂的自然语言任务。
 
-> [!NOTE] Title
-> 安装 深度学习框架 PyTorch
-> pip install -U transformers
+> 安装 深度学习框架 PyTorch  
+> pip install -U transformers  
 > pip install torch
 
 

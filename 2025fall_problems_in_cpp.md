@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2025-11-04 08:46 GMT+8*
+*Updated 2025-11-07 22:58 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -2278,12 +2278,10 @@ int main(){
 ```
 
 
-
 ## M02783: Holiday Hotel
 
 greedy, http://cs101.openjudge.cn/practice/02783/
 
-### 
 
 ```cpp
 #include <iostream>
@@ -2807,7 +2805,7 @@ tree, http://cs101.openjudge.cn/practice/07161/
 
 思路：根据**带度数的层次序列**恢复树，再进行后根遍历输出
 
-```c++
+```cpp
 #include <iostream>
 #include <queue>
 #include <vector>
@@ -2885,6 +2883,89 @@ int main() {
 }
 ```
 
+
+思路：读取每个测试用例的节点信息，利用队列构建树结构，然后进行后序遍历输出所有节点值。
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <sstream>
+#include <string>
+
+using namespace std;
+struct Node {
+    char val;
+    vector<Node*> children;
+    Node(char c) : val(c) {}
+};
+vector<string> split(const string &s) {
+    vector<string> res;
+    stringstream ss(s);
+    string token;
+    while (ss >> token) {
+        res.push_back(token);
+    }
+    return res;
+}
+Node* buildTree(const vector<pair<char, int>> &nodes) {
+    if (nodes.empty()) return nullptr;
+    Node* root = new Node(nodes[0].first);
+    queue<pair<Node*, int>> q; 
+    q.push({root, nodes[0].second});
+    
+    int i = 1;
+    while (i < nodes.size() && !q.empty()) {
+        auto [parent, need] = q.front();
+        q.pop();
+        for (int j = 0; j < need && i < nodes.size(); ++j) {
+            char val = nodes[i].first;
+            int degree = nodes[i].second;
+            Node* child = new Node(val);
+            parent->children.push_back(child);
+            if (degree > 0) {
+                q.push({child, degree}); 
+            }
+            ++i;
+        }
+    }
+    return root;
+}
+void postOrder(Node* node, string &s) {
+    if (!node) return;
+    for (Node* child : node->children) {
+        postOrder(child, s);
+    }
+    s += node->val;
+    s += " ";
+}
+
+int main() {
+    int n;
+    cin >> n;
+    cin.ignore(); 
+    string result;
+    for (int i = 0; i < n; ++i) {
+        string line;
+        getline(cin, line);
+        vector<string> tokens = split(line);
+        vector<pair<char, int>> nodes;
+        for (int j = 0; j + 1 < tokens.size(); j += 2) {
+            char c = tokens[j][0];
+            int d = stoi(tokens[j + 1]);
+            nodes.emplace_back(c, d);
+        }
+        Node* root = buildTree(nodes);
+        postOrder(root, result);
+    }
+    if (!result.empty()) {
+        result.pop_back();
+    }
+    cout << result << endl;
+    
+    return 0;
+}
+```
 
 
 ## M08210: 河中跳房子
@@ -3544,7 +3625,7 @@ int main() {
 
 
 
-## 24684: 直播计票
+## M24684: 直播计票
 
 http://cs101.openjudge.cn/practice/24684/
 
@@ -3960,7 +4041,7 @@ int main()
 
 思路：对每个节点，将它与所有子节点的值一起按从小到大排序，先递归遍历比它小的子节点，最后输出自己，这样整棵树按规则完成遍历。
 
-```c++
+```cpp
 #include <iostream>
 #include <map>
 #include <vector>
@@ -4982,6 +5063,36 @@ int main()
 }
 ```
 
+## E108.将有序数组转换为二叉搜索树
+
+https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/
+
+思路：二分查找，选中间元素为根节点，递归构建左右子树，25分钟
+
+```cpp
+class Solution {
+private:
+    TreeNode* buildBST(vector<int>& nums, int left, int right) {
+        
+        if (left > right) {
+            return nullptr;
+        }
+        int mid = left + (right - left) / 2; 
+        TreeNode* root = new TreeNode(nums[mid]);
+        root->left = buildBST(nums, left, mid - 1);
+        root->right = buildBST(nums, mid + 1, right);
+        return root;
+    }
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        if (nums.empty()) {
+            return nullptr;
+        }
+        return buildBST(nums, 0, nums.size() - 1);
+    }
+};
+```
+
 
 
 ## 118A. String Task
@@ -4991,7 +5102,7 @@ implementation/strings, 1000, http://codeforces.com/problemset/problem/118/A
 思路：遇到元音continue，其余情况变成小写然后输出.和该字母，用时较长（处理输出次数太多），但代码较短
 ，用时约15min（没注意到y也算元音）
 
-```c++
+```cpp
 #include <iostream>
 
 using namespace std;

@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-11-07 21:36 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-11-09 00:11 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,6 +19,7 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1109 | 827.最大人工岛    | disjoint set    | Tough    | https://leetcode.cn/problems/making-a-large-island/      |
 | 1108 | 04089:电话号码    | trie       | Medium | http://cs101.openjudge.cn/practice/04089/          |
 | 1107 | 547.省份数量      | dfs, disjoint set     | Medium | https://leetcode.cn/problems/number-of-provinces/          |
 | 1106 | 02499:Binary Tree   | math       | Medium | http://cs101.openjudge.cn/practice/02499/          |

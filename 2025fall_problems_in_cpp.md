@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2025-11-07 22:58 GMT+8*
+*Updated 2025-11-08 23:48 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -3678,6 +3678,76 @@ int main() {
 
 ```
 
+## M24729: 括号嵌套树
+
+dfs, stack, [http://cs101.openjudge.cn/practice/24729/](http://cs101.openjudge.cn/practice/24729/)
+
+思路：注意到树的构建与栈是一致的，用栈来辅助构建会很方便，非常简单，用时约15min
+
+ #include <iostream>  
+ #include <vector>  
+ #include <map>  
+ #include <string>  
+ #include <sstream>  
+ using namespace std;  
+ struct TreeNode  
+ {  
+     char name;  
+     vector<TreeNode*> children;  
+     TreeNode(char c) : name(c) {}  
+ };  
+ class Solution   
+ {  
+ public:  
+     TreeNode* root;  
+     void getTree()  
+     {  
+         char c;  
+         TreeNode* lastnode;  
+         vector<TreeNode*> stack;  
+         while (cin >> c)  
+         {  
+             if (c == ',')continue;  
+             if (c == '(')  
+                 stack.push_back(lastnode);  
+             else if (c == ')')  
+                 stack.pop_back();  
+             else  
+             {  
+                 TreeNode* node = new TreeNode(c);  
+                 if (stack.empty())  
+                     root = node;  
+                 else  
+                     stack.back()->children.push_back(node);  
+                 lastnode = node;  
+             }  
+         }     
+     }  
+     void printTree_1(TreeNode* node)  
+     {  
+         if (node == nullptr)return;  
+         cout << node->name;  
+         for (auto child : node->children)  
+             printTree_1(child);  
+     }  
+     void printTree_2(TreeNode* node)  
+     {  
+         if (node == nullptr)return;  
+         for (auto child : node->children)  
+             printTree_2(child);  
+         cout << node->name;  
+     }  
+ };  
+ int main()   
+ {  
+     Solution s;  
+     s.getTree();  
+     s.printTree_1(s.root);  
+     cout << endl;  
+     s.printTree_2(s.root);  
+     return 0;  
+ }  
+ ​
 
 
 ## M25570 洋葱

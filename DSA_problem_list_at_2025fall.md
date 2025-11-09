@@ -19,7 +19,8 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
-| 1110 | 85.最大矩阵      | monotonic stack, dp    | Tough | https://leetcode.cn/problems/maximal-rectangle/description/          |
+| 1111 | 85.最大矩阵      | monotonic stack, dp    | Tough | https://leetcode.cn/problems/maximal-rectangle/description/          |
+| 1110 | 84.柱状图中最大的矩形  | monotonic stack  | Tough | https://leetcode.cn/problems/largest-rectangle-in-histogram/description/          |
 | 1109 | 827.最大人工岛    | disjoint set    | Tough    | https://leetcode.cn/problems/making-a-large-island/      |
 | 1108 | 04089:电话号码    | trie       | Medium | http://cs101.openjudge.cn/practice/04089/          |
 | 1107 | 547.省份数量      | dfs, disjoint set     | Medium | https://leetcode.cn/problems/number-of-provinces/          |

@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2025-11-08 23:58 GMT+8*
+*Updated 2025-11-09 13:03 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -2746,6 +2746,102 @@ int main() {
 
 
 
+## M04147汉诺塔问题(Tower of Hanoi)
+
+dfs, [http://cs101.openjudge.cn/pctbook/M04147](http://cs101.openjudge.cn/pctbook/M04147)
+
+ #include <iostream>  
+ #include <vector>  
+ using namespace std;  
+ ​  
+ void moveDisk(int numDisk, char fromPole, char toPole)  
+ {  
+     printf("%d:%c->%c\n", numDisk, fromPole, toPole);  
+ }  
+ ​  
+ void moveTower(int height, char fromPole, char withPole, char toPole)  
+ {  
+     if (height == 1)  
+         moveDisk(1, fromPole, toPole);  
+     else  
+     {  
+         moveTower(height - 1, fromPole, toPole, withPole);  
+         moveDisk(height, fromPole, toPole);  
+         moveTower(height - 1, withPole, fromPole, toPole);  
+     }  
+ }  
+ ​  
+ int main()  
+ {  
+     ios::sync_with_stdio(false);  
+     cin.tie(nullptr);  
+ ​  
+     int n;  
+     char a, b, c;  
+     cin >> n >> a >> b >> c;  
+     moveTower(n, a, b, c);  
+     return 0;  
+ }
+
+
+## M05585: 晶矿的个数
+
+matrices, dfs similar, [http://cs101.openjudge.cn/pctbook/M05585](http://cs101.openjudge.cn/pctbook/M05585)
+
+ #include <iostream>  
+ #include <cstring>  
+ #include <vector>  
+ using namespace std;  
+ ​  
+ int xy[4][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};  
+ char m[30][30];  
+ ​  
+ void dfs(int x, int y, char c)  
+ {  
+     m[x][y] = '#';  
+     for (int i = 0; i < 4; i++)  
+     {  
+         int newX = x + xy[i][0];  
+         int newY = y + xy[i][1];  
+         if (m[newX][newY] == c)  
+             dfs(newX, newY, c);  
+     }  
+ }  
+ ​  
+ int main()  
+ {  
+     ios::sync_with_stdio(false);  
+     cin.tie(nullptr);  
+ ​  
+     int k;  
+     cin >> k;  
+     for (int i = 0; i < k; i++)  
+     {  
+         int n;  
+         cin >> n;  
+         memset(m, '\0', sizeof(m));  
+         for (int j = 0; j < n * n; j++)  
+             cin >> m[j / n][j % n];  
+           
+         int r = 0, b = 0;  
+         for (int x = 0; x < n; x++)  
+             for (int y = 0; y < n; y++)  
+                 if (m[x][y] == 'r')  
+                 {  
+                     dfs(x, y, 'r');  
+                     r++;  
+                 }  
+                 else if (m[x][y] == 'b')  
+                 {  
+                     dfs(x, y, 'b');  
+                     b++;  
+                 }  
+           
+         cout << r << ' ' << b << '\n';  
+     }  
+     return 0;  
+ }
+
 ## M06640: 倒排索引
 
 data structures, http://cs101.openjudge.cn/pctbook/M06640/
@@ -4465,6 +4561,106 @@ int main(){
 
 # 挑战Tough
 
+## T01661: Help Jimmy
+
+dfs/dp, [http://cs101.openjudge.cn/practice/01661](http://cs101.openjudge.cn/practice/01661) 做了4-5h才完全搞明白这道题...... 一开始忘记考虑`y - p[i].h > MaxVal`时的返回值了，导致返回的是默认值0，在这里卡了很久，也就是说它作为一个单纯的DFS题就已经不是很容易了，结果写完以后发现超时了，做了剪枝之后发现还是超时，然后就借助ai得知了记忆化搜索这个工具，然后又在key上面卡了好久，最后还是写出来了。
+
+ #include <iostream>  
+ #include <algorithm>  
+ #include <vector>  
+ #include <unordered_map>  
+ using namespace std;  
+ ​  
+ int minTime, MaxVal;  
+ ​  
+ struct Node  
+ {  
+     int r, l, h;  
+ };  
+ ​  
+ bool cmp(Node a, Node b)  
+ {  
+     return a.h > b.h;  
+ }  
+ ​  
+ unordered_map<long long, int> memo;  
+ ​  
+ long long encode(int x, int y, int it)  
+ {  
+     return ((long long)x << 32) | ((long long)y << 16) | it;  
+ }  
+ ​  
+ int dfs(vector<Node>& p, int x, int y, int it)  
+ {  
+     long long key = encode(x, y, it);  
+     if (memo.count(key))  
+         return memo[key];  
+     for (int i = it + 1; i < p.size(); i++)  
+     {  
+         if (y - p[i].h > MaxVal)  
+             return memo[key] = 1e9;  
+         else if (x >= p[i].l && x <= p[i].r)  
+         {  
+             int l = x - p[i].l + dfs(p, p[i].l, p[i].h, i);  
+             int r = p[i].r - x + dfs(p, p[i].r, p[i].h, i);  
+             return memo[key] = l < r ? l : r;  
+         }  
+     }  
+     return memo[key] = 0;  
+ }  
+ ​  
+ int main()  
+ {  
+     ios::sync_with_stdio(false);  
+     cin.tie(nullptr);  
+ ​  
+     int k;  
+     cin >> k;  
+     while (k--)  
+     {  
+         int n, inix, iniy;  
+         cin >> n >> inix >> iniy >> MaxVal;  
+         vector<Node> plat;  
+         Node floor;  
+         floor.l = inix, floor.r = inix, floor.h = iniy;  
+         plat.push_back(floor);  
+         while (n--)  
+         {  
+             Node ipt;  
+             cin >> ipt.l >> ipt.r >> ipt.h;  
+             plat.push_back(ipt);  
+         }  
+         sort(plat.begin(), plat.end(), cmp);  
+         cout << iniy + dfs(plat, inix, iniy, 0) << '\n';  
+     }  
+     return 0;  
+ }
+
+## T01958 Strange Towers of Hanoi
+
+[http://cs101.openjudge.cn/practice/01958/](http://cs101.openjudge.cn/practice/01958/)
+
+ #include <iostream>  
+ #include <cmath>  
+ using namespace std;  
+ ​  
+ int dp(int n)  
+ {  
+     if (n == 1)  
+         return 1;  
+     int maxMov = 1e9;  
+     for (int k = 1; k < n; k++)  
+         maxMov = min(maxMov, 2 * dp(n - k) + int(pow(2, k)) - 1);  
+     return maxMov;  
+ }  
+ ​  
+ int main()  
+ {  
+     for (int i = 1; i <= 12; i++)  
+         cout << dp(i) << '\n';  
+     return 0;  
+ }
+
 ## T02488: A Knight's Journey
 
 backtracking, http://cs101.openjudge.cn/practice/02488/
@@ -4579,6 +4775,62 @@ int main()
 
 ```
 
+
+## T02754: 八皇后
+
+dfs and similar, [http://cs101.openjudge.cn/pctbook/T02754](http://cs101.openjudge.cn/pctbook/T02754)
+
+ #include <iostream>  
+ #include <algorithm>  
+ #include <vector>  
+ using namespace std;  
+ ​  
+ bool is_valid(string& queen, int x, int y)  
+ {  
+     for (int i = 1; i < x; i++)  
+         if (int(queen[i] - '0') == y || abs(i - x) == abs(int(queen[i] - '0') - y))  
+             return false;  
+     return true;  
+ }  
+ ​  
+ void sovle_8_queens(vector<string>& sol, string& queen, int n)  
+ {  
+     if (n == 9)  
+         sol.push_back(queen);  
+     else  
+         for (int i = 1; i <= 8; i++)  
+             if (is_valid(queen, n, i))  
+             {  
+                 queen[n] = i + '0';  
+                 sovle_8_queens(sol, queen, n + 1);  
+                 queen[n] = '0';  
+             }  
+ }  
+ ​  
+ int main()  
+ {  
+     ios::sync_with_stdio(false);  
+     cin.tie(nullptr);  
+ ​  
+     int n;  
+     cin >> n;  
+ ​  
+     vector<string> solutions;  
+     string queen = "000000000";  
+     sovle_8_queens(solutions, queen, 1);  
+     vector<int> sol;  
+     for (auto i : solutions)  
+         sol.push_back(stoi(i));  
+     sort(sol.begin(), sol.end());  
+ ​  
+     while (n--)  
+     {  
+         int k;  
+         cin >> k;  
+         cout << sol[k - 1] << '\n';  
+     }  
+     return 0;  
+ }
 
 
 ## T02775: 文件结构“图”
@@ -4920,7 +5172,7 @@ int main(){
 
 
 
-## 
+
 
 
 
@@ -5808,7 +6060,64 @@ public:
 ```
 
 
+## T51.N皇后
 
+backtracking, [https://leetcode.cn/problems/n-queens/](https://leetcode.cn/problems/n-queens/)
+
+ #include <iostream>  
+ #include <vector>  
+ using namespace std;  
+ ​  
+ vector<int> row;  
+ ​  
+ bool is_Valid(int x, int y)  
+ {  
+     for (int i = 0; i < x; i++)  
+         if (row[i] == y || abs(x - i) == abs(y - row[i]))  
+             return false;  
+     return true;  
+ }  
+ ​  
+ void solve(int n, vector<vector<string>>& q, int x)  
+ {  
+     if (x == n)  
+     {  
+         vector<string> tmp(n, string(n, '.'));  
+         for (int i = 0; i < row.size(); i++)  
+             tmp[i][row[i]] = 'Q';  
+         q.push_back(tmp);  
+         return;  
+     }  
+     for (int i = 0; i < n; i++)  
+         if (is_Valid(x, i))  
+         {  
+             row.push_back(i);  
+             solve(n, q, x + 1);  
+             row.pop_back();  
+         }  
+ }  
+ ​  
+ vector<vector<string>> solveNQueens(int n)  
+ {  
+     vector<vector<string>> ans;  
+     solve(n, ans, 0);  
+     return ans;  
+ }  
+ ​  
+ int main()  
+ {  
+     ios::sync_with_stdio(false);  
+     cin.tie(nullptr);  
+ ​  
+     int n = 4;  
+     for (auto i : solveNQueens(n))  
+     {  
+         for (auto j : i)  
+             cout << j << ' ';  
+         cout << '\n';  
+     }  
+     return 0;  
+ }
 
 
 ## M78.子集
@@ -6554,6 +6863,45 @@ public:
 
 # Other
 
+## sy132: 全排列I 中等
+
+[https://sunnywhy.com/sfbj/4/3/132](https://sunnywhy.com/sfbj/4/3/132)
+
+ #include <iostream>  
+ #include <vector>  
+ using namespace std;  
+ ​  
+ void permute(vector<bool>& valid, vector<int>& nums, int first, int n)  
+ {  
+     if (first == n + 1)  
+     {  
+         for (int i = 0; i < n; i++)  
+             i < n - 1 ? cout << nums[i] << ' ' : cout << nums[i] << '\n';  
+         return;  
+     }  
+     for (int i = 1; i <= n; i++)  
+         if (valid[i])  
+         {  
+             valid[i] = false;  
+             nums.push_back(i);  
+             permute(valid, nums, first + 1, n);  
+             valid[i] = true;  
+             nums.pop_back();  
+         }  
+ }  
+ ​  
+ int main()  
+ {  
+     ios::sync_with_stdio(false);  
+     cin.tie(nullptr);  
+ ​  
+     int n;  
+     cin >> n;  
+     vector<int> nums;  
+     vector<bool> valid(n + 1, true);  
+     permute(valid, nums, 1, n);  
+     return 0;  
+ }
 
 
 ## 画矩形

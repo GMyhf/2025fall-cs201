@@ -159,7 +159,7 @@ monotonous-stack, http://cs101.openjudge.cn/practice/04137/
 
 ## 2. 学习总结和收获
 
-如果作业题目简单，有否额外练习题目，比如：OJ“计概2025fall每日选做”、CF、LeetCode、洛谷等网站题目。
+如果作业题目简单，有否额外练习题目，比如：OJ“数算2025fall每日选做”、CF、LeetCode、洛谷等网站题目。
 
 
 

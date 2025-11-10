@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2025-11-09 13:03 GMT+8*
+*Updated 2025-11-10 12:08 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -2095,6 +2095,39 @@ public:
 
 
 
+## M02255: 重建二叉树
+
+http://cs101.openjudge.cn/practice/02255/
+
+
+
+```cpp
+#include <iostream>
+
+using namespace std;
+
+string preorder, midorder;
+
+void dfs(int lp, int rp, int lm, int rm){
+	if (lp > rp) return;
+	int rootm = lm;
+	while (midorder[rootm] != preorder[lp]) rootm++;
+	dfs(lp + 1, lp + rootm - lm, lm, rootm - 1);
+	dfs(lp + rootm - lm + 1, rp, rootm + 1, rm);
+	cout << preorder[lp];
+}
+
+int main(){
+	while (cin >> preorder >> midorder){
+		int n = preorder.size() - 1;
+		dfs(0, n, 0, n);
+		cout << endl;
+	}
+	return 0;
+}
+```
+
+
 ## M02299:Ultra-QuickSort
 
 merge sort, http://cs101.openjudge.cn/practice/02299/
@@ -2278,6 +2311,47 @@ int main(){
 ```
 
 
+
+## M02774: 木材加工
+
+http://cs101.openjudge.cn/practice/02774/
+
+
+
+```cpp
+#include <stdio.h>
+
+int len[10001];
+
+bool check(int n, int m, int k){
+	int cnt = 0;
+	for (int i = 1; i <= n; i++){
+		cnt += len[i] / m;
+	}
+	return cnt >= k;
+}
+
+int main(){
+	int n, k, l = 1, r = 10000, ans = 0;
+	scanf("%d %d", &n, &k);
+	for (int i = 1; i <= n; i++){
+		scanf("%d", &len[i]);
+	}
+	while (l <= r){
+		int mid = (l + r) >> 1;
+		if (check(n, mid, k)){
+			l = mid + 1;
+			ans = mid;
+		} else {
+			r = mid - 1;
+		}
+	}
+	printf("%d", ans);
+	return 0;
+}
+```
+
+
 ## M02783: Holiday Hotel
 
 greedy, http://cs101.openjudge.cn/practice/02783/
@@ -2410,6 +2484,46 @@ int main() {
 
 
 
+## M02788: 二叉树（2）
+
+http://cs101.openjudge.cn/practice/02788/
+
+思路：
+
+- $m$ 子树也是**完全二叉树**，故我们只需要关心与 $n$ 在同一层的点有哪些能取到。
+- 考虑 dfs 搜索：对于 $(m, n)$，若 $m$ 子树内不存在与 $n$ 在同一层且编号 $\leq n$ 的点则答案为 $0$，若 $m$ 子树内所有与 $n$ 在同一层的点的编号都 $\leq n$ 则答案为 $2^{\lfloor \log_2 n \rfloor - \lfloor \log_2 m \rfloor}$。
+- 否则，我们考虑直接对 $m$ 的两个儿子递归求解再将答案相加。
+- 注意到两个儿子之中至少有一个不会再往下递归，则递归层数是 $O(\log \dfrac{n}{m})$ 的。
+- 故时间复杂度为 $O(\sum \log \dfrac{n}{m})$，可以通过。
+
+代码：
+
+```cpp
+#include <stdio.h>
+#include <math.h>
+
+int solve(int m, int n, int delta){
+	int l = m << delta;
+	if (l > n) return 0;
+	int r = l + (1 << delta) - 1;
+	if (r <= n) return 1 << delta;
+	return solve(m << 1, n, delta - 1) + solve(m << 1 | 1, n, delta - 1);
+}
+
+int main(){
+	int m, n;
+	while (true){
+		scanf("%d %d", &m, &n);
+		if (m == 0 && n == 0) break;
+		int delta = (int)log2(n) - (int)log2(m);
+		printf("%d\n", solve(m, n, delta) + ((1 << delta) - 1));
+	}
+	return 0;
+}
+```
+
+
+
 ## M03704: 扩号匹配问题
 
 Stack, http://cs101.openjudge.cn/pctbook/M03704/
@@ -2500,6 +2614,94 @@ int main() {
 ```
 
 
+
+
+## M04081: 树的转换 
+
+http://cs101.openjudge.cn/practice/04081/
+
+代码：
+
+```cpp
+#include <iostream>
+#include <stack>
+#include <vector>
+
+using namespace std;
+
+int depth[10001];
+stack<int> stk;
+vector<int> v[10001];
+
+int main(){
+	int id = 0, h1 = 0;
+	string s;
+	cin >> s;
+	stk.push(0);
+	for (char i : s){
+		if (i == 'd'){
+			id++;
+			v[stk.top()].push_back(id);
+			stk.push(id);
+		} else {
+			stk.pop();
+		}
+		h1 = max(h1, (int)stk.size() - 1);
+	}
+	for (int i = id; i >= 0; i--){
+		int size = v[i].size();
+		for (int j = 0; j < size; j++){
+			depth[i] = max(depth[i], depth[v[i][j]] + j + 1);
+		}
+	}
+	cout << h1 << " => " << depth[0];
+	return 0;
+}
+```
+
+
+
+## M04117: 简单的整数划分问题
+
+dfs, dp, http://cs101.openjudge.cn/practice/04117/
+
+思路：
+
+- 设 $dp_{i, j}$ 表示把 $i$ 划分称若干正整数之和、且其中最大者为 $j$ 的方案数。
+- 初值：$dp_{0, 0} = 1$。
+- 转移：枚举次大者，可知 $dp_{i, j} = \displaystyle\sum_{k = 0}^j dp_{i - j, k}$。
+- 答案：$\displaystyle\sum_{i = 1}^n dp_{n, i}$。
+- 时间复杂度为 $O(N^3 + \sum n)$，其中 $N = 50$。
+- **注意本题要多测！**
+
+代码：
+
+```cpp
+#include <stdio.h>
+
+const int N = 50;
+int dp[N + 1][N + 1];
+
+int main(){
+	int n;
+	dp[0][0] = 1;
+	for (int i = 1; i <= N; i++){
+		for (int j = 1; j <= i; j++){
+			for (int k = 0; k <= j; k++){
+				dp[i][j] += dp[i - j][k];
+			}
+		}
+	}
+	while (scanf("%d", &n) != EOF){
+		int ans = 0;
+		for (int i = 1; i <= n; i++){
+			ans += dp[n][i];
+		}
+		printf("%d\n", ans);
+	}
+	return 0;
+}
+```
 
 
 
@@ -2741,6 +2943,67 @@ int main() {
     }
     cout << l << endl;
     return 0;
+}
+```
+
+
+
+## M04137:最小新整数
+
+monotonous-stack, http://cs101.openjudge.cn/practice/04137/
+
+思路：
+
+- 法一（考场 ver.）：注意到 $n$ 最多只有 $9$ 位，因此可以直接枚举出所有可能的删除方案，再取最小值即可。时间复杂度视实现可能为 $O(t 2^m m)$ 或 $O(t C_m^k (m - k))$，其中 $m = \lfloor \log_{10} n \rfloor + 1$。
+- 法二：考虑 dp，设 $dp_{i, j}$ 表示在前 $i$ 位中删去 $j$ 位所能得到的最小数，答案即为 $dp_{m, k}$。时间复杂度为 $O(tmk)$。
+- 法三：考虑贪心，令 $k' = m - k$，则我们需要给新数依次确定尽可能小的第 $i$ 位，其中 $i = 1, \cdots, k$。
+- 设新数的第 $t$ 位为原数的第 $p_t$ 位，原数从高到低的第 $t$ 位为 $d_t$，则对于 $p_i$，我们有如下限制：
+- (1) $p_{i - 1} < p_i \leq n - (k' - i) = i + k$，左边确保了新数的前 $i$ 位可以通过删除原数得到，右边确保了第 $i + 1 \sim k'$ 位还有的选。
+- (2) $d_{p_i}$ 尽可能小。**那要是有多个，我们应该怎么办呢？**
+- (3) 在满足 (2) 的前提下，$p_i$ 尽可能小，这样的话可以给后面留下更大的选择余地。
+- 类似滑动窗口地单调队列即可。时间复杂度为 $O(tm)$。
+- ~~那么问题来了，为什么 $n$ 不开到 $10^{10^5}$ 卡掉上面两种做法？~~
+
+代码（法三）：
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+
+int digit[10];
+deque<int> q;
+
+int main(){
+	int t;
+	cin >> t;
+	for (int i = 1; i <= t; i++){
+		int n, k, k_, len = 0;
+		cin >> n >> k;
+		while (n > 0){
+			digit[++len] = n % 10;
+			n /= 10;
+		}
+		reverse(digit + 1, digit + len + 1);
+		k_ = len - k;
+		q.clear();
+		for (int j = 1; j <= k; j++){
+			while (!q.empty() && digit[q.back()] > digit[j]) q.pop_back();
+			q.push_back(j);
+		}
+		for (int j = 1; j <= k_; j++){
+			int add = j + k, cur;
+			while (!q.empty() && digit[q.back()] > digit[add]) q.pop_back();
+			q.push_back(add);
+			cur = q.front();
+			q.pop_front();
+			cout << digit[cur];
+		}
+		cout << endl; 
+	}
+	return 0;
 }
 ```
 

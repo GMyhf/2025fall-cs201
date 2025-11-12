@@ -1,13 +1,13 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2025-11-10 12:08 GMT+8*
+*Updated 2025-11-12 17:34 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
 
 > Logs:
 >
-> 2025/10/15: 加了些 数算、计概 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】、【罗锐，25工学院，】、【海博治 城市与环境学院】同学的CPP代码。
+> 2025/10/15: 加了些 数算、计概 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】、【罗锐，25工学院，】、【海博治 城市与环境学院】、【刘思哲 25工学院】同学的CPP代码。
 >
 > 鉴于每学期都有同学偏好C++编程，本学期除维护Python题解外，也开始提供C++题解支持。
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                          
+>                                                                                                             
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                          
+>                                                                                                             
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                          
+>                                                                                                             
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                          
+>                                                                                                             
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                          
+>                                                                                                             
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -1540,6 +1540,91 @@ int main(){
 	}
 	cout << ans;
 	return 0;
+}
+```
+
+
+
+## E29982:一种等价类划分问题
+
+hashing, http://cs101.openjudge.cn/practice/29982
+
+
+
+```python
+#include <iostream>
+
+using namespace std;
+int cg(int t){
+    int ret=0;
+    while(t>0){
+        ret+=t%10;
+        t=t/10;
+    }
+    return ret;
+}
+
+int main(){
+    int m,n,k;
+    char u,v;
+    cin>>m>>u>>n>>v>>k;
+    int a[100000]={};
+    int b[100000]={};
+    for(int i=m+1;i<n;i++){
+        a[i]=cg(i);
+        if(cg(i)%k==0){
+            b[i]=cg(i)/k;
+        }
+    }
+    for(int p=1;p*k<=36;p++){
+        int id=0;
+        int idd=0;
+        for(int i=m+1;i<n;i++){
+            if(b[i]==p){
+                idd=1;
+                if(id==0){
+                    cout<<i;
+                    id++;
+                }else{
+                    cout<<","<<i;
+                }
+            }
+        }
+        if(idd==0)continue;
+        cout<<'\n';
+    }
+    return 0;
+}
+```
+
+
+
+
+
+## E30086:dance
+
+greedy, http://cs101.openjudge.cn/practice/30086
+
+```python
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int main(){
+    int n,d;
+    cin>>n>>d;
+    vector<int> a(2*n,0);
+    for(int i=0;i<2*n;i++){
+        cin>>a[i];
+    }
+    sort(a.begin(),a.end());
+    for(int i=0;i<2*n;i+=2){
+        if(a[i+1]-a[i]>d){cout<<"No"<<'\n';return 0;}
+    }
+    cout<<"Yes"<<'\n';
+    return 0;
 }
 ```
 
@@ -4642,6 +4727,86 @@ int main()
 
 
 
+
+
+## M28906:数的划分
+
+dfs, dp, http://cs101.openjudge.cn/practice/28906
+
+```python
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    int n,k;
+    cin>>n>>k;
+    int a[n+1][k+1]={};
+    for(int i=1;i<=n;i++){
+        a[i][1]=1;
+    }
+    for(int i=1;i<=n;i++){
+        for(int j=2;j<=k;j++){
+            if(i-j>=0){
+                a[i][j]=a[i-j][j]+a[i-1][j-1];
+            }
+        }
+    }
+    cout<<a[n][k];
+    return 0;
+}
+```
+
+
+
+## M29896:购物
+
+greedy, http://cs101.openjudge.cn/practice/29896
+
+
+
+```python
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+int main(){
+    int x,n;
+    cin>>x>>n;
+    vector<int> a(n,0);
+    for(int i=0;i<n;i++){
+        cin>>a[i];
+    }
+    sort(a.begin(),a.end());
+    if(a[0]>1) {cout<<-1;}
+    else{
+        if(n==1)cout<<x;
+        else{
+        int sum=a[0];
+        int ans=1;
+        for(int i=2;i<=x;i++){
+            if(i>sum){
+                for(int j=n-1;j>=0;j--){
+                    if(a[j]<=sum+1){
+                        ans++;
+                        sum+=a[j];
+                        break;
+                    }
+                }
+            }
+        }
+        cout<<ans;
+    }
+    }
+    return 0;
+}
+```
+
+
+
+
+
 ## M29917: 牛顿迭代法
 
 implementation, http://cs101.openjudge.cn/practice/29917/
@@ -5244,6 +5409,87 @@ int main() {
     postorder(root);
     cout << "\n";
 
+    return 0;
+}
+```
+
+
+
+## T25353:排队
+
+greedy, http://cs101.openjudge.cn/practice/25353
+
+思路：两个月前就尝试过一直不会做，现在还是不会做，学习了树状数组后靠ai写了一个出来。。。
+
+```python
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <unordered_map>
+#include <map>
+using namespace std;
+
+int lowbit(int x){
+    return x&(-x);
+}
+class BIT {
+private:
+    vector<int> depth;
+    int length;
+public:
+    BIT(int len) : length(len){
+        depth.resize(len,-1);
+    }
+    void update(int id,int newvalue){
+        while(id<=length){
+            depth[id-1]=max(depth[id-1],newvalue);
+            id+=lowbit(id);
+        }
+    }
+    int findmax(int id){
+        int f=-1;
+        while(id>0){
+            f=max(f,depth[id-1]);
+            id-=lowbit(id);
+        }
+        return f;
+    }
+};
+int main(){
+    int n,d;
+    cin>>n>>d;
+    vector<int> heights(n,0);
+    for(int i=0;i<n;i++){
+        cin>>heights[i];
+    }
+    vector<int> sortheights=heights;
+    sort(sortheights.begin(),sortheights.end());
+    sortheights.erase(unique(sortheights.begin(),sortheights.end()),sortheights.end());
+    int t=sortheights.size();
+    unordered_map<int,int> mp;
+    for(int i=0;i<t;i++){
+        mp[sortheights[i]]=i;
+    }
+    BIT stree(t);
+    BIT rtree(t);
+    map<int,vector<int>> depclass;
+    for(int height : heights){
+        int sortid=upper_bound(sortheights.begin(),sortheights.end(),height-d-1)-sortheights.begin();
+        int rsortid=t-(lower_bound(sortheights.begin(),sortheights.end(),height+d+1)-sortheights.begin());
+        int max1=stree.findmax(sortid);
+        int max2=rtree.findmax(rsortid);
+        int de=max(max1,max2)+1;
+
+        stree.update(mp[height]+1,de);
+        rtree.update(t-mp[height],de);
+        depclass[de].push_back(height);
+    }
+    for(auto &p:depclass){
+        sort(p.second.begin(),p.second.end());
+        for(int height : p.second){
+            cout<<height<<'\n';
+        }
+    }
     return 0;
 }
 ```

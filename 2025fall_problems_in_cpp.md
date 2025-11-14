@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                             
+>                                                                                                                
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                             
+>                                                                                                                
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                             
+>                                                                                                                
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                             
+>                                                                                                                
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                             
+>                                                                                                                
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -5495,6 +5495,111 @@ int main(){
 ```
 
 
+
+思路：用链表实现元素删除的O(1)实现就过了，本来用vector元素删除O(N)就过不了
+
+```c++
+#include <bits/stdc++.h>
+
+using namespace std;
+
+struct lineup
+
+{
+
+    long long height;
+
+    lineup *next;
+};
+
+int main()
+{
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int N, D;
+
+    cin >> N >> D;
+
+    vector<lineup> stu(N);
+
+    for (int i = 0; i < N - 1; i++)
+    {
+
+        long long h;
+
+        cin >> h;
+
+        stu[i] = {h, &stu[i + 1]};
+    }
+
+    cin >> stu[N - 1].height;
+
+    stu[N - 1].next = NULL;
+
+    lineup *head = &stu[0];
+
+    multiset<long long> part;
+
+    vector<long long> ans;
+
+    while (head->next != NULL)
+    {
+
+        lineup *it = head;
+
+        lineup *previous = head;
+
+        bool flag = 1;
+
+        long long mmin = it->height, mmax = it->height;
+
+        while (it != NULL)
+        {
+
+            mmin = min(mmin, it->height);
+
+            mmax = max(mmax, it->height);
+
+            if (abs(it->height - mmin) <= D && abs(it->height - mmax) <= D)
+            {
+
+                part.insert(it->height);
+
+                previous->next = it->next;
+            }
+
+            else
+            {
+
+                if (flag)
+                {
+                    head = it;
+                    flag = 0;
+                }
+
+                previous = it;
+            }
+
+            it = it->next;
+        }
+
+        while (!part.empty())
+        {
+            ans.push_back(*part.begin());
+            part.erase(part.begin());
+        }
+
+
+    }
+
+    //ans.push_back(head->height);
+
+    for (int i = 0; i < N; i++) cout << ans[i] << '\n';
+}
+
+```
 
 
 

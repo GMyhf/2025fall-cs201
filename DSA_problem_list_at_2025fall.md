@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-11-14 23:25 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-11-15 21:51 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,6 +19,7 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1116 | 20744: 土豪购物   | dp      | Medium | http://cs101.openjudge.cn/pctbook/M20744/          |
 | 1115 | 215.数组中的第K个最大元素     | heap      | Medium | https://leetcode.cn/problems/kth-largest-element-in-an-array/          |
 | 1114 | 25353:排队      | greedy      | Tough | http://cs101.openjudge.cn/pctbook/T25353/          |
 | 1113 | 01182:食物链     | disjoint set      | Tough | http://cs101.openjudge.cn/pctbook/T01182/          |

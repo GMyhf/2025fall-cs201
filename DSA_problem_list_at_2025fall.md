@@ -19,7 +19,7 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
-| 1117 | 19943:图的拉普拉斯矩阵 | OOP,implementation,gragh    | Medium    | http://cs101.openjudge.cn/pctbook/E19943/      |
+| 1117 | 19943:图的拉普拉斯矩阵 | implementation,gragh,OOP    | E/Medium    | http://cs101.openjudge.cn/pctbook/E19943/      |
 |      |      | -    | -    | graph and all kinds of tags begin  |
 | 1116 | 20744: 土豪购物   | dp      | Medium | http://cs101.openjudge.cn/pctbook/M20744/          |
 | 1115 | 215.数组中的第K个最大元素     | heap      | Medium | https://leetcode.cn/problems/kth-largest-element-in-an-array/          |

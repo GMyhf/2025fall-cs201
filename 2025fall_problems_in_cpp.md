@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2025-11-12 17:34 GMT+8*
+*Updated 2025-11-16 20:40 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                
+>                                                                                                                   
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                
+>                                                                                                                   
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                
+>                                                                                                                   
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                
+>                                                                                                                   
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                
+>                                                                                                                   
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -5341,6 +5341,239 @@ int main() {
     return 0;
 }
 ```
+
+
+
+## T20576: printExp
+
+http://cs101.openjudge.cn/practice/20576/
+
+
+
+下面是 **< 60 行的超精简 C++ 实现**（不建 AST，完全复刻 Python 逻辑）
+
+```c++
+#include <bits/stdc++.h>
+using namespace std;
+
+int pri(const string &op){return op=="not"?3:op=="and"?2:op=="or"?1:0;}
+bool isop(const string&s){return s=="not"||s=="and"||s=="or";}
+
+void apply(vector<pair<string,int>>&v, vector<string>&o){
+    string op=o.back();o.pop_back();
+    if(op=="not"){
+        auto[a,pa]=v.back();v.pop_back();
+        if(pa<pri(op)) a="( "+a+" )";
+        v.push_back({"not "+a,pri(op)});return;
+    }
+    auto[b,pb]=v.back();v.pop_back();
+    auto[a,pa]=v.back();v.pop_back();
+    int p=pri(op);
+    if(pa<p) a="( "+a+" )";
+    if(pb<=p) b="( "+b+" )";
+    v.push_back({a+" "+op+" "+b,p});
+}
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    string s;getline(cin,s);
+    vector<string> t;string cur;
+    for(char c:s){
+        if(isspace(c)){if(!cur.empty())t.push_back(cur),cur.clear();}
+        else if(c=='('||c==')'){ if(!cur.empty())t.push_back(cur),cur.clear(); t.push_back(string(1,c)); }
+        else cur+=c;
+    }
+    if(!cur.empty()) t.push_back(cur);
+
+    vector<pair<string,int>> v; vector<string> o;
+    for(auto&x:t){
+        if(x=="(") o.push_back(x);
+        else if(x==")"){
+            while(o.back()!="(") apply(v,o);
+            o.pop_back();
+        }else if(isop(x)){
+            while(!o.empty()&&isop(o.back())){
+                string top=o.back();
+                bool cond = (x!="not"? pri(top)>=pri(x): pri(top)>pri(x));
+                if(!cond) break;
+                apply(v,o);
+            }
+            o.push_back(x);
+        }else v.push_back({x,4});
+    }
+    while(!o.empty()) apply(v,o);
+    cout<<v.back().first<<"\n";
+}
+```
+
+
+
+下面是 **加入详细注释、结构清晰、易读但仍保持简洁的 C++ 版本**。
+逻辑与 Python Shunting Yard 版本完全一致，可直接 AC T20576。
+
+> 注释非常详细，适合理解与维护。代码约 90 行（仍然不长）。
+
+------
+
+✅ **注释版（易读清晰版）**
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+/*
+    运算符优先级：
+        not > and > or
+*/
+int pri(const string &op) {
+    if (op == "not") return 3;
+    if (op == "and") return 2;
+    if (op == "or")  return 1;
+    return 0;
+}
+
+bool isop(const string &s) {
+    return s == "not" || s == "and" || s == "or";
+}
+
+/*
+    apply(): 弹出一个操作符，构造新的表达式字符串
+    - vals:  存 (表达式字符串, 该表达式整体的优先级)
+    - ops:   存操作符
+    - 逻辑完全复刻 Python 版本
+*/
+void apply(vector<pair<string,int>> &vals, vector<string> &ops) {
+    string op = ops.back();
+    ops.pop_back();
+
+    // ----- 单目操作符 not -----
+    if (op == "not") {
+        auto [a, pa] = vals.back();   // 右操作数
+        vals.pop_back();
+
+        // 若子表达式优先级 < not，则需要加括号
+        if (pa < pri(op))
+            a = "( " + a + " )";
+
+        vals.push_back({"not " + a, pri(op)});
+        return;
+    }
+
+    // ----- 二元操作符 and / or -----
+    // 注意弹栈顺序：先右后左
+    auto [b, pb] = vals.back(); vals.pop_back();
+    auto [a, pa] = vals.back(); vals.pop_back();
+
+    int p = pri(op);
+
+    // 左侧优先级低 → 必须加括号
+    if (pa < p)
+        a = "( " + a + " )";
+
+    // 右侧优先级 <= 当前 → 必须加括号
+    if (pb <= p)
+        b = "( " + b + " )";
+
+    vals.push_back({a + " " + op + " " + b, p});
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    // ---- 读取整行表达式 ----
+    string input;
+    getline(cin, input);
+
+    // ---- 分词 ----
+    vector<string> tokens;
+    string cur;
+
+    for (char c : input) {
+        if (isspace(c)) {
+            if (!cur.empty()) tokens.push_back(cur), cur.clear();
+        }
+        else if (c == '(' || c == ')') {
+            if (!cur.empty()) tokens.push_back(cur), cur.clear();
+            tokens.push_back(string(1, c));
+        }
+        else {
+            cur += c;
+        }
+    }
+    if (!cur.empty()) tokens.push_back(cur);
+
+    // 两个栈：
+    // vals: (字符串, 优先级)
+    // ops:  操作符
+    vector<pair<string,int>> vals;
+    vector<string> ops;
+
+    // ---- 主循环：Shunting Yard ----
+    for (auto &tk : tokens) {
+
+        // 左括号直接入栈
+        if (tk == "(") {
+            ops.push_back(tk);
+        }
+
+        // 右括号：不断 apply 直到遇到 '('
+        else if (tk == ")") {
+            while (!ops.empty() && ops.back() != "(")
+                apply(vals, ops);
+            ops.pop_back(); // 弹掉 "("
+        }
+
+        // ------ 操作符 ------
+        else if (isop(tk)) {
+
+            // 根据优先级决定是否先 apply 栈顶操作符
+            // 重点：not 是右结合 → 规则不同
+            while (!ops.empty() && isop(ops.back())) {
+                string top = ops.back();
+
+                bool should_apply =
+                    (tk != "not")
+                        ? (pri(top) >= pri(tk))   // and/or：左结合
+                        : (pri(top) >  pri(tk));  // not：右结合
+
+                if (!should_apply) break;
+                apply(vals, ops);
+            }
+
+            ops.push_back(tk);
+        }
+
+        // ------ 操作数：True / False ------
+        else {
+            // 常量优先级设为最高 4
+            vals.push_back({tk, 4});
+        }
+    }
+
+    // ---- 清空剩余操作符 ----
+    while (!ops.empty())
+        apply(vals, ops);
+
+    // 最终表达式在 vals 栈顶
+    cout << vals.back().first << "\n";
+    return 0;
+}
+```
+
+------
+
+✅ 这个版本的优点
+
+| 优点                     | 说明                          |
+| ------------------------ | ----------------------------- |
+| **非常清晰**             | 每一步都注释，容易理解        |
+| **完全对应 Python 逻辑** | 左右 child 的括号规则完全一致 |
+| **能 AC T20576**         | 处理所有情况                  |
+| **处理 not 的右结合性**  | 完全正确                      |
+| **没有 AST、只用两个栈** | 简单可靠                      |
 
 
 

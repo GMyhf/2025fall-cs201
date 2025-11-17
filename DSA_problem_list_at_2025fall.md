@@ -19,7 +19,7 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
-| 1118 | 208.实现Trie(前缀树)     | OOP, hash table    | Medium    | https://leetcode.cn/problems/implement-trie-prefix-tree/      |
+| 1118 | 208.实现Trie(前缀树)     | design, trie, hash table, string    | Medium    | https://leetcode.cn/problems/implement-trie-prefix-tree/      |
 | 1117 | 19943:图的拉普拉斯矩阵 | implementation,gragh,OOP    | E/Medium    | http://cs101.openjudge.cn/pctbook/E19943/      |
 |      |      | -    | -    | graph and all kinds of tags begin  |
 | 1116 | 20744: 土豪购物   | dp      | Medium | http://cs101.openjudge.cn/pctbook/M20744/          |

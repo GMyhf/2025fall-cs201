@@ -2700,6 +2700,185 @@ int main() {
 
 
 
+## M04078: 实现堆结构
+
+http://cs101.openjudge.cn/practice/04078/
+
+要求手搓堆实现。
+
+思路：根据课上所讲直接写即可，用时约20min
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+struct TreeNode
+{
+    int value;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int v) : value(v), left(nullptr), right(nullptr) {}
+    TreeNode(int v, TreeNode* l, TreeNode* r) : value(v), left(l), right(r) {}
+};
+class quque//手搓最小堆
+{
+    public:
+        vector<int> q;
+        void push(int value)
+        {
+            q.push_back(value);
+            int i = q.size()-1;
+            while (i > 0)
+            {
+                int parent = (i-1)/2;
+                if (q[parent] > q[i])
+                {
+                    int tmp = q[parent];
+                    q[parent] = q[i];
+                    q[i] = tmp;
+                    i = parent;
+                }
+                else
+                    break;
+            }
+        }
+        void pop()
+        {
+            q[0] = q[q.size()-1];
+            q.pop_back();
+            int i = 0;
+            while (2 * i + 1 < q.size())
+            {
+                int left = 2 * i + 1;
+                int right = 2 * i + 2;
+                int min = left;
+                if (right < q.size() && q[right] < q[left])
+                    min = right;
+                if (q[min] < q[i])
+                {
+                    int tmp = q[min];
+                    q[min] = q[i];
+                    q[i] = tmp;
+                    i = min;
+                }
+                else
+                    break;
+            }
+        }
+        int top()
+        {
+            return q[0];
+        }
+};
+int main() 
+{
+    int n;
+    cin >> n;
+    quque q;
+    while (n--)
+    {
+        int type;
+        cin >> type;
+        if (type == 1)
+        {
+            int value;
+            cin >> value;
+            q.push(value);
+
+        }
+        else
+        {
+            cout << q.top() << endl;
+            q.pop();
+        }
+    }
+    return 0;
+}
+```
+
+
+
+
+
+## 04080:Huffman编码树
+
+greedy, http://cs101.openjudge.cn/practice/04080/
+
+思路：根据huffman编码的定义，每次将权重最小的两个合并成一个，一直合并直到最后只剩一个，该节点即为根节点
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+struct TreeNode
+{
+    int weight;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int w) : weight(w), left(nullptr), right(nullptr) {}
+    TreeNode(int w, TreeNode* l, TreeNode* r) : weight(w), left(l), right(r) {}
+};
+class Solution
+{
+    public:
+        vector<pair<int,TreeNode*>> heights;
+        void getheights()
+        {
+            int length;
+            cin >> length;
+            heights.resize(length);
+            for (int i = 0; i < length; i++)
+            {
+                cin >> heights[i].first;
+                heights[i].second = new TreeNode(heights[i].first);
+                //一定是叶节点，因此可以直接建立
+            }
+        }
+        void buildTree(vector<pair<int, TreeNode*>>& heights)//这个&我debug了半天才发现没写
+        {
+            while (heights.size() > 1)
+            {
+                sort(heights.begin(), heights.end());
+                TreeNode* left = heights[0].second;
+                TreeNode* right = heights[1].second;
+                int sum = heights[0].first + heights[1].first;
+                heights.erase(heights.begin(), heights.begin() + 2);
+                heights.push_back({sum, new TreeNode(sum, left, right)});
+                //合二为一，一为二的父节点
+            }
+        }
+        int length(TreeNode* root, int height)
+        {
+            if (!root) return 0;//理论上这行不会执行
+            if (root->left == nullptr && root->right == nullptr)//叶节点
+                return (height * root->weight);
+            return length(root->left, height + 1) + length(root->right, height + 1) ;
+        }
+        void solve()
+        {
+            getheights();
+            buildTree(heights);
+            cout << length(heights[0].second, 0);
+        }
+};
+int main() 
+{
+    Solution s;
+    s.solve();
+    return 0;
+}
+```
+
+
+
+
+
 
 ## M04081: 树的转换 
 

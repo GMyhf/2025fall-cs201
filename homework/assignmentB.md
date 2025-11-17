@@ -24,7 +24,9 @@ Updated 2031 GMT+8 Nov 17, 2025
 
 ## 1. 题目
 
-### M拉普拉斯矩阵
+### E07218: 献给阿尔吉侬的花束
+
+bfs, http://cs101.openjudge.cn/practice/07218/
 
 思路：
 
@@ -44,7 +46,9 @@ Updated 2031 GMT+8 Nov 17, 2025
 
 
 
-### M 小组队列
+### M27925: 小组队列
+
+dict, queue, http://cs101.openjudge.cn/practice/27925/
 
 
 思路：
@@ -65,9 +69,9 @@ Updated 2031 GMT+8 Nov 17, 2025
 
 
 
-### M04089:电话号码
+### M04089: 电话号码
 
-http://cs101.openjudge.cn/practice/04089/
+trie, http://cs101.openjudge.cn/practice/04089/
 
 思路：
 
@@ -87,7 +91,9 @@ http://cs101.openjudge.cn/practice/04089/
 
 
 
-### M
+### M3532.针对图的路径存在性查询I
+
+disjoint set, https://leetcode.cn/problems/path-existence-queries-in-a-graph-i/
 
 思路：
 
@@ -107,7 +113,11 @@ http://cs101.openjudge.cn/practice/04089/
 
 
 
-### M
+### M19943: 图的拉普拉斯矩阵
+
+OOP, graph, implementation, http://cs101.openjudge.cn/pctbook/E19943/
+
+要求创建Graph, Vertex两个类，建图实现。
 
 思路：
 

@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                   
+>                                                                                                                      
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                   
+>                                                                                                                      
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                   
+>                                                                                                                      
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                   
+>                                                                                                                      
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                   
+>                                                                                                                      
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -3818,6 +3818,56 @@ int main(){
 
 
 
+## M22275: 二叉搜索树的遍历
+
+http://cs101.openjudge.cn/practice/22275/
+
+
+思路：左子树所有节点值小于根节点，右子树所有节点值大于根节点。结合前序遍历，通过递归划分左右子树，最终得到后序遍历
+
+```c++
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> getPostorder(vector<int>& pre, int l, int r) {
+    if (l > r) return {}; 
+    int root = pre[l];   
+    int mid = l + 1;
+    while (mid <= r && pre[mid] < root) {
+        mid++;
+    }
+ 
+    vector<int> left = getPostorder(pre, l + 1, mid - 1);
+    vector<int> right = getPostorder(pre, mid, r);
+    vector<int> res;
+    res.insert(res.end(), left.begin(), left.end());
+    res.insert(res.end(), right.begin(), right.end());
+    res.push_back(root);
+    return res;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<int> pre(n);
+    for (int i = 0; i < n; ++i) {
+        cin >> pre[i];
+    }
+    vector<int> post = getPostorder(pre, 0, n - 1);
+    for (size_t i = 0; i < post.size(); ++i) {
+        if (i > 0) cout << " ";
+        cout << post[i];
+    }
+    cout << endl;
+    return 0;
+}
+```
+
+
+
+
+
 ## M23555: 节省存储的矩阵乘法
 
 implementation, matrices, http://cs101.openjudge.cn/practice/23555
@@ -4128,70 +4178,136 @@ dfs, stack, [http://cs101.openjudge.cn/practice/24729/](http://cs101.openjudge.c
 
 思路：注意到树的构建与栈是一致的，用栈来辅助构建会很方便，非常简单，用时约15min
 
- #include <iostream>  
- #include <vector>  
- #include <map>  
- #include <string>  
- #include <sstream>  
- using namespace std;  
- struct TreeNode  
- {  
-     char name;  
-     vector<TreeNode*> children;  
-     TreeNode(char c) : name(c) {}  
- };  
- class Solution   
- {  
- public:  
-     TreeNode* root;  
-     void getTree()  
-     {  
-         char c;  
-         TreeNode* lastnode;  
-         vector<TreeNode*> stack;  
-         while (cin >> c)  
-         {  
-             if (c == ',')continue;  
-             if (c == '(')  
-                 stack.push_back(lastnode);  
-             else if (c == ')')  
-                 stack.pop_back();  
-             else  
-             {  
-                 TreeNode* node = new TreeNode(c);  
-                 if (stack.empty())  
-                     root = node;  
-                 else  
-                     stack.back()->children.push_back(node);  
-                 lastnode = node;  
-             }  
-         }     
-     }  
-     void printTree_1(TreeNode* node)  
-     {  
-         if (node == nullptr)return;  
-         cout << node->name;  
-         for (auto child : node->children)  
-             printTree_1(child);  
-     }  
-     void printTree_2(TreeNode* node)  
-     {  
-         if (node == nullptr)return;  
-         for (auto child : node->children)  
-             printTree_2(child);  
-         cout << node->name;  
-     }  
- };  
- int main()   
- {  
-     Solution s;  
-     s.getTree();  
-     s.printTree_1(s.root);  
-     cout << endl;  
-     s.printTree_2(s.root);  
-     return 0;  
- }  
+ 
+
+```c++
+#include <iostream>  
+#include <vector>  
+#include <map>  
+#include <string>  
+#include <sstream>  
+using namespace std;  
+struct TreeNode  
+{  
+    char name;  
+    vector<TreeNode*> children;  
+    TreeNode(char c) : name(c) {}  
+};  
+class Solution   
+{  
+public:  
+    TreeNode* root;  
+    void getTree()  
+    {  
+        char c;  
+        TreeNode* lastnode;  
+        vector<TreeNode*> stack;  
+        while (cin >> c)  
+        {  
+            if (c == ',')continue;  
+            if (c == '(')  
+                stack.push_back(lastnode);  
+            else if (c == ')')  
+                stack.pop_back();  
+            else  
+            {  
+                TreeNode* node = new TreeNode(c);  
+                if (stack.empty())  
+                    root = node;  
+                else  
+                    stack.back()->children.push_back(node);  
+                lastnode = node;  
+            }  
+        }     
+    }  
+    void printTree_1(TreeNode* node)  
+    {  
+        if (node == nullptr)return;  
+        cout << node->name;  
+        for (auto child : node->children)  
+            printTree_1(child);  
+    }  
+    void printTree_2(TreeNode* node)  
+    {  
+        if (node == nullptr)return;  
+        for (auto child : node->children)  
+            printTree_2(child);  
+        cout << node->name;  
+    }  
+};  
+int main()   
+{  
+    Solution s;  
+    s.getTree();  
+    s.printTree_1(s.root);  
+    cout << endl;  
+    s.printTree_2(s.root);  
+    return 0;  
+}  
+
+```
+
  ​
+
+## M25145: 猜二叉树（按层次遍历）
+
+http://cs101.openjudge.cn/practice/25145/
+
+思路：先根据二叉树的中序遍历和后序遍历序列构建二叉树，然后进行层次遍历
+
+```c++
+#include <iostream>
+#include <string>
+#include <queue>
+using namespace std;
+
+struct TreeNode {
+    char val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(char c) : val(c), left(nullptr), right(nullptr) {}
+};
+TreeNode* buildTree(string& inorder, int inStart, int inEnd, string& postorder, int postStart, int postEnd) {
+    if (inStart > inEnd) return nullptr; 
+    char rootVal = postorder[postEnd];  
+    TreeNode* root = new TreeNode(rootVal);
+    int rootIdx = inorder.find(rootVal, inStart); 
+    int leftLen = rootIdx - inStart;          
+    root->left = buildTree(inorder, inStart, rootIdx - 1, postorder, postStart, postStart + leftLen - 1);
+    root->right = buildTree(inorder, rootIdx + 1, inEnd, postorder, postStart + leftLen, postEnd - 1);
+    return root;
+}
+string levelOrder(TreeNode* root) {
+    if (!root) return "";
+    queue<TreeNode*> q;
+    q.push(root);
+    string res;
+    while (!q.empty()) {
+        TreeNode* node = q.front();
+        q.pop();
+        res += node->val;
+        if (node->left) q.push(node->left);
+        if (node->right) q.push(node->right);
+    }
+    return res;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    while (n--) {
+        string inorder, postorder;
+        cin >> inorder >> postorder;
+        TreeNode* root = buildTree(inorder, 0, inorder.size() - 1, postorder, 0, postorder.size() - 1);
+        cout << levelOrder(root) << endl;
+    }
+    return 0;
+}
+```
+
+
+
+
 
 
 ## M25570 洋葱
@@ -6911,12 +7027,15 @@ public:
 
 backtracking, [https://leetcode.cn/problems/n-queens/](https://leetcode.cn/problems/n-queens/)
 
- #include <iostream>  
+ 
+
+```c++
+#include <iostream>  
  #include <vector>  
  using namespace std;  
- ​  
+ 
  vector<int> row;  
- ​  
+ 
  bool is_Valid(int x, int y)  
  {  
      for (int i = 0; i < x; i++)  
@@ -6924,7 +7043,7 @@ backtracking, [https://leetcode.cn/problems/n-queens/](https://leetcode.cn/probl
              return false;  
      return true;  
  }  
- ​  
+ 
  void solve(int n, vector<vector<string>>& q, int x)  
  {  
      if (x == n)  
@@ -6943,19 +7062,19 @@ backtracking, [https://leetcode.cn/problems/n-queens/](https://leetcode.cn/probl
              row.pop_back();  
          }  
  }  
- ​  
+
  vector<vector<string>> solveNQueens(int n)  
  {  
      vector<vector<string>> ans;  
      solve(n, ans, 0);  
      return ans;  
  }  
- ​  
+
  int main()  
  {  
      ios::sync_with_stdio(false);  
      cin.tie(nullptr);  
- ​  
+
      int n = 4;  
      for (auto i : solveNQueens(n))  
      {  
@@ -6965,6 +7084,9 @@ backtracking, [https://leetcode.cn/problems/n-queens/](https://leetcode.cn/probl
      }  
      return 0;  
  }
+```
+
+
 
 
 ## M78.子集

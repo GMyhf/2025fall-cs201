@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2025-11-16 20:40 GMT+8*
+*Updated 2025-11-20 01:45 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                      
+>                                                                                                                         
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                      
+>                                                                                                                         
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                      
+>                                                                                                                         
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                      
+>                                                                                                                         
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                      
+>                                                                                                                         
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -1862,6 +1862,79 @@ int main() {
 ```
 
 
+
+## 07218:献给阿尔吉侬的花束
+
+Bfs, http://cs101.openjudge.cn/practice/07218/
+
+
+
+```c++
+#include<iostream>
+#include<queue>
+#include<algorithm>
+#include<cstring>
+
+using namespace std;
+
+int main() {
+    char map[201][201];
+    bool vst[201][201] = {0};
+    
+    int n, x, y, r0, c0;
+    cin >> n;
+    for(int i = 0; i < n; i ++) {
+        cin >> x >> y;
+        memset(vst, 0, sizeof(vst));
+
+        for(int r = 0; r < x; r ++) {
+            for(int c = 0; c < y; c ++) {
+                cin >> map[r][c];
+                if(map[r][c] == 'S') {
+                    r0 = r;
+                    c0 = c;
+                }
+            }
+        }
+
+        queue<pair<int,int>> q;
+        q.push({r0, c0});
+        vst[r0][c0] = 1;
+        int steps = 0;
+        bool found = 0;
+        while(!q.empty() && !found) {
+            int k = q.size();
+            for(int j = 0; j < k; j ++) {
+                int curr = q.front().first;
+                int curc = q.front().second;
+                q.pop();
+                if(map[curr][curc] == 'E') {
+                    cout << steps << endl;
+                    found = 1;
+                    break;
+                } if(curr > 0 && map[curr - 1][curc] != '#' && !vst[curr - 1][curc]) {
+                    q.push({curr - 1, curc});
+                    vst[curr - 1][curc] = 1;
+                } if(curr < x - 1 && map[curr + 1][curc] != '#' && !vst[curr + 1][curc]) {
+                    q.push({curr + 1, curc});
+                    vst[curr + 1][curc] = 1;
+                } if(curc > 0 && map[curr][curc - 1] != '#' && !vst[curr][curc - 1]) {
+                    q.push({curr, curc - 1});
+                    vst[curr][curc - 1] = 1;
+                } if(curc < y - 1 && map[curr][curc + 1] != '#' && !vst[curr][curc + 1]) {
+                    q.push({curr, curc + 1});
+                    vst[curr][curc + 1] = 1;
+                }
+            }
+            steps ++;
+        }
+        if(!found) cout << "oop!" << endl;
+
+    }
+    return 0;
+}
+
+```
 
 
 

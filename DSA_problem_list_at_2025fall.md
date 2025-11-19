@@ -19,6 +19,7 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1120 | 1843D. Apple Tree     | Combinatorics, dfs and similar, dp, math, trees     | 1200 | https://codeforces.com/problemset/problem/1843/D          |
 | 1119 | 07206: 我是最快的马      | bfs      | Tough | http://cs101.openjudge.cn/pctbook/T07206/          |
 | 1118 | 208.实现Trie(前缀树)     | design, trie, hash table, string    | Medium    | https://leetcode.cn/problems/implement-trie-prefix-tree/      |
 | 1117 | 19943:图的拉普拉斯矩阵 | implementation,gragh,OOP    | E/Medium    | http://cs101.openjudge.cn/pctbook/E19943/      |

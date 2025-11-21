@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-11-20 23:52 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-11-22 01:02 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,6 +19,7 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1122 | 28749:Top2招生工作      | graph      | Tough | http://cs101.openjudge.cn/practice/28749/          |
 | 1121 | 28972:海拔      | bfs     | Tough | http://cs101.openjudge.cn/practice/28972          |
 | 1120 | 1843D. Apple Tree     | Combinatorics, dfs and similar, dp, math, trees     | 1200 | https://codeforces.com/problemset/problem/1843/D          |
 | 1119 | 07206: 我是最快的马      | bfs      | Tough | http://cs101.openjudge.cn/pctbook/T07206/          |

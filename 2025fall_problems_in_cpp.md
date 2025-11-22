@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2025-11-20 01:45 GMT+8*
+*Updated 2025-11-22 21:57 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                            
+>                                                                                                                               
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                            
+>                                                                                                                               
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                            
+>                                                                                                                               
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                            
+>                                                                                                                               
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                            
+>                                                                                                                               
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -612,6 +612,171 @@ int main() {
 }
 
 ```
+
+
+
+## M04089 电话号码
+
+思路：
+
+- 建立 Trie 树，插入一个字符串时需要检查是否存在存在其前缀或后缀。
+- 对于“前缀”，只需在每个节点上记录 `end` 表示是否存在以之结尾的字符串；对于后缀，只需记录当前字符串结尾的 Trie 节点是否为新增的节点即可。
+
+```cpp
+#include <stdio.h>
+#include <string.h>
+
+struct Node {
+	bool end;
+	int nxt[10];
+	
+	void clear(){
+		end = false;
+		for (int i = 0; i <= 9; i++){
+			nxt[i] = 0;
+		}
+	}
+};
+
+int id;
+char phone[12];
+Node tree[100002];
+
+void init(){
+	id = 0;
+	tree[0].clear();
+}
+
+bool insert(char s[]){
+	int len = strlen(&s[1]), x = 0;
+	bool nsuffix, nprefix = true;
+	for (int i = 1; i <= len; i++){
+		int ch = s[i] - '0';
+		if (i == len) nsuffix = tree[x].nxt[ch] == 0;
+		if (tree[x].nxt[ch] == 0){
+			id++;
+			tree[x].nxt[ch] = id;
+			tree[id].clear();
+		}
+		x = tree[x].nxt[ch];
+		nprefix &= !tree[x].end;
+	}
+	tree[x].end = true;
+	return nprefix && nsuffix;
+}
+
+int main(){
+	int t;
+	scanf("%d", &t);
+	for (int i = 1; i <= t; i++){
+		int n;
+		bool ans = true;
+		scanf("%d", &n);
+		init();
+		for (int j = 1; j <= n; j++){
+			scanf("%s", &phone[1]);
+			ans &= insert(phone);
+		}
+		if (ans){
+			printf("YES\n");
+		} else {
+			printf("NO\n");
+		}
+	}
+	return 0;
+}
+```
+
+
+
+## E07218 献给阿尔吉侬的花束
+
+思路：bfs 求 01 最短路即可。
+
+- **注意有多组数据，记得清空队列！**
+
+```cpp
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+struct Node {
+	int x;
+	int y;
+	
+	Node(int _x, int _y) : x(_x), y(_y) {}
+};
+
+int dis[200][200];
+string mp[200];
+queue<Node> q;
+
+void init(int r, int c){
+	while (!q.empty()) q.pop();
+	for (int i = 0; i < r; i++){
+		for (int j = 0; j < c; j++){
+			dis[i][j] = 0x7fffffff;
+		}
+	}
+}
+
+void find(int r, int c, int &x, int &y, char ch){
+	for (int i = 0; i < r; i++){
+		for (int j = 0; j < c; j++){
+			if (mp[i][j] == ch){
+				x = i;
+				y = j;
+				return;
+			}
+		}
+	}
+}
+
+int main(){
+	int t;
+	cin >> t;
+	for (int i = 1; i <= t; i++){
+		int r, c, sx, sy;
+		bool flag = false;
+		cin >> r >> c;
+		init(r, c);
+		for (int j = 0; j < r; j++){
+			cin >> mp[j];
+		}
+		find(r, c, sx, sy, 'S');
+		dis[sx][sy] = 0;
+		q.push(Node(sx, sy));
+		while (!q.empty()){
+			Node cur = q.front();
+			q.pop();
+			if (mp[cur.x][cur.y] == 'E'){
+				flag = true;
+				cout << dis[cur.x][cur.y] << endl;
+				break;
+			}
+			for (int j : {-1, 1}){
+				int nx = cur.x + j;
+				if (nx >= 0 && nx < r && mp[nx][cur.y] != '#' && dis[nx][cur.y] == 0x7fffffff){
+					dis[nx][cur.y] = dis[cur.x][cur.y] + 1;
+					q.push(Node(nx, cur.y));
+				}
+			}
+			for (int j : {-1, 1}){
+				int ny = cur.y + j;
+				if (ny >= 0 && ny < c && mp[cur.x][ny] != '#' && dis[cur.x][ny] == 0x7fffffff){
+					dis[cur.x][ny] = dis[cur.x][cur.y] + 1;
+					q.push(Node(cur.x, ny));
+				}
+			}
+		}
+		if (!flag) cout << "oop!" << endl;
+	}
+	return 0;
+}
+```
+
+
 
 
 
@@ -2771,6 +2936,38 @@ int main(){
 
 
 
+## M3532.针对图的路径存在性查询 I
+
+思路：
+
+- 由于 `nums` 单调不降排序，若 $r - l > 1$，则 $l, r$ 间有边直接相连意味着 $\text{nums}_r - \text{nums}_l \leq \text{maxDiff} \Rightarrow \forall l \leq i < r, \text{nums}_{i + 1} - \text{nums}_i \leq \text{nums}_r - \text{nums}_l \leq \text{maxDiff}$，即边 $(i, i + 1)$ 存在，$(l, r)$ 这条边可以被“替代”。
+- 故只需考虑所有形如 $(i, i + 1)$ 的边，进而可知对每个 $i$ 都有 $\text{maxr}_i$，表示从 $i$ 出发向右、能到达的最大节点编号。
+- 回答询问时，不妨设 $u \leq v$，则存在路径当且仅当 $v \leq \text{maxr}_u$。
+
+```cpp
+class Solution {
+public:
+	vector<bool> pathExistenceQueries(int n, vector<int>& nums, int maxDiff, vector<vector<int>>& queries) {
+		vector<int> maxr(n);
+		vector<bool> answer;
+		for (int i = 0; i < n; i++){
+			int l = i;
+			while (i + 1 < n && nums[i + 1] - nums[i] <= maxDiff) i++;
+			for (int j = l; j <= i; j++){
+				maxr[j] = i;
+			}
+		}
+		for (vector<int> i : queries){
+			if (i[0] > i[1]) swap(i[0], i[1]);
+			answer.push_back(i[1] <= maxr[i[0]]);
+		}
+		return answer;
+	}
+};
+```
+
+
+
 ## M03704: 扩号匹配问题
 
 Stack, http://cs101.openjudge.cn/pctbook/M03704/
@@ -4180,6 +4377,90 @@ int main(){
 
 
 
+## M19943 图的拉普拉斯矩阵
+
+
+
+```cpp
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Vertex {
+private:
+	vector<int> adj;
+	
+public:
+	void add_edge_to(int v){
+		adj.push_back(v);
+	}
+	
+	int get_degree(){
+		return adj.size();
+	}
+	
+	vector<int> get_adjacent(){
+		return adj;
+	}
+};
+
+class Graph {
+private:
+	int n;
+	vector<Vertex> node;
+	
+public:
+	void init(int _n){
+		n = _n;
+		node.resize(n);
+	}
+	
+	void add_edge(int u, int v){
+		node[u].add_edge_to(v);
+		node[v].add_edge_to(u);
+	}
+	
+	vector<vector<int>> get_laplace(){
+		vector<vector<int>> ans(n, vector<int>(n));
+		for (int i = 0; i < n; i++){
+			ans[i][i] += node[i].get_degree();
+			for (int j : node[i].get_adjacent()){
+				ans[i][j]--;
+			}
+		}
+		return ans;
+	}
+};
+
+void output(vector<vector<int>> mat){
+	for (vector<int> i : mat){
+		for (int j : i){
+			cout << j << " ";
+		}
+		cout << endl;
+	}
+}
+
+int main(){
+	int n, m;
+	Graph g;
+	cin >> n >> m;
+	g.init(n);
+	for (int i = 1; i <= m; i++){
+		int a, b;
+		cin >> a >> b;
+		g.add_edge(a, b);
+	}
+	output(g.get_laplace());
+	return 0;
+}
+```
+
+
+
+
+
 ## M21554: 排队做实验
 
 greedy, http://cs101.openjudge.cn/pctbook/M21554/
@@ -5059,6 +5340,119 @@ int main()
 }
 
 ```
+
+
+
+## M27925 小组队列
+
+思路：
+
+- 考虑维护一个**双向**链表，链表节点中除当前点的编号外，存储**在队列中**的上一个点和下一个点和**在当前小组中**的上一个点和下一个点。
+- ~~好像做麻烦了？~~
+
+- 之前一直没写过 C++ 指针版的链表啊！于是来写了一发，踩了不少坑 /ll
+- 总的来说，需要注意的地方有：(1) 检查“小组队列”的始末 `ahead`、`atail` 和每个小组的末端 `ttail[bel]` 是否需要更新；(2) 判断指针是否为空。
+
+```cpp
+#include <iostream>
+#include <sstream>
+
+using namespace std;
+
+struct LinkList {
+	int id;
+	LinkList *aprev;
+	LinkList *anext;
+	LinkList *tprev;
+	LinkList *tnext;
+	
+	LinkList(int _id) : id(_id), aprev(nullptr), anext(nullptr), tprev(nullptr), tnext(nullptr) {}
+};
+
+int team;
+LinkList *ahead = nullptr, *atail = nullptr;
+int belong[1000000];
+LinkList *ttail[50099];
+
+void insert(int x){
+	LinkList *cur = new LinkList(x);
+	if (belong[x] == 0) belong[x] = ++team;
+	if (ttail[belong[x]] == nullptr){
+		ttail[belong[x]] = cur;
+		cur->aprev = atail;
+		if (atail != nullptr) atail->anext = cur;
+		atail = cur;
+		if (ahead == nullptr) ahead = cur;
+	} else {
+		LinkList *aft = ttail[belong[x]];
+		cur->anext = aft->anext;
+		if (aft->anext != nullptr) aft->anext->aprev = cur;
+		cur->aprev = aft;
+		aft->anext = cur;
+		cur->tprev = aft;
+		aft->tnext = cur;
+		ttail[belong[x]] = cur;
+		if (atail == aft) atail = cur;
+	}
+}
+
+void pop(){
+	LinkList *nxt = ahead->anext;
+	if (ahead->anext != nullptr){
+		ahead->anext->aprev = nullptr;
+		ahead->anext = nullptr;
+	} else {
+		atail = nullptr;
+	}
+	if (ahead->tnext != nullptr){
+		ahead->tnext->tprev = nullptr;
+		ahead->tnext = nullptr;
+	} else {
+		ttail[belong[ahead->id]] = nullptr;
+	}
+	delete ahead;
+	ahead = nxt;
+}
+
+void finalize(){
+	while (ahead != nullptr){
+		LinkList *nxt = ahead->anext;
+		delete ahead;
+		ahead = nxt;
+	}
+}
+
+int main(){
+	cin >> team;
+	getchar();
+	for (int i = 1; i <= team; i++){
+		int id;
+		string line;
+		getline(cin, line);
+		stringstream scin(line);
+		while (scin >> id){
+			belong[id] = i;
+		}
+	}
+	while (true){
+		string op;
+		cin >> op;
+		if (op == "STOP") break;
+		if (op == "ENQUEUE"){
+			int x;
+			cin >> x;
+			insert(x);
+		} else {
+			cout << ahead->id << endl;
+			pop();
+		}
+	}
+	finalize();
+	return 0;
+}
+```
+
+
 
 
 
@@ -6161,9 +6555,156 @@ int main() {
 
 
 
-## T25353:排队
+## T25353: 排队
 
 greedy, http://cs101.openjudge.cn/practice/25353
+
+
+
+思路：
+
+- 一个自然的想法是从前到后逐个确定当前位置可以填入的身高最小的同学。
+- 如果现在一个同学 $i$ 想要前移到当前位置，则 $\not\exists j < i, \text{s.t. } |h_i - h_j| > D$。
+- 因此可以发现：当且仅当 $i$ 前面“卡住它”的 $j$ 都已经被移到最前面的一些位置并固定下来，$i$ 才能前移到当前位置。
+- 算法一：确定每一个位置时，暴力枚举待确定位置的同学，找到能前移且身高最小者即可。时间复杂度为 $O(n^2)$。
+- 算法二：注意到这是一个图论模型，考虑一个 $n$ 个点的图，对初始序列中满足 $j < i \land |h_i - h_j| > D$ 的 $(i, j)$，连**有向边** $j \to i$，维护**优先队列**拓扑排序即可。时间复杂度为 $O(n^2)$。
+- 算法三：注意到每个连向 $i$ 的 $j$ 满足 $j < i, h_j < h_i - D$ 或 $j < i, h_j > h_i + D$，AI 说这个可以“线段树优化建图”，点数和边数都将变为 $O(n \log n)$。对原图上的点用优先队列维护、对“优化建图”中新建的点用普通队列维护即可。时间复杂度为 $O(n \log n)$。
+- 算法四：考虑不要把“图”建出来。注意到这张图是“分层”的，即我们可以把所有同学分成若干层，使得将层内排序结果拼起来就能得到答案。
+- 这个结论看上去似乎比较“直观”，比如样例中 $1, 2, 4$ 和 $3, 5$ 就是两层，层内可以任意交换；但总让人有点不安，下面我们来证明一下。
+- 在某一时刻，设待确定者中没有“被卡住”的同学编号为 $x_1 < x_2 < \cdots < x_k$，则 $(x_1, x_2), \cdots, (x_{k - 1}, x_k), (x_k, n]$ 这些区间中每个同学都至少被前面的一个同学卡住。
+- (1) 对 $(x_k, n]$ 中的同学，它们显然不能在这些没有“被卡住”的同学都前移之前前移。
+- (2) 而对于 $(x_1, x_k)$ 中的同学，考虑反证法，即对目前被卡住的同学 $t \in (x_i, x_{i + 1})$，当某些没有“被卡住”的同学 $x_j \ (j \leq i)$ 移到最前面并固定下来时，假设 $t$ 不再“被剩下的项卡住”，则可知 $|h_t - h_{x_j}| > d$，又由于 $|h_{x_{i + 1}} - h_{x_j}| \leq d, |h_{x_{i + 1}} - h_t| \leq d$，可得 $h_t > h_{x_{i + 1}} > h_{x_j}$ 或 $h_{x_j} > h_{x_{i + 1}} > h_t$。若为前者，则此时取 $t$ 不优；若为后者，则矛盾，因为取 $h_{x_j}$ 不优于 $h_{x_{i + 1}}$，即我们前移 $x_j$ 的操作不优。
+- 故 (1)(2) 均不成立，可知上面的结论正确。
+- 通过支持单点修改、前 / 后缀最大值的树状数组，即可从前到后依次求出每个同学所处的层。时间复杂度为 $O(n \log n)$。
+
+代码（算法三）：
+
+```cpp
+#include <algorithm>
+#include <queue>
+#include <cstdio>
+
+using namespace std;
+
+struct Node {
+	int ls;
+	int rs;
+};
+
+struct Edge {
+	int nxt;
+	int end;
+};
+
+struct Candidate {
+	int pos;
+
+	Candidate(int _pos) : pos(_pos) {}
+};
+
+int n, id, root = 0, cnt = 0;
+int h[1900001], lsh[100001], head[1900001], deg[1900001];
+Node tree[1900001];
+Edge edge[7100001];
+queue<int> q;
+priority_queue<Candidate> pq;
+
+bool operator <(const Candidate a, const Candidate b){
+	return h[a.pos] > h[b.pos];
+}
+
+void add_edge(int start, int end){
+	cnt++;
+	edge[cnt].nxt = head[start];
+	head[start] = cnt;
+	edge[cnt].end = end;
+	deg[end]++;
+}
+
+int insert(int x, int l, int r, int val, int pos){
+	int ans = ++id;
+	tree[ans] = tree[x];
+	if (x != 0) add_edge(x, ans);
+	add_edge(pos, ans);
+	if (l == r) return ans;
+	int mid = (l + r) >> 1, &ls = tree[ans].ls, &rs = tree[ans].rs;
+	if (val <= mid){
+		ls = insert(ls, l, mid, val, pos);
+	} else {
+		rs = insert(rs, mid + 1, r, val, pos);
+	}
+	return ans;
+}
+
+void add_edges(int x, int L, int R, int l, int r, int pos){
+	if (x == 0) return;
+	if (l <= L && R <= r){
+		add_edge(x, pos);
+		return;
+	}
+	int mid = (L + R) >> 1;
+	if (l <= mid) add_edges(tree[x].ls, L, mid, l, r, pos);
+	if (r > mid) add_edges(tree[x].rs, mid + 1, R, l, r, pos);
+}
+
+void push(int x){
+	if (x <= n){
+		pq.push(Candidate(x));
+	} else {
+		q.push(x);
+	}
+}
+
+bool empty(){
+	return q.empty() && pq.empty();
+}
+
+int pop(){
+	int ans;
+	if (!q.empty()){
+		ans = q.front();
+		q.pop();
+	} else {
+		ans = pq.top().pos;
+		pq.pop();
+	}
+	return ans;
+}
+
+int main(){
+	int d, m;
+	scanf("%d %d", &n, &d);
+	for (int i = 1; i <= n; i++){
+		scanf("%d", &h[i]);
+		lsh[i] = h[i];
+	}
+	sort(lsh + 1, lsh + n + 1);
+	m = unique(lsh + 1, lsh + n + 1) - lsh - 1;
+	id = n;
+	for (int i = 1; i <= n; i++){
+		int r = upper_bound(lsh + 1, lsh + m + 1, h[i] - d - 1) - lsh - 1, l = lower_bound(lsh + 1, lsh + m + 1, h[i] + d + 1) - lsh;
+		if (r >= 1) add_edges(root, 1, m, 1, r, i);
+		if (l <= m) add_edges(root, 1, m, l, m, i);
+		root = insert(root, 1, m, lower_bound(lsh + 1, lsh + m + 1, h[i]) - lsh, i);
+	}
+	for (int i = 1; i <= id; i++){
+		if (deg[i] == 0) push(i);
+	}
+	while (!empty()){
+		int cur = pop();
+		if (cur <= n) printf("%d\n", h[cur]);
+		for (int i = head[cur]; i != 0; i = edge[i].nxt){
+			int x = edge[i].end;
+			if (--deg[x] == 0) push(x);
+		}
+	}
+	return 0;
+}
+```
+
+
+
+
 
 思路：两个月前就尝试过一直不会做，现在还是不会做，学习了树状数组后靠ai写了一个出来。。。
 

@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                         
+>                                                                                                                            
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                         
+>                                                                                                                            
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                         
+>                                                                                                                            
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                         
+>                                                                                                                            
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                         
+>                                                                                                                            
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -929,6 +929,41 @@ int main()
 ```
 
 
+
+## E19943
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n, m;
+    cin >> n >> m;
+    vector<vector<int>> L(n, vector<int>(n, 0));
+    while (m--)
+    {
+        int a, b;
+        cin >> a >> b;
+        L[a][a]++;
+        L[b][b]++;
+        L[a][b]--;
+        L[b][a]--;
+    }
+
+    for (auto i : L)
+    {
+        for (auto j : i)
+            cout << j << ' ';
+        cout << '\n';
+    }
+    return 0;
+}
+```
 
 
 
@@ -2341,6 +2376,60 @@ int main()
 
 
 
+## M02692
+
+```cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n;
+    cin >> n;
+    while (n--)
+    {
+        string l[3], r[3], stat[3];
+        for (int i = 0; i < 3; i++)
+            cin >> l[i] >> r[i] >> stat[i];
+
+        for (char c = 'A'; c <= 'L'; ++c)
+            for (int fakeType = 0; fakeType < 2; fakeType++)
+            {
+                bool ok = true;
+                for (int i = 0; i < 3; ++i)
+                {
+                    int left = 0, right = 0;
+                    for (char x : l[i])
+                        if (x == c)
+                            left += (fakeType ? 1 : -1);
+                    for (char x : r[i])
+                        if (x == c)
+                            right += (fakeType ? 1 : -1);
+                    if (stat[i] == "even" && left != right)
+                        ok = false;
+                    if (stat[i] == "up" && left <= right)
+                        ok = false;
+                    if (stat[i] == "down" && left >= right)
+                        ok = false;
+                }
+                if (ok)
+                {
+                    cout << c << " is the counterfeit coin and it is " << (fakeType ? "heavy." : "light.") << '\n';
+                    goto next_case;
+                }
+            }
+    next_case:;
+    }
+    return 0;
+}
+```
+
+
+
 
 
 ## M02749:分解因数
@@ -2995,6 +3084,62 @@ int main(){
 	return 0;
 }
 ```
+
+
+
+## M04100
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+struct Node
+{
+    int s, d;
+};
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int k;
+    cin >> k;
+    while (k--)
+    {
+        int n;
+        cin >> n;
+        vector<Node> p(n);
+        for (int i = 0; i < n; i++)
+            cin >> p[i].s >> p[i].d;
+
+        int testCounter = 0;
+        sort(p.begin(), p.end(), [](Node &a, Node &b) -> bool
+             { return a.s < b.s; });
+        int it = 0;
+        while (it < n)
+        {
+            int j = it;
+            int maxs = p[it].s, mind = p[it].d;
+            while (j < n && p[j].s >= maxs && p[j].s <= mind)
+            {
+                maxs = max(maxs, p[j].s);
+                mind = min(mind, p[j].d);
+                j++;
+            }
+            it = j;
+            testCounter++;
+        }
+
+        cout << testCounter << '\n';
+    }
+    return 0;
+}
+```
+
+
 
 
 
@@ -6204,6 +6349,154 @@ int main()
 
 
 
+
+
+对于这道题目，线段树（或类似的二分查找树）思路实际上是解决这个问题的正解方向之一。这个问题的本质是求一个字典序最小的拓扑排序，而由于约束条件的特殊性（$|h_i - h_j| > D$ 时不能交换），这可以转化为一个分层问题：每一个数 $h_i$ 必须排在所有在该数之前出现、且与该数差值超过 $D$ 的数之后。
+
+代码使用了动态开点的线段树思想（尽管是一次性建树），维护的是“值域”上的最大层数。
+
+如果得到 WA（Wrong Answer）的主要原因很可能是 **整数溢出** 以及 **I/O 速度** 问题，还有 `getf` 函数中对于“完全包含在安全区”的节点处理不够显式（虽然逻辑上勉强通过，但为了稳健性最好加上）。
+
+**1. 整数溢出问题 (Critical)**
+
+题目中 $h_i$ 和 $D$ 均可达 $10^9$。
+在代码中调用 `getf(h[i] - d, h[i] + d, root)` 时：
+`h[i] + d` 的计算结果最大可达 $2 \times 10^9$。虽然 $2 \times 10^9$ 刚好在 `int` (约为 $2.147 \times 10^9$) 的范围内，但非常接近边界。如果测试数据稍微触碰边界，或者编译器对有符号整数溢出的处理，这都是极其危险的。
+更重要的是，你的 `getf` 函数参数定义为 `const int&`。如果计算结果发生了溢出（变成负数），或者单纯因为类型转换问题，会导致 `ub` 变成一个很小的数，从而导致 `cur->l > ub` 误判为真，返回错误的层数。
+
+**修改建议：** 将 `getf` 的参数改为 `long long`，并在调用时强制转换计算类型。
+
+**2. 递归查询的逻辑隐患**
+
+在 `getf` 函数中，你通过 `cur->r < lb` 和 `cur->l > ub` 来判断是否落在“阻挡区”。
+如果一个节点的区间 `[l, r]` 完全落在 `[lb, ub]`（安全区，即可以交换的区域）内，你的代码通过不进入 `if` 分支最终返回 `ans = -1`。
+这个逻辑是对的，但是为了清晰和防止边界错误，最好显式处理“无交集”或“被包含”的情况。
+
+**3. I/O 性能**
+
+$N=10^5$，且输出量大，使用 `cin/cout` 而不加 `ios::sync_with_stdio(0)` 极易导致 TLE（虽然你报的是 WA，但有时候评测机反馈不准确，或者因为超时截断导致 WA）。
+
+ `long long` 的使用，增加了 Fast I/O。
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+struct Node {
+    int f;          // 当前区间的最大批次
+    int l, r;       // 当前结点覆盖的值域 [l, r]
+    Node* l_ch;
+    Node* r_ch;
+    
+    Node(int a, int b, int x = -1) : f(x), l(a), r(b), l_ch(nullptr), r_ch(nullptr) {}
+};
+
+// 建树逻辑不变，注意这里是对排序后的值建树
+Node* buildTree(const vector<int>& v, int l, int r) {
+    if (v[l] == v[r]) return new Node(v[l], v[r]); // 这里的区间是值域
+    int m = l + (r - l) / 2;
+    Node* cur = new Node(v[l], v[r]);
+    cur->l_ch = buildTree(v, l, m);
+    cur->r_ch = buildTree(v, m + 1, r);
+    return cur;
+}
+
+// 查询范围 [lb, ub] 之外（即 (-inf, lb) U (ub, inf)）的最大 f 值
+// 使用 long long 避免 lb/ub 溢出问题
+int getf(long long lb, long long ub, Node* cur) {
+    // 如果当前节点完全在安全区 [lb, ub] 内，它不产生阻挡，忽略
+    if (cur->l >= lb && cur->r <= ub) return -1;
+    
+    // 如果当前节点完全在左侧阻挡区 (-inf, lb)
+    if (cur->r < lb) return cur->f;
+    // 如果当前节点完全在右侧阻挡区 (ub, inf)
+    if (cur->l > ub) return cur->f;
+
+    // 否则区间有重叠，需要递归查询
+    int ans = -1;
+    if (cur->l_ch) ans = max(ans, getf(lb, ub, cur->l_ch));
+    if (cur->r_ch) ans = max(ans, getf(lb, ub, cur->r_ch));
+    
+    return ans;
+}
+
+// 更新值为 k 的节点的层数为 nf
+void updatef(int k, int nf, Node* cur) {
+    // 找到覆盖 k 的叶子节点（或者值域缩成一点的节点）
+    if (cur->l == k && cur->r == k) {
+        cur->f = max(cur->f, nf);
+        return;
+    }
+    
+    // 递归更新子节点
+    // 由于可能有重复值，且树的划分是基于排序后的索引，相同的值可能跨越左右子树
+    // 因此需要分别检查
+    if (cur->l_ch && k <= cur->l_ch->r) updatef(k, nf, cur->l_ch);
+    if (cur->r_ch && k >= cur->r_ch->l) updatef(k, nf, cur->r_ch);
+    
+    // 回溯更新当前节点
+    int val = -1;
+    if (cur->l_ch) val = max(val, cur->l_ch->f);
+    if (cur->r_ch) val = max(val, cur->r_ch->f);
+    cur->f = val;
+}
+
+int main() {
+    // 开启 Fast I/O
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n;
+    long long d; // D 可能很大，配合加法运算使用 long long
+    if (!(cin >> n >> d)) return 0;
+
+    vector<int> h(n);
+    for(int i = 0; i < n; i++) cin >> h[i];
+
+    // 排序并建树
+    vector<int> sorted_h(h);
+    sort(sorted_h.begin(), sorted_h.end());
+    
+    // 构建线段树
+    Node* root = buildTree(sorted_h, 0, n - 1);
+
+    // 存储分层结果
+    // fs[layer] 存储该层所有的身高
+    vector<vector<int>> fs; 
+
+    for(int i = 0; i < n; i++) {
+        // 查询阻挡区：(-inf, h[i]-d) U (h[i]+d, inf)
+        // 计算 h[i]-d 和 h[i]+d 时强制使用 long long
+        long long lb = (long long)h[i] - d;
+        long long ub = (long long)h[i] + d;
+        
+        int nf = getf(lb, ub, root) + 1;
+        
+        updatef(h[i], nf, root);
+
+        if (fs.size() <= nf) {
+            fs.resize(nf + 1);
+        }
+        fs[nf].push_back(h[i]);
+    }
+
+    // 输出
+    for(auto& group : fs) {
+        sort(group.begin(), group.end()); // 同一层内按身高从小到大排序（字典序最小）
+        for(int val : group) {
+            cout << val << "\n";
+        }
+    }
+
+    return 0;
+}
+```
+
+
+
 ## T29947: 校门外的树又来了
 
 http://cs101.openjudge.cn/practice/29947/
@@ -7045,6 +7338,47 @@ int main()
     return 0;
 }
 ```
+
+
+
+## 1520D
+
+```cpp
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        int n;
+        cin >> n;
+        unordered_map<int, long long> diff;
+        for (int i = 1; i <= n; i++)
+        {
+            int a;
+            cin >> a;
+            diff[a - i]++;
+        }
+
+        long long ans = 0;
+        for (auto i : diff)
+            if (i.second >= 2)
+                ans += (i.second * (i.second - 1) / 2);
+
+        cout << ans << '\n';
+    }
+    return 0;
+}
+```
+
+
 
 
 
@@ -8088,10 +8422,13 @@ public:
 
 [https://sunnywhy.com/sfbj/4/3/132](https://sunnywhy.com/sfbj/4/3/132)
 
- #include <iostream>  
+ 
+
+```c++
+ #include <iostream>  
  #include <vector>  
  using namespace std;  
- ​  
+ 
  void permute(vector<bool>& valid, vector<int>& nums, int first, int n)  
  {  
      if (first == n + 1)  
@@ -8110,12 +8447,12 @@ public:
              nums.pop_back();  
          }  
  }  
- ​  
+ 
  int main()  
  {  
      ios::sync_with_stdio(false);  
      cin.tie(nullptr);  
- ​  
+ 
      int n;  
      cin >> n;  
      vector<int> nums;  
@@ -8123,6 +8460,53 @@ public:
      permute(valid, nums, 1, n);  
      return 0;  
  }
+```
+
+
+
+
+
+## sy578
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n, k;
+    string s;
+    cin >> n >> k >> s;
+
+    int l = 0, r = -1, cnt = 0;
+    int maxLen = 0;
+    while (r < n)
+    {
+        if (cnt <= k)
+        {
+            maxLen = max(maxLen, r - l + 1);
+            r++;
+            if (r < n && s[r] == '0')
+                cnt++;
+        }
+        else
+        {
+            if (s[l] == '0')
+                cnt--;
+            l++;
+        }
+    }
+
+    cout << maxLen << '\n';
+    return 0;
+}
+```
+
+
+
 
 
 ## 画矩形

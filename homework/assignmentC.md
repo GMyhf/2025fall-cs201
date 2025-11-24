@@ -94,7 +94,7 @@ bfs, http://cs101.openjudge.cn/practice/28046/
 
 ### M433.最小基因变化
 
-bfs, https://leetcode.cn/problems/minimum-genetic-mutation/description/
+bfs, https://leetcode.cn/problems/minimum-genetic-mutation/
 
 思路：
 

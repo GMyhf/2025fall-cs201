@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2025-11-22 21:57 GMT+8*
+*Updated 2025-11-24 10:32 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                               
+>                                                                                                                                  
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                               
+>                                                                                                                                  
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                               
+>                                                                                                                                  
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                               
+>                                                                                                                                  
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                               
+>                                                                                                                                  
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -7035,6 +7035,92 @@ int main() {
     return 0;
 }
 ```
+
+
+
+【潘彦璋 物理学院】思路：终于写到这里……我在这题上花了超久，首先是用的我在课后与同学初步讨论得到的拓扑排序解法，直接显式建图，记录每个点的所有儿子，入度，值，然后把所有入度为0的点丢到一个最小堆（我还为此学了一下堆如何自定义比较规则）blablabla……结果不出意料的爆了，而且还是先爆的内存，因为我把所有子结点指针直接存在结点里，但是其实只要存子结点的编号就够了
+然后就是喜闻乐见的优化环节，首先这个拓扑排序的思路优化空间不说前途光明也是一点没有，于是只能求教AI和同学，于是收获了一个新思路：分层。
+分层的主要思路是多次扫描数列h_i，每次找出所有入度为0的点，然后将他们一并删去，随后循环直到处理完所有数据。这个做法与每次只删去一个点相比利用了一个好的性质，那就是在任意时刻所有入度为0的点在最后的输出中必定是连续的。证明如下：
+首先找出某一时刻数列中所有入度为0的点（编号为{a_1~a_n}，满足h_a_i单调递增），如果他们在最后的结果中不连续，那只能是在从小到大依次删除他们的过程中会产生新的入度为0的点，且其值小于h_a_n。假设这样的点a_k在删除a_i时产生，则有h_a_k大于h_a_i + D或h_a_k小于h_a_i - D。
+1 若h_a_k大于h_a_i + D：由于h_a_n和h_a_k可以交换，故h_a_n不大于h_a_i + D，所以h_a_k不可能小于h_a_n，矛盾
+2 若h_a_k小于h_a_i - D：则h_a_n和h_a_k的差必然大于D，因此a_n与a_k之间存在边，要么a_n入度不为零要么a_k入度不为零，总之矛盾
+因此，问题就变成了将所有数据分批，而且一个点的输出批次只与其前面的输入数据有关，只要知道了输出的批次就可以得到结果。
+又注意到某个点的输出批次等于它前面的与其值相差大于D的所有点的批次中的最大值+1（没有找到就是0），于是我们可以使用线段树维护每个区间点的批次最大值。
+于是本人去学习了线段树的写法，然后又是指针显式建树（用数组应该也可以，但是我不太会，用指针更明了），最后终于是搞出来了，但是还是败在细节上了，递归访问的逻辑写错了……
+总之，现在基本是会写线段树了，但是还得练习。
+另外最后为了调试debug把注释基本全写上了，可以给同学参考了（
+
+```c++
+#include<iostream>
+#include<algorithm>
+#include<vector>
+
+using namespace std;
+
+struct Node {
+    int f, l, r; //f储存当前区间的最大批次，l和r则是当前区间的值域左右端
+    Node* l_ch;
+    Node* r_ch;
+    Node(int a, int b, int x = -1) : f(x), l(a), r(b), l_ch(nullptr), r_ch(nullptr) {} //未处理的结点默认批次为-1，方便后续处理
+};
+
+Node* buildTree(vector<int>& v, int l, int r) {
+    if(v[l] == v[r]) return (new Node(v[l], v[r])); //值相同的点可以合并储存
+    int m = l + (r - l) / 2; //简单二分
+    Node* cur = (new Node(v[l], v[r]));
+    cur->l_ch = buildTree(v, l ,m);
+    cur->r_ch = buildTree(v, m + 1, r); //树的建立过程保证了所有非叶子结点都有左右孩子
+    return cur;
+}
+
+int getf(const int& lb, const int& ub, Node* cur) {
+    if (cur->l >= lb && cur->r <= ub) return -1; //当前节点区间完全在[lb, ub]内
+    if(cur->r < lb) return cur->f; //当前结点的区间完全在(-无穷, lb)内
+    if(cur->l > ub) return cur->f; //当前结点的区间完全在(ub, +无穷)内
+    //否则有重叠，需要进一步递归
+    int ans = -1;
+    if(cur->l_ch) ans = max(ans, getf(lb, ub, cur->l_ch)); //执行该语句时必定有cur->r >= lb，因此不是叶子结点
+    if(cur->r_ch) ans = max(ans, getf(lb, ub, cur->r_ch)); //同上
+    return ans;
+}
+
+void updatef(const int& k, const int& nf, Node* cur) {
+    if(cur->l == k && cur->r == k) {
+        cur->f = max(cur->f, nf); //找到，更新
+        return;
+    }
+    if(k <= cur->l_ch->r) updatef(k, nf, cur->l_ch);
+    if(k >= cur->r_ch->l) updatef(k, nf, cur->r_ch);
+    cur->f = max(cur->l_ch->f, cur->r_ch->f);
+    return;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int n, d;
+    cin >> n >> d;
+    vector<int> h(n);
+    for(int i = 0; i < n; i ++) cin >> h[i];
+    vector<int> sorted_h(h.begin(), h.end());
+    sort(sorted_h.begin(), sorted_h.end());
+    Node* root = buildTree(sorted_h, 0, n - 1); //在排序后的h[i]上建树，减少内存需求
+    vector<vector<int>> fs; //分批存储输出值
+    for(int i = 0; i < n; i ++) {
+        int nf = getf(h[i] - d, h[i] + d, root) + 1; //这就是方便的地方：-1对应的是要么前面的点都可以换要么是不能换的还在后面，批次显然都为0
+        updatef(h[i], nf, root);
+        if(fs.size() < nf + 1) fs.push_back({h[i]});
+        else fs[nf].push_back(h[i]);
+    }
+    for(auto& p : fs){
+        sort(p.begin(), p.end()); //同批次可自由交换
+        for(auto& t : p) cout << t << endl;
+    }
+    return 0;
+}
+```
+
+
 
 
 

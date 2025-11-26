@@ -1,6 +1,6 @@
 # 人工智能概览
 
-*Updated 2025-11-05 16:04 GMT+8*  
+*Updated 2025-11-26 16:19 GMT+8*  
 *Compiled by Hongfei Yan (2025 Summer)*    
 https://github.com/GMyhf/2025fall-cs201/
 
@@ -16,7 +16,7 @@ https://github.com/GMyhf/2025fall-cs201/
 
 人工智能的发展思想分为三个主要流派：
 
-- **符号主义（Symbolic     AI）**：核心观点是通过符号表示和逻辑推理来实现智能。典型方法包括专家系统、搜索算法、逻辑推理（如一阶逻辑）、规划系统等。代表人物有艾伦·纽厄尔、赫伯特·西蒙、约翰·麦卡锡等。符号主义强调可解释性强，适用于有明确规则的任务（如数学推理、棋类游戏）。其代表成果包括20世纪80年代的专家系统（如DEC公司的XCON系统，显著提高了配置效率）以及IBM的棋类程序**深蓝（Deep Blue）**，1997年击败国际象棋冠军卡斯帕罗夫。但符号主义的缺点是学习能力弱，难以处理模糊信息，需要大量手工编码规则。
+- **符号主义（Symbolic AI）**：核心观点是通过符号表示和逻辑推理来实现智能。典型方法包括专家系统、搜索算法、逻辑推理（如一阶逻辑）、规划系统等。代表人物有艾伦·纽厄尔、赫伯特·西蒙、约翰·麦卡锡等。符号主义强调可解释性强，适用于有明确规则的任务（如数学推理、棋类游戏）。其代表成果包括20世纪80年代的专家系统（如DEC公司的XCON系统，显著提高了配置效率）以及IBM的棋类程序**深蓝（Deep Blue）**，1997年击败国际象棋冠军卡斯帕罗夫。但符号主义的缺点是学习能力弱，难以处理模糊信息，需要大量手工编码规则。
 
 - **连接主义（Connectionism）**：核心观点是通过模拟人脑神经元网络结构来实现智能，依赖数据驱动学习。主要方法是各种人工神经网络（ANN）和深度学习（如卷积神经网络CNN、循环神经网络RNN、Transformer等）。代表人物包括Geoffrey Hinton、Yann LeCun、Ilya Sutskever、David Rumelhart等。约翰·霍普菲尔德（John Hopfield）与Geoffrey Hinton于2024年获得诺贝尔物理学奖，以表彰他们在神经网络领域的奠基性贡献。连接主义流派引领了近年来AI的主要突破（“强数据、弱规则”）。其代表成果包括最早的单层感知机（Perceptron，1958年）以及1986年Rumelhart等人提出的**误差反向传播算法**（Backpropagation），使多层神经网络得以高效训练。现代连接主义系统在图像识别、语音识别、自然语言处理、自动驾驶等领域均取得了巨大成功，例如Google的AlphaGo和各种视觉模型、OpenAI的GPT系列语言模型等[3]。
 - **行为主义（Behaviorism）**：在AI领域常指“机器人行动派”或强化学习思想。其核心思想是智能体通过与环境交互并根据反馈（奖惩）自主学习，无需事先假设内部知识结构。代表人物有罗德尼·布鲁克斯（Rodney Brooks）、李开复等。行为主义AI强调“行动优先”，对现代机器人学和强化学习影响深远。典型应用是基于强化学习的系统，如**AlphaGo/AlphaZero**（通过自我博弈学习围棋策略）和自动驾驶等。行为主义流派下的智能体可视为通过试错和环境反馈来优化决策。
@@ -38,15 +38,15 @@ https://github.com/GMyhf/2025fall-cs201/
 - **智能博弈：AlphaGo/AlphaZero**：DeepMind的AlphaGo结合了深度卷积神经网络（CNN）、强化学习和蒙特卡洛树搜索（MCTS），成为首个战胜围棋人类冠军的AI系统。2016年AlphaGo以4:1击败李世石，2017年以3:0战胜柯洁。其强化学习版本AlphaGo Zero无需人类棋谱，从随机对弈中自学，经过数周训练便超越了原版AlphaGo。进一步的AlphaZero甚至能从零开始自学多种棋类（围棋、国际象棋、日本将棋等），展现出超强的策略学习能力。它证明了放弃人类经验、有条件的自我对弈（self-play）学习在某些领域能带来更优解。
 - **自然语言处理：Transformer与GPT**：Transformer模型由Google研究者在2017年提出（著名论文*Attention Is All You Need*），其核心是**自注意力机制**，允许模型并行处理序列并捕捉远距离依赖[4]。Transformer架构广泛应用于大规模自然语言处理和其它领域，催生了众多预训练模型如GPT系列和BERT[4]。GPT（Generative Pre-trained Transformer）是OpenAI推出的一类语言模型，采用巨大的Transformer解码器结构进行无监督预训练后再微调。GPT-3于2020年问世，拥有约1750亿参数[2]，能够生成连贯流畅的文本，支持零样本学习（zero-shot）和少样本学习（few-shot），在翻译、对话、写作等任务中表现优异。**GPT-4**（2023年发布）在GPT-3.5基础上进一步扩展规模和能力，是一个支持文本和图像输入的**多模态大模型**[5] [3]。GPT-4在包括模拟律师资格考试（bar exam）在内的多项专业测试中表现出类人水平（成绩在前10%）[3]。与前代模型相比，GPT-4更加可靠、富有创造力，能够处理更复杂、更长的指令[5]。GPT系列模型被广泛应用于对话机器人、内容生成、编程辅助、教育辅导等场景。
 
-**示例：使用预训练模型进行问答**。以Hugging Face Transformer为例，下述代码载入本地中文预训练模型进行问答推理：
+**示例：使用预训练模型进行问答**。以Hugging Face Transformer为例，下述 `first_qa.py`代码载入本地中文预训练模型进行问答推理：
 
 
 
 > | 模型                                     | 适用语言 | 用途     |
->| ---------------------------------------- | -------- | -------- |
+> | ---------------------------------------- | -------- | -------- |
 > | `distilbert-base-cased-distilled-squad`  | 英文     | 英文问答 |
 > | `uer/roberta-base-chinese-extractive-qa` | 中文     | 中文问答 |
-> 
+>
 > Q: 如何用**浏览器手动下载** `uer/roberta-base-chinese-extractive-qa` 模型，做到完全 **离线部署** 的步骤：
 >
 > 🔗 1. 打开模型页面
@@ -58,31 +58,66 @@ https://github.com/GMyhf/2025fall-cs201/
 > 📁 2. 进入 “Files and versions” 页面，手动下载以下几个关键文件：
 >
 > | 文件名                    | 说明                           |
->| ------------------------- | ------------------------------ |
+> | ------------------------- | ------------------------------ |
 > | `config.json`             | 模型结构配置                   |
 > | `pytorch_model.bin`       | 模型权重（很大，400MB 左右）   |
 > | `tokenizer_config.json`   | tokenizer 配置                 |
 > | `vocab.txt`               | 中文词表（必需）               |
 > | `special_tokens_map.json` | 特殊符号定义（可选但推荐）     |
 > | `tokenizer.json`          | tokenizer 的二进制形式（可选） |
-> 
+>
 > 你可以在网页中依次点击这些文件，然后点击右上角 “Download”。
 >
-> ------
+> 
 >
-> 🗂️ 3. 下载后，把它们放入一个本地文件夹，例如：
+> 或者这里下载：
 >
-> ```
->./models/roberta-chinese-qa/
-> ├── config.json
-> ├── pytorch_model.bin
-> ├── tokenizer_config.json
-> ├── vocab.txt
-> ├── special_tokens_map.json
-> ├── tokenizer.json
-> ```
+> https://disk.pku.edu.cn/link/AA5F507BA7BC504334ACA7FCBECFE64995
+> Name: model-roberta-chinese-qa.zip
+> Expires: Never
+> Pickup Code: zXih
 
 
+
+🗂️ 我的clab云虚拟机beijing.zhengmao.ltd，`AI_literacy`文件夹
+
+```
+[rocky@jensen AI_literacy]$ tree
+.
+├── first_qa.py
+└── models
+    └── roberta-chinese-qa
+        ├── config.json
+        ├── pytorch_model.bin
+        ├── special_tokens_map.json
+        ├── tokenizer_config.json
+        └── vocab.txt
+
+```
+
+
+
+**创建独立的虚拟环境 & 安装 深度学习框架 PyTorch**
+
+> 为每个项目创建独立的虚拟环境，避免依赖冲突。
+>
+> ```
+> cd ~/AI_literacy  # 替换为你的项目路径
+> python3 -m venv .venv
+> source .venv/bin/activate
+> ```
+>
+> > 退出虚拟环境命令：`deactivate`
+>
+> 
+>
+> 安装 深度学习框架 PyTorch  
+> pip install -U transformers  
+> pip install torch
+
+
+
+`first_qa.py`
 
 ```python
 from transformers import pipeline
@@ -104,11 +139,16 @@ print(result)       # 看完整结果
 print(result["answer"])  # 输出应为：艾伦·图灵
 ```
 
-上述代码中，我们指定了本地下载的中文问答模型目录，通过pipeline接口直接进行抽取式问答推理。在真实应用中，可替换为更强大的模型（如GPT-4）并结合语言提示（Prompt）实现更复杂的自然语言任务。
+上述代码中，指定了本地下载的中文问答模型目录，通过pipeline接口直接进行抽取式问答推理。在真实应用中，可替换为更强大的模型（如GPT-4）并结合语言提示（Prompt）实现更复杂的自然语言任务。
 
-> 安装 深度学习框架 PyTorch  
-> pip install -U transformers  
-> pip install torch
+运行结果展示
+
+```
+(.venv) [rocky@jensen AI_literacy]$ python first_qa.py 
+Device set to use cpu
+{'score': 0.31832563877105713, 'start': 0, 'end': 5, 'answer': '艾伦·图灵'}
+艾伦·图灵
+```
 
 
 
@@ -194,9 +234,52 @@ print(result["answer"])  # 输出应为：艾伦·图灵
 
 
 
+### Q6.交互可视化neural network
+
+https://developers.google.com/machine-learning/crash-course/neural-networks/interactive-exercises?hl=zh-cn
+
+**您的任务**：配置一个神经网络，使其能够将下图中的橙点与蓝点分开，并在训练数据和测试数据上实现低于 0.2 的损失。
+
+**说明：**
+
+在下方的互动式 widget 中：
+
+1. 通过尝试以下部分配置设置来修改神经网络超参数：
+   - 点击网络图中的**隐藏层**标题左侧的 **+** 和 **-** 按钮，添加或移除隐藏层。
+   - 点击隐藏层列上方的 **+** 和 **-** 按钮，即可在隐藏层中添加或移除神经元。
+   - 如需更改学习率，请从图表上方的**学习率**下拉菜单中选择一个新值。
+   - 通过从图表上方的**激活**下拉菜单中选择新值来更改激活函数。
+2. 点击图表上方的“播放”(▶️) 按钮，使用指定的参数训练神经网络模型。
+3. 在训练过程中，观察模型拟合数据的可视化效果，以及**输出**部分中的**测试损失**和**训练损失**值。
+4. 如果模型在测试数据和训练数据上的损失未达到 0.2 以下，请点击“重置”，然后使用另一组配置设置重复执行第 1-3 步。重复此过程，直到获得理想的结果。
+
+> **Your task:** configure a neural network that can separate the orange dots from the blue dots in the diagram, achieving a loss of less than 0.2 on both the training and test data.
+>
+> **Instructions:**
+>
+> In the interactive widget:
+>
+> 1. Modify the neural network hyperparameters by experimenting with some of the following config settings:
+>    - Add or remove hidden layers by clicking the **+** and **-** buttons to the left of the **HIDDEN LAYERS** heading in the network diagram.
+>    - Add or remove neurons from a hidden layer by clicking the **+** and **-** buttons above a hidden-layer column.
+>    - Change the learning rate by choosing a new value from the **Learning rate** drop-down above the diagram.
+>    - Change the activation function by choosing a new value from the **Activation** drop-down above the diagram.
+> 2. Click the Play button above the diagram to train the neural network model using the specified parameters.
+> 3. Observe the visualization of the model fitting the data as training progresses, as well as the **Test loss** and **Training loss** values in the **Output** section.
+> 4. If the model does not achieve loss below 0.2 on the test and training data, click reset, and repeat steps 1–3 with a different set of configuration settings. Repeat this process until you achieve the preferred results.
+>
+
+给出满足约束条件的<mark>截图</mark>，同学可以领悟概念和原理。
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/6e8ec7f85c470b44edc373985d94337c.png" alt="6e8ec7f85c470b44edc373985d94337c" style="zoom: 50%;" />
+
+
+
+
+
 > 阅读：PyTorch 教程，https://www.runoob.com/pytorch/pytorch-tutorial.html
 >
-> 使用PyTorch实现5个从基础模型到较复杂模型的训练与应用。相关代码及说明文档已整理于 Markdown 文件中，详见项目仓库：https://github.com/GMyhf/2025spring-cs201/tree/main/LLM
+> 我使用PyTorch实现5个从基础模型到较复杂模型的训练与应用。相关代码及说明文档已整理于 Markdown 文件中，详见项目仓库：https://github.com/GMyhf/2025spring-cs201/tree/main/LLM
 >
 > 1. `0_xor_bp_neural_net_manual`：手动实现反向传播的简单神经网络，用于异或问题。
 > 2. `1_iris_neural_network`：构建并训练用于鸢尾花分类的数据驱动神经网络。
@@ -347,6 +430,18 @@ Predictions after training:
 **任务描述**：使用全连接神经网络对经典的Iris（鸢尾花）数据集进行多分类。数据集包含150个样本，每个样本4个特征（花萼和花瓣长度/宽度），分为3个类别。
 
 **关键步骤**：数据预处理（标准化、训练/测试集划分）、模型构建、训练与评估。示例代码（PyTorch）：
+
+安装需要的包 pip install torchvision matplotlib
+
+> $ python iris_nn.py 
+>
+> Traceback (most recent call last):
+>
+>  File "/home/rocky/AI_literacy/iris_nn.py", line 3, in <module>
+>
+>   from sklearn.datasets import load_iris
+>
+> ModuleNotFoundError: No module named 'sklearn'
 
 ```python
 import torch, torch.nn as nn, torch.optim as optim
@@ -613,6 +708,42 @@ plt.show()
 MNIST是手写数字分类的基准数据集，包含60000张28×28的训练手写数字图片（0–9共10类）。我们使用经典的CNN（如ResNet18）来进行分类训练。
 
 关键点：加载MNIST数据集，定义卷积神经网络（例如预训练ResNet18或自定义小型CNN），训练多个epoch后评估。下面是示例代码：
+
+安装需要的包 
+
+> $ python MNIST_nn.py 
+>
+> Traceback (most recent call last):
+>
+>  File "/home/rocky/AI_literacy/MNIST_nn.py", line 2, in <module>
+>
+>   import torchvision
+>
+> ModuleNotFoundError: No module named 'torchvision'
+
+clab虚拟机需要登录网关，能访问外网，因为要下载数据
+
+> 否则，报302错误
+>
+> (.venv) [rocky@jensen AI_literacy]$ python MNIST_nn.py 
+> Traceback (most recent call last):
+>  File "/home/rocky/AI_literacy/MNIST_nn.py", line 166, in <module>
+>   main()
+>  File "/home/rocky/AI_literacy/MNIST_nn.py", line 25, in main
+>   trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform_train)
+>  File "/home/rocky/AI_literacy/.venv/lib64/python3.9/site-packages/torchvision/datasets/mnist.py", line 100, in __init__
+>
+>   self.download()
+>
+>  File "/home/rocky/AI_literacy/.venv/lib64/python3.9/site-packages/torchvision/datasets/mnist.py", line 197, in download
+>   raise RuntimeError(s)
+> RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+> Tried https://ossci-datasets.s3.amazonaws.com/mnist/, got:
+> <urlopen error [Errno 110] Connection timed out>
+> Tried http://yann.lecun.com/exdb/mnist/, got:
+> HTTP Error 302: Moved Temporarily
+
+
 
 ```python
 import torch
@@ -1410,6 +1541,12 @@ if __name__ == "__main__":
 > ```
 >
 > 
+
+
+
+2025年11月26日，在clab云虚拟机跑。虚拟机只有CPU。
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/33caace9ba4252b9bcc6707b67f18746.png" alt="33caace9ba4252b9bcc6707b67f18746" style="zoom: 33%;" />
 
 
 

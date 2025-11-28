@@ -436,11 +436,8 @@ Predictions after training:
 > $ python iris_nn.py 
 >
 > Traceback (most recent call last):
->
 >  File "/home/rocky/AI_literacy/iris_nn.py", line 3, in <module>
->
 >   from sklearn.datasets import load_iris
->
 > ModuleNotFoundError: No module named 'sklearn'
 
 ```python
@@ -2668,6 +2665,1495 @@ Build a Large Language Model (From Scratch)
 可以在本地 mac 或者 window 运行，配置方法方法如： ...Setup_....md。
 
 https://github.com/GMyhf/2025fall-cs201/tree/main/LLM
+
+
+
+# 附录
+
+# A. PyTorch教程@runoob
+
+https://www.runoob.com/pytorch/pytorch-tutorial.html
+
+PyTorch 是一个开源的机器学习库，主要用于进行计算机视觉（CV）、自然语言处理（NLP）、语音识别等领域的研究和开发。
+
+PyTorch由 Facebook 的人工智能研究团队开发，并在机器学习和深度学习社区中广泛使用。
+
+PyTorch 以其灵活性和易用性而闻名，特别适合于深度学习研究和开发。
+
+
+
+## 1.PyTorch安装
+
+在已经安装好的python环境中，在terminal窗口命令行中，激活环境，并安装torch包
+
+> Python开发环境配置指南，https://github.com/GMyhf/2025fall-cs101/blob/main/Python_Development_Setup_Mac_Windows.md
+
+```
+[hfyan@HongfeideMac-Studio MyPythonApp % source .venv/bin/activate
+(.venv) hfyan@HongfeideMac-Studio MyPythonApp % uv pip install torch torchvision torchaudio
+
+```
+
+
+
+**验证安装**
+
+为了确保 PyTorch 已正确安装，我们可以通过执行以下 PyTorch 代码来验证是否安装成功：
+
+**实例**
+
+```python
+import torch
+
+# 当前安装的 PyTorch 库的版本
+print(torch.__version__)
+
+# 检测 MPS 作为 GPU 后端是否可用（适用于 Apple Silicon）
+if torch.backends.mps.is_available():
+    device = torch.device("mps")
+    print("Using MPS device for GPU acceleration")
+else:   # 检查 CUDA 是否可用，即你的系统有 NVIDIA 的 GPU
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    print("MPS device not available, using CPU")
+
+"""
+2.9.1
+Using MPS device for GPU acceleration
+"""
+```
+
+
+
+一个简单的实例，构建一个随机初始化的张量：
+
+```python
+import torch
+x = torch.rand(5, 3)
+print(x)
+```
+
+如果安装成功，输出结果类似如下：
+
+```
+tensor([[0.8622, 0.5916, 0.8073],
+        [0.8955, 0.7416, 0.3482],
+        [0.8059, 0.1414, 0.2828],
+        [0.0923, 0.0113, 0.4226],
+        [0.4438, 0.9789, 0.9048]])
+```
+
+
+
+**实例**
+
+下面的是 PyTorch 中一些基本的张量操作：如何创建随机张量、进行逐元素运算、访问特定元素以及计算总和和最大值。
+
+```python
+import torch
+
+# 设置数据类型和设备
+dtype = torch.float  # 张量数据类型为浮点型
+device = torch.device("cpu")  # 本次计算在 CPU 上进行
+
+# 创建并打印两个随机张量 a 和 b
+a = torch.randn(2, 3, device=device, dtype=dtype)  # 创建一个 2x3 的随机张量
+b = torch.randn(2, 3, device=device, dtype=dtype)  # 创建另一个 2x3 的随机张量
+
+print("张量 a:")
+print(a)
+
+print("张量 b:")
+print(b)
+
+# 逐元素相乘并输出结果
+print("a 和 b 的逐元素乘积:")
+print(a * b)
+
+# 输出张量 a 所有元素的总和
+print("张量 a 所有元素的总和:")
+print(a.sum())
+
+# 输出张量 a 中第 2 行第 3 列的元素（注意索引从 0 开始）
+print("张量 a 第 2 行第 3 列的元素:")
+print(a[1, 2])
+
+# 输出张量 a 中的最大值
+print("张量 a 中的最大值:")
+print(a.max())
+
+"""
+张量 a:
+tensor([[ 0.8182,  0.4718,  0.8318],
+        [ 0.8146,  0.1508, -1.7619]])
+张量 b:
+tensor([[-1.7713,  0.8521,  0.4598],
+        [ 0.3082,  0.0558,  0.1254]])
+a 和 b 的逐元素乘积:
+tensor([[-1.4493,  0.4020,  0.3824],
+        [ 0.2510,  0.0084, -0.2209]])
+张量 a 所有元素的总和:
+tensor(1.3252)
+张量 a 第 2 行第 3 列的元素:
+tensor(-1.7619)
+张量 a 中的最大值:
+tensor(0.8318)
+"""
+```
+
+
+
+## 2.PyTorch 简介
+
+PyTorch 是一个开源的 Python 机器学习库，基于 Torch 库，底层由 C++ 实现，应用于人工智能领域，如计算机视觉和自然语言处理。
+
+PyTorch 最初由 Meta Platforms 的人工智能研究团队开发，现在属 于Linux 基金会的一部分。
+
+许多深度学习软件都是基于 PyTorch 构建的，包括特斯拉自动驾驶、Uber 的 Pyro、Hugging Face 的 Transformers、 PyTorch Lightning 和 Catalyst。
+
+**PyTorch 主要有两大特征：**
+
+- 类似于 NumPy 的张量计算，能在 GPU 或 MPS 等硬件加速器上加速。
+- 基于带自动微分系统的深度神经网络。
+
+PyTorch 包括 torch.autograd、torch.nn、torch.optim 等子模块。
+
+PyTorch 包含多种损失函数，包括 MSE（均方误差 = L2 范数）、交叉熵损失和负熵似然损失（对分类器有用）等。
+
+### PyTorch 特性
+
+- **动态计算图（Dynamic Computation Graphs）**： PyTorch 的计算图是动态的，这意味着它们在运行时构建，并且可以随时改变。这为实验和调试提供了极大的灵活性，因为开发者可以逐行执行代码，查看中间结果。
+- **自动微分（Automatic Differentiation）**： PyTorch 的自动微分系统允许开发者轻松地计算梯度，这对于训练深度学习模型至关重要。它通过反向传播算法自动计算出损失函数对模型参数的梯度。
+- **张量计算（Tensor Computation）**： PyTorch 提供了类似于 NumPy 的张量操作，这些操作可以在 CPU 和 GPU 上执行，从而加速计算过程。张量是 PyTorch 中的基本数据结构，用于存储和操作数据。
+- **丰富的 API**： PyTorch 提供了大量的预定义层、损失函数和优化算法，这些都是构建深度学习模型的常用组件。
+- **多语言支持**： PyTorch 虽然以 Python 为主要接口，但也提供了 C++ 接口，允许更底层的集成和控制。
+
+#### 动态计算图（Dynamic Computation Graph）
+
+PyTorch 最显著的特点之一是其动态计算图的机制。
+
+与 TensorFlow 的静态计算图（graph）不同，PyTorch 在执行时构建计算图，这意味着在每次计算时，图都会根据输入数据的形状自动变化。
+
+**动态计算图的优点：**
+
+- 更加灵活，特别适用于需要条件判断或递归的场景。
+- 方便调试和修改，能够直接查看中间结果。
+- 更接近 Python 编程的风格，易于上手。
+
+#### 张量（Tensor）与自动求导（Autograd）
+
+PyTorch 中的核心数据结构是 **张量（Tensor）**，它是一个多维矩阵，可以在 CPU 或 GPU 上高效地进行计算。张量的操作支持自动求导（Autograd）机制，使得在反向传播过程中自动计算梯度，这对于深度学习中的梯度下降优化算法至关重要。
+
+**张量（Tensor）：**
+
+- 支持在 CPU 和 GPU 之间进行切换。
+- 提供了类似 NumPy 的接口，支持元素级运算。
+- 支持自动求导，可以方便地进行梯度计算。
+
+**自动求导（Autograd）：**
+
+- PyTorch 内置的自动求导引擎，能够自动追踪所有张量的操作，并在反向传播时计算梯度。
+- 通过 `requires_grad` 属性，可以指定张量需要计算梯度。
+- 支持高效的反向传播，适用于神经网络的训练。
+
+#### 模型定义与训练
+
+PyTorch 提供了 `torch.nn` 模块，允许用户通过继承 `nn.Module` 类来定义神经网络模型。使用 `forward` 函数指定前向传播，自动反向传播（通过 `autograd`）和梯度计算也由 PyTorch 内部处理。
+
+**神经网络模块（torch.nn）：**
+
+- 提供了常用的层（如线性层、卷积层、池化层等）。
+- 支持定义复杂的神经网络架构（包括多输入、多输出的网络）。
+- 兼容与优化器（如 `torch.optim`）一起使用。
+
+#### GPU 加速
+
+PyTorch 完全支持在 GPU 上运行，以加速深度学习模型的训练。通过简单的 `.to(device)` 方法，用户可以将模型和张量转移到 GPU 上进行计算。PyTorch 支持多 GPU 训练，能够利用 NVIDIA CUDA 技术显著提高计算效率。
+
+**GPU 支持：**
+
+- 自动选择 GPU 或 CPU。
+- 支持通过 CUDA 加速运算。
+- 支持多 GPU 并行计算（`DataParallel` 或 `torch.distributed`）。
+
+#### 生态系统与社区支持
+
+PyTorch 作为一个开源项目，拥有一个庞大的社区和生态系统。它不仅在学术界得到了广泛的应用，也在工业界，特别是在计算机视觉、自然语言处理等领域中得到了广泛部署。PyTorch 还提供了许多与深度学习相关的工具和库，如：
+
+- **torchvision**：用于计算机视觉任务的数据集和模型。
+- **torchtext**：用于自然语言处理任务的数据集和预处理工具。
+- **torchaudio**：用于音频处理的工具包。
+- **PyTorch Lightning**：一种简化 PyTorch 代码的高层库，专注于研究和实验的快速迭代。
+
+------
+
+### 与其他框架的对比
+
+PyTorch 由于其灵活性、易用性和社区支持，已经成为很多深度学习研究者和开发者的首选框架。
+
+#### TensorFlow vs PyTorch
+
+- PyTorch 的动态计算图使得它更加灵活，适合快速实验和研究；而 TensorFlow 的静态计算图在生产环境中更具优化空间。
+- PyTorch 在调试时更加方便，TensorFlow 则在部署上更加成熟，支持更广泛的硬件和平台。
+- 近年来，TensorFlow 也引入了动态图（如 TensorFlow 2.x），使得两者在功能上趋于接近。
+- 其他深度学习框架，如 Keras、Caffe 等也有一定应用，但 PyTorch 由于其灵活性、易用性和社区支持，已经成为很多深度学习研究者和开发者的首选框架。
+
+| 特性               | **TensorFlow**                                          | **PyTorch**                                                  |
+| :----------------- | :------------------------------------------------------ | :----------------------------------------------------------- |
+| **开发公司**       | Google                                                  | Facebook (FAIR)                                              |
+| **计算图类型**     | 静态计算图（定义后再执行）                              | 动态计算图（定义即执行）                                     |
+| **灵活性**         | 低（计算图在编译时构建，不易修改）                      | 高（计算图在执行时动态创建，易于修改和调试）                 |
+| **调试**           | 较难（需要使用 `tf.debugging` 或外部工具调试）          | 容易（可以直接在 Python 中进行调试）                         |
+| **易用性**         | 低（较复杂，API 较多，学习曲线较陡峭）                  | 高（API 简洁，语法更加接近 Python，容易上手）                |
+| **部署**           | 强（支持广泛的硬件，如 TensorFlow Lite、TensorFlow.js） | 较弱（部署工具和平台相对较少，虽然有 TensorFlow 支持）       |
+| **社区支持**       | 很强（成熟且庞大的社区，广泛的教程和文档）              | 很强（社区活跃，特别是在学术界，快速发展的生态）             |
+| **模型训练**       | 支持分布式训练，支持多种设备（如 CPU、GPU、TPU）        | 支持分布式训练，支持多 GPU、CPU 和 TPU                       |
+| **API 层级**       | 高级API：Keras；低级API：TensorFlow Core                | 高级API：TorchVision、TorchText 等；低级API：Torch           |
+| **性能**           | 高（优化方面成熟，适合生产环境）                        | 高（适合研究和原型开发，生产性能也在提升）                   |
+| **自动求导**       | 通过 `tf.GradientTape` 实现动态求导（较复杂）           | 通过 `autograd` 动态求导（更简洁和直观）                     |
+| **调优与可扩展性** | 强（支持在多平台上运行，如 TensorFlow Serving 等）      | 较弱（虽然在学术和实验环境中表现优越，但生产环境支持相对较少） |
+| **框架灵活性**     | 较低（TensorFlow 2.x 引入了动态图特性，但仍不完全灵活） | 高（动态图带来更高的灵活性）                                 |
+| **支持多种语言**   | 支持多种语言（Python, C++, Java, JavaScript, etc.）     | 主要支持 Python（但也有 C++ API）                            |
+| **兼容性与迁移**   | TensorFlow 2.x 与旧版本兼容性较好                       | 与 TensorFlow 兼容性差，迁移较难                             |
+
+#### PyTorch vs NumPy
+
+| 特性         | PyTorch            | NumPy            |
+| :----------- | :----------------- | :--------------- |
+| **目标**     | 深度学习专用       | 通用科学计算     |
+| **GPU 支持** | 原生支持 CUDA      | 不直接支持       |
+| **自动微分** | 内置自动求导       | 需要手动计算梯度 |
+| **神经网络** | 丰富的神经网络模块 | 需要从零实现     |
+| **学习成本** | 相对较高           | 相对较低         |
+
+------
+
+### PyTorch 的历史与发展
+
+PyTorch 的前身是 Torch，这是一个基于 Lua 语言的科学计算框架。随着 Python 在机器学习领域的兴起，Facebook 团队决定将 Torch 的核心思想移植到 Python 上，从而诞生了 PyTorch。
+
+- **2016年**：Facebook 发布 PyTorch 0.1 版本
+- **2017年**：PyTorch 0.2 引入分布式训练支持
+- **2018年**：PyTorch 1.0 发布，增加了生产部署能力
+- **2019年**：PyTorch 1.3 引入移动端支持
+- **2020年**：PyTorch 1.6 增加了自动混合精度训练
+- **2021年**：PyTorch 1.9 引入 TorchScript 和 C++ 前端
+- **2022年**：PyTorch 1.12 优化了性能和稳定性
+- **2023年**：PyTorch 2.0 发布，引入编译模式大幅提升性能
+
+
+
+## 3.PyTorch 基础
+
+PyTorch 是一个开源的深度学习框架，以其灵活性和动态计算图而广受欢迎。
+
+PyTorch 主要有以下几个基础概念：张量（Tensor）、自动求导（Autograd）、神经网络模块（nn.Module）、优化器（optim）等。
+
+- **张量（Tensor）**：PyTorch 的核心数据结构，支持多维数组，并可以在 CPU 或 GPU 上进行加速计算。
+- **自动求导（Autograd）**：PyTorch 提供了自动求导功能，可以轻松计算模型的梯度，便于进行反向传播和优化。
+- **神经网络（nn.Module）**：PyTorch 提供了简单且强大的 API 来构建神经网络模型，可以方便地进行前向传播和模型定义。
+- **优化器（Optimizers）**：使用优化器（如 Adam、SGD 等）来更新模型的参数，使得损失最小化。
+- **设备（Device）**：可以将模型和张量移动到 GPU 上以加速计算。
+
+------
+
+### PyTorch 架构总览
+
+PyTorch 采用模块化设计，由多个相互协作的核心组件构成。理解这些组件的作用和相互关系，是掌握 PyTorch 的关键。
+
+**PyTorch 架构图**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    PyTorch 生态系统                          │
+├─────────────────────────────────────────────────────────────┤
+│  torchvision  │  torchtext  │  torchaudio  │  其他专业库     │
+├─────────────────────────────────────────────────────────────┤
+│                     PyTorch 核心                            │
+├───────────────┬─────────────────┬───────────────────────────┤
+│   torch.nn    │   torch.optim   │      torch.utils          │
+│   (神经网络)   │   (优化器)      │      (工具函数)           │
+├───────────────┼─────────────────┼───────────────────────────┤
+│               │                 │   torch.utils.data        │
+│  torch 核心   │  autograd       │   (数据加载)              │
+│  (张量计算)   │  (自动微分)     │                           │
+└───────────────┴─────────────────┴───────────────────────────┘
+```
+
+PyTorch 采用**分层架构**设计，从上层到底层依次为： 
+
+**1、Python API（顶层）**
+
+- `torch`：核心张量计算（类似NumPy，支持GPU）。 
+- `torch.nn`：神经网络层、损失函数等。 
+- `torch.autograd`：自动微分（反向传播）。 
+- 开发者直接调用的接口，简单易用。 
+
+**2、C++核心（中层）**
+
+- **ATen**：张量运算核心库（400+操作）。 
+- **JIT**：即时编译优化模型。 
+- **Autograd引擎**：自动微分的底层实现。 
+- 高性能计算，连接Python与底层硬件。 
+
+**3、基础库（底层）**
+
+- **TH/THNN**：C语言实现的基础张量和神经网络操作。 
+- **THC/THCUNN**：对应的CUDA（GPU）版本。 
+- 直接操作硬件（CPU/GPU），极致优化速度。 
+
+**执行流程**：
+Python代码 → C++核心计算 → 底层CUDA/C库加速 → 返回结果。
+既保持易用性，又确保高性能。
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/iGWbOXL.png" alt="img" style="zoom:67%;" />
+
+**张量（Tensor）**
+
+张量（Tensor）是 PyTorch 中的核心数据结构，用于存储和操作多维数组。
+
+张量可以视为一个多维数组，支持加速计算的操作。
+
+在 PyTorch 中，张量的概念类似于 NumPy 中的数组，但是 PyTorch 的张量可以运行在不同的设备上，比如 CPU 和 GPU，这使得它们非常适合于进行大规模并行计算，特别是在深度学习领域。
+
+- **维度（Dimensionality）**：张量的维度指的是数据的多维数组结构。例如，一个标量（0维张量）是一个单独的数字，一个向量（1维张量）是一个一维数组，一个矩阵（2维张量）是一个二维数组，以此类推。
+- **形状（Shape）**：张量的形状是指每个维度上的大小。例如，一个形状为`(3, 4)`的张量意味着它有3行4列。
+- **数据类型（Dtype）**：张量中的数据类型定义了存储每个元素所需的内存大小和解释方式。PyTorch支持多种数据类型，包括整数型（如`torch.int8`、`torch.int32`）、浮点型（如`torch.float32`、`torch.float64`）和布尔型（`torch.bool`）。
+
+**张量创建：**
+
+**实例**
+
+```python
+import torch
+
+# 创建一个 2x3 的全 0 张量
+a = torch.zeros(2, 3)
+print(a)
+
+# 创建一个 2x3 的全 1 张量
+b = torch.ones(2, 3)
+print(b)
+
+# 创建一个 2x3 的随机数张量
+c = torch.randn(2, 3)
+print(c)
+
+# 从 NumPy 数组创建张量
+import numpy as np
+numpy_array = np.array([[1, 2], [3, 4]])
+tensor_from_numpy = torch.from_numpy(numpy_array)
+print(tensor_from_numpy)
+
+# 在指定设备（CPU/GPU）上创建张量
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+d = torch.randn(2, 3, device=device)
+print(d)
+```
+
+输出结果类似如下：
+
+```
+tensor([[0., 0., 0.],
+        [0., 0., 0.]])
+tensor([[1., 1., 1.],
+        [1., 1., 1.]])
+tensor([[ 1.0189, -0.5718, -1.2814],
+        [-0.5865,  1.0855,  1.1727]])
+tensor([[1, 2],
+        [3, 4]])
+tensor([[-0.3360,  0.2203,  1.3463],
+        [-0.5982, -0.2704,  0.5429]])
+```
+
+**常用张量操作：**
+
+**实例**
+
+```py
+# 张量相加
+e = torch.randn(2, 3)
+f = torch.randn(2, 3)
+print(e + f)
+
+# 逐元素乘法
+print(e * f)
+
+# 张量的转置
+g = torch.randn(3, 2)
+print(g.t()) # 或者 g.transpose(0, 1)
+
+# 张量的形状
+print(g.shape) # 返回形状
+```
+
+
+
+**张量与设备**
+
+PyTorch 张量可以存在于不同的设备上，包括CPU和GPU，你可以将张量移动到 GPU 上以加速计算：
+
+```
+if torch.cuda.is_available():
+    tensor_gpu = tensor_from_list.to('cuda')  # 将张量移动到GPU
+```
+
+**梯度和自动微分**
+
+PyTorch的张量支持自动微分，这是深度学习中的关键特性。当你创建一个需要梯度的张量时，PyTorch可以自动计算其梯度：
+
+**实例**
+
+```python
+# 创建一个需要梯度的张量
+tensor_requires_grad = torch.tensor([1.0], requires_grad=True)
+
+# 进行一些操作
+tensor_result = tensor_requires_grad * 2
+
+# 计算梯度
+tensor_result.backward()
+print(tensor_requires_grad.grad) # 输出梯度
+```
+
+
+
+**内存和性能**
+
+PyTorch 张量还提供了一些内存管理功能，比如.clone()、.detach() 和 .to() 方法，它们可以帮助你优化内存使用和提高性能。
+
+------
+
+### 自动求导（Autograd）
+
+自动求导（Automatic Differentiation，简称Autograd）是深度学习框架中的一个核心特性，它允许计算机自动计算数学函数的导数。
+
+在深度学习中，自动求导主要用于两个方面：**一是在训练神经网络时计算梯度**，**二是进行反向传播算法的实现**。
+
+自动求导基于链式法则（Chain Rule），这是一个用于计算复杂函数导数的数学法则。链式法则表明，复合函数的导数是其各个组成部分导数的乘积。在深度学习中，模型通常是由许多层组成的复杂函数，自动求导能够高效地计算这些层的梯度。
+
+**动态图与静态图：**
+
+- **动态图（Dynamic Graph）**：在动态图中，计算图在运行时动态构建。每次执行操作时，计算图都会更新，这使得调试和修改模型变得更加容易。PyTorch使用的是动态图。
+- **静态图（Static Graph）**：在静态图中，计算图在开始执行之前构建完成，并且不会改变。TensorFlow最初使用的是静态图，但后来也支持动态图。
+
+PyTorch 提供了自动求导功能，通过 autograd 模块来自动计算梯度。
+
+torch.Tensor 对象有一个 requires_grad 属性，用于指示是否需要计算该张量的梯度。
+
+当你创建一个 requires_grad=True 的张量时，PyTorch 会自动跟踪所有对它的操作，以便在之后计算梯度。
+
+创建需要梯度的张量:
+
+**实例**
+
+```python
+# 创建一个需要计算梯度的张量
+x = torch.randn(2, 2, requires_grad=True)
+print(x)
+
+# 执行某些操作
+y = x + 2
+z = y * y * 3
+out = z.mean()
+
+print(out)
+
+
+```
+
+输出结果类似如下：
+
+```
+tensor([[0., 0., 0.],
+        [0., 0., 0.]])
+tensor([[1., 1., 1.],
+        [1., 1., 1.]])
+tensor([[ 1.0189, -0.5718, -1.2814],
+        [-0.5865,  1.0855,  1.1727]])
+tensor([[1, 2],
+        [3, 4]])
+tensor([[-0.3360,  0.2203,  1.3463],
+        [-0.5982, -0.2704,  0.5429]])
+tianqixin@Mac-mini runoob-test % python3 test.py
+tensor([[-0.1908,  0.2811],
+        [ 0.8068,  0.8002]], requires_grad=True)
+tensor(18.1469, grad_fn=<MeanBackward0>)
+```
+
+### 反向传播（Backpropagation）
+
+一旦定义了计算图，可以通过 **.backward()** 方法来计算梯度。
+
+**实例**
+
+```python
+# 反向传播，计算梯度
+out.backward()
+
+# 查看 x 的梯度
+print(x.grad)
+```
+
+在神经网络训练中，自动求导主要用于实现反向传播算法。
+
+反向传播是一种通过计算损失函数关于网络参数的梯度来训练神经网络的方法。在每次迭代中，网络的前向传播会计算输出和损失，然后反向传播会计算损失关于每个参数的梯度，并使用这些梯度来更新参数。
+
+**停止梯度计算**
+
+如果你不希望某些张量的梯度被计算（例如，当你不需要反向传播时），可以使用 **torch.no_grad()** 或设置 **requires_grad=False**。
+
+**实例**
+
+```python
+# 使用 torch.no_grad() 禁用梯度计算
+with torch.no_grad():
+  y = x * 2
+```
+
+
+
+------
+
+### 神经网络（nn.Module）
+
+神经网络是一种模仿人脑神经元连接的计算模型，由多层节点（神经元）组成，用于学习数据之间的复杂模式和关系。
+
+神经网络通过调整神经元之间的连接权重来优化预测结果，这一过程涉及前向传播、损失计算、反向传播和参数更新。
+
+神经网络的类型包括前馈神经网络、卷积神经网络（CNN）、循环神经网络（RNN）和长短期记忆网络（LSTM），它们在图像识别、语音处理、自然语言处理等多个领域都有广泛应用。
+
+PyTorch 提供了一个非常方便的接口来构建神经网络模型，即 **torch.nn.Module**。
+
+我们可以继承 nn.Module 类并定义自己的网络层。
+
+创建一个简单的神经网络：
+
+**实例**
+
+```python
+import torch.nn as nn
+import torch.optim as optim
+
+# 定义一个简单的全连接神经网络
+class SimpleNN(nn.Module):
+  def init(self):
+    super(SimpleNN, self).__init__()
+    self.fc1 = nn.Linear(2, 2) # 输入层到隐藏层
+    self.fc2 = nn.Linear(2, 1) # 隐藏层到输出层
+
+  def forward(self, x):
+    x = torch.relu(self.fc1(x)) # ReLU 激活函数
+    x = self.fc2(x)
+    return x
+
+# 创建网络实例
+model = SimpleNN()
+
+# 打印模型结构
+print(model)
+
+```
+
+输出结果：
+
+```
+SimpleNN(
+  (fc1): Linear(in_features=2, out_features=2, bias=True)
+  (fc2): Linear(in_features=2, out_features=1, bias=True)
+)
+```
+
+**训练过程：**
+
+1. **前向传播（Forward Propagation）**： 在前向传播阶段，输入数据通过网络层传递，每层应用权重和激活函数，直到产生输出。
+2. **计算损失（Calculate Loss）**： 根据网络的输出和真实标签，计算损失函数的值。
+3. **反向传播（Backpropagation）**： 反向传播利用自动求导技术计算损失函数关于每个参数的梯度。
+4. **参数更新（Parameter Update）**： 使用优化器根据梯度更新网络的权重和偏置。
+5. **迭代（Iteration）**： 重复上述过程，直到模型在训练数据上的性能达到满意的水平。
+
+### 前向传播与损失计算
+
+**实例**
+
+```python
+# 随机输入
+x = torch.randn(1, 2)
+
+# 前向传播
+output = model(x)
+print(output)
+
+# 定义损失函数（例如均方误差 MSE）
+criterion = nn.MSELoss()
+
+# 假设目标值为 1
+target = torch.randn(1, 1)
+
+# 计算损失
+loss = criterion(output, target)
+print(loss)
+```
+
+
+
+### 优化器（Optimizers）
+
+优化器在训练过程中更新神经网络的参数，以减少损失函数的值。
+
+PyTorch 提供了多种优化器，例如 SGD、Adam 等。
+
+使用优化器进行参数更新：
+
+**实例**
+
+```python
+# 定义优化器（使用 Adam 优化器）
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+# 训练步骤
+optimizer.zero_grad() # 清空梯度
+loss.backward() # 反向传播
+optimizer.step() # 更新参数
+```
+
+
+
+------
+
+### 训练模型
+
+训练模型是机器学习和深度学习中的核心过程，旨在通过大量数据学习模型参数，以便模型能够对新的、未见过的数据做出准确的预测。
+
+训练模型通常包括以下几个步骤：
+
+1. **数据准备**：
+   - 收集和处理数据，包括清洗、标准化和归一化。
+   - 将数据分为训练集、验证集和测试集。
+2. **定义模型**：
+   - 选择模型架构，例如决策树、神经网络等。
+   - 初始化模型参数（权重和偏置）。
+3. **选择损失函数**：
+   - 根据任务类型（如分类、回归）选择合适的损失函数。
+4. **选择优化器**：
+   - 选择一个优化算法，如SGD、Adam等，来更新模型参数。
+5. **前向传播**：
+   - 在每次迭代中，将输入数据通过模型传递，计算预测输出。
+6. **计算损失**：
+   - 使用损失函数评估预测输出与真实标签之间的差异。
+7. **反向传播**：
+   - 利用自动求导计算损失相对于模型参数的梯度。
+8. **参数更新**：
+   - 根据计算出的梯度和优化器的策略更新模型参数。
+9. **迭代优化**：
+   - 重复步骤5-8，直到模型在验证集上的性能不再提升或达到预定的迭代次数。
+10. **评估和测试**：
+    - 使用测试集评估模型的最终性能，确保模型没有过拟合。
+11. **模型调优**：
+    - 根据模型在测试集上的表现进行调参，如改变学习率、增加正则化等。
+12. **部署模型**：
+    - 将训练好的模型部署到生产环境中，用于实际的预测任务。
+
+**实例**
+
+```py
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+# 1. 定义一个简单的神经网络模型
+class SimpleNN(nn.Module):
+  def init(self):
+    super(SimpleNN, self).init()
+    self.fc1 = nn.Linear(2, 2) # 输入层到隐藏层
+    self.fc2 = nn.Linear(2, 1) # 隐藏层到输出层
+
+  def forward(self, x):
+    x = torch.relu(self.fc1(x)) # ReLU 激活函数
+    x = self.fc2(x)
+    return x
+
+# 2. 创建模型实例
+model = SimpleNN()
+
+# 3. 定义损失函数和优化器
+criterion = nn.MSELoss() # 均方误差损失函数
+optimizer = optim.Adam(model.parameters(), lr=0.001) # Adam 优化器
+
+# 4. 假设我们有训练数据 X 和 Y
+X = torch.randn(10, 2) # 10 个样本，2 个特征
+Y = torch.randn(10, 1) # 10 个目标值
+
+# 5. 训练循环
+for epoch in range(100):  # 训练 100 轮
+  optimizer.zero_grad() # 清空之前的梯度
+  output = model(X) # 前向传播
+  loss = criterion(output, Y) # 计算损失
+  loss.backward() # 反向传播
+  optimizer.step() # 更新参数
+
+  # 每 10 轮输出一次损失
+  if (epoch+1) % 10 == 0:
+    print(f'Epoch [{epoch+1}/100], Loss: {loss.item():.4f}')
+```
+
+输出结果如下：
+
+```
+Epoch [10/100], Loss: 1.7180
+Epoch [20/100], Loss: 1.6352
+Epoch [30/100], Loss: 1.5590
+Epoch [40/100], Loss: 1.4896
+Epoch [50/100], Loss: 1.4268
+Epoch [60/100], Loss: 1.3704
+Epoch [70/100], Loss: 1.3198
+Epoch [80/100], Loss: 1.2747
+Epoch [90/100], Loss: 1.2346
+Epoch [100/100], Loss: 1.1991
+```
+
+在每 10 轮，程序会输出当前的损失值，帮助我们跟踪模型的训练进度。随着训练的进行，损失值应该会逐渐降低，表示模型在不断学习并优化其参数。
+
+训练模型是一个迭代的过程，需要不断地调整和优化，直到达到满意的性能。这个过程涉及到大量的实验和调优，目的是使模型在新的、未见过的数据上也能有良好的泛化能力。
+
+------
+
+### 设备（Device）
+
+PyTorch 允许你将模型和数据移动到 GPU 上进行加速。
+
+使用 **torch.device** 来指定计算设备。
+
+将模型和数据移至 GPU:
+
+**实例**
+
+```python
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# 将模型移动到设备
+model.to(device)
+
+# 将数据移动到设备
+X = X.to(device)
+Y = Y.to(device)
+```
+
+在训练过程中，所有张量和模型都应该移到同一个设备上（要么都在 CPU 上，要么都在 GPU 上）。
+
+
+
+## 4.PyTorch 张量（Tensor）
+
+张量是一个多维数组，可以是标量、向量、矩阵或更高维度的数据结构。
+
+在 PyTorch 中，张量（Tensor）是数据的核心表示形式，类似于 NumPy 的多维数组，但具有更强大的功能，例如支持 GPU 加速和自动梯度计算。
+
+张量支持多种数据类型（整型、浮点型、布尔型等）。
+
+张量可以存储在 CPU 或 GPU 中，GPU 张量可显著加速计算。
+
+下图展示了不同维度的张量（Tensor）在 PyTorch 中的表示方法：
+
+![img](https://raw.githubusercontent.com/GMyhf/img/main/img/1__D5ZvufDS38WkhK9rK32hQ.jpg)
+
+**说明：**
+
+- **1D Tensor / Vector（一维张量/向量）:** 最基本的张量形式，可以看作是一个数组，图中的例子是一个包含 10 个元素的向量。
+- **2D Tensor / Matrix（二维张量/矩阵）:** 二维数组，通常用于表示矩阵，图中的例子是一个 4x5 的矩阵，包含了 20 个元素。
+- **3D Tensor / Cube（三维张量/立方体）:** 三维数组，可以看作是由多个矩阵堆叠而成的立方体，图中的例子展示了一个 3x4x5 的立方体，其中每个 5x5 的矩阵代表立方体的一个"层"。
+- **4D Tensor / Vector of Cubes（四维张量/立方体向量）:** 四维数组，可以看作是由多个立方体组成的向量，图中的例子没有具体数值，但可以理解为一个包含多个 3D 张量的集合。
+- **5D Tensor / Matrix of Cubes（五维张量/立方体矩阵）:** 五维数组，可以看作是由多个4D张量组成的矩阵，图中的例子同样没有具体数值，但可以理解为一个包含多个 4D 张量的集合。
+
+------
+
+**创建张量**
+
+张量创建的方式有：
+
+| **方法**                            | **说明**                                               | **示例代码**                                |
+| :---------------------------------- | :----------------------------------------------------- | :------------------------------------------ |
+| `torch.tensor(data)`                | 从 Python 列表或 NumPy 数组创建张量。                  | `x = torch.tensor([[1, 2], [3, 4]])`        |
+| `torch.zeros(size)`                 | 创建一个全为零的张量。                                 | `x = torch.zeros((2, 3))`                   |
+| `torch.ones(size)`                  | 创建一个全为 1 的张量。                                | `x = torch.ones((2, 3))`                    |
+| `torch.empty(size)`                 | 创建一个未初始化的张量。                               | `x = torch.empty((2, 3))`                   |
+| `torch.rand(size)`                  | 创建一个服从均匀分布的随机张量，值在 `[0, 1)`。        | `x = torch.rand((2, 3))`                    |
+| `torch.randn(size)`                 | 创建一个服从正态分布的随机张量，均值为 0，标准差为 1。 | `x = torch.randn((2, 3))`                   |
+| `torch.arange(start, end, step)`    | 创建一个一维序列张量，类似于 Python 的 `range`。       | `x = torch.arange(0, 10, 2)`                |
+| `torch.linspace(start, end, steps)` | 创建一个在指定范围内等间隔的序列张量。                 | `x = torch.linspace(0, 1, 5)`               |
+| `torch.eye(size)`                   | 创建一个单位矩阵（对角线为 1，其他为 0）。             | `x = torch.eye(3)`                          |
+| `torch.from_numpy(ndarray)`         | 将 NumPy 数组转换为张量。                              | `x = torch.from_numpy(np.array([1, 2, 3]))` |
+
+使用 **torch.tensor()** 函数，你可以将一个列表或数组转换为张量：
+
+**实例**
+
+```python
+import torch
+
+tensor = torch.tensor([1, 2, 3])
+print(tensor)
+```
+
+输出如下：
+
+```
+tensor([1, 2, 3])
+```
+
+如果你有一个 NumPy 数组，可以使用 torch.from_numpy() 将其转换为张量：
+
+实例
+
+```python
+import numpy as np
+
+np_array = np.array([1, 2, 3])
+tensor = torch.from_numpy(np_array)
+print(tensor)
+```
+
+输出如下：
+
+```
+tensor([1, 2, 3])
+```
+
+创建 2D 张量（矩阵）：
+
+**实例**
+
+```python
+import torch
+
+tensor_2d = torch.tensor([
+  [-9, 4, 2, 5, 7],
+  [3, 0, 12, 8, 6],
+  [1, 23, -6, 45, 2],
+  [22, 3, -1, 72, 6]
+])
+print("2D Tensor (Matrix):\n", tensor_2d)
+print("Shape:", tensor_2d.shape) # 形状
+```
+
+输出如下：
+
+```
+2D Tensor (Matrix):
+ tensor([[-9,  4,  2,  5,  7],
+        [ 3,  0, 12,  8,  6],
+        [ 1, 23, -6, 45,  2],
+        [22,  3, -1, 72,  6]])
+Shape: torch.Size([4, 5])
+```
+
+其他维度的创建：
+
+```python
+# 创建 3D 张量（立方体）
+tensor_3d = torch.stack([tensor_2d, tensor_2d + 10, tensor_2d - 5])  # 堆叠 3 个 2D 张量
+print("3D Tensor (Cube):\n", tensor_3d)
+print("Shape:", tensor_3d.shape)  # 形状
+
+# 创建 4D 张量（向量的立方体）
+tensor_4d = torch.stack([tensor_3d, tensor_3d + 100])  # 堆叠 2 个 3D 张量
+print("4D Tensor (Vector of Cubes):\n", tensor_4d)
+print("Shape:", tensor_4d.shape)  # 形状
+
+# 创建 5D 张量（矩阵的立方体）
+tensor_5d = torch.stack([tensor_4d, tensor_4d + 1000])  # 堆叠 2 个 4D 张量
+print("5D Tensor (Matrix of Cubes):\n", tensor_5d)
+print("Shape:", tensor_5d.shape)  # 形状
+```
+
+------
+
+**张量的属性**
+
+张量的属性如下表：
+
+| **属性**           | **说明**                         | **示例**                 |
+| :----------------- | :------------------------------- | :----------------------- |
+| `.shape`           | 获取张量的形状                   | `tensor.shape`           |
+| `.size()`          | 获取张量的形状                   | `tensor.size()`          |
+| `.dtype`           | 获取张量的数据类型               | `tensor.dtype`           |
+| `.device`          | 查看张量所在的设备 (CPU/GPU)     | `tensor.device`          |
+| `.dim()`           | 获取张量的维度数                 | `tensor.dim()`           |
+| `.requires_grad`   | 是否启用梯度计算                 | `tensor.requires_grad`   |
+| `.numel()`         | 获取张量中的元素总数             | `tensor.numel()`         |
+| `.is_cuda`         | 检查张量是否在 GPU 上            | `tensor.is_cuda`         |
+| `.T`               | 获取张量的转置（适用于 2D 张量） | `tensor.T`               |
+| `.item()`          | 获取单元素张量的值               | `tensor.item()`          |
+| `.is_contiguous()` | 检查张量是否连续存储             | `tensor.is_contiguous()` |
+
+**实例**
+
+```python
+import torch
+
+# 创建一个 2D 张量
+tensor = torch.tensor([[1, 2, 3], [4, 5, 6]], dtype=torch.float32)
+
+# 张量的属性
+print("Tensor:\n", tensor)
+print("Shape:", tensor.shape) # 获取形状
+print("Size:", tensor.size()) # 获取形状（另一种方法）
+print("Data Type:", tensor.dtype) # 数据类型
+print("Device:", tensor.device) # 设备
+print("Dimensions:", tensor.dim()) # 维度数
+print("Total Elements:", tensor.numel()) # 元素总数
+print("Requires Grad:", tensor.requires_grad) # 是否启用梯度
+print("Is CUDA:", tensor.is_cuda) # 是否在 GPU 上
+print("Is Contiguous:", tensor.is_contiguous()) # 是否连续存储
+
+\# 获取单元素值
+single_value = torch.tensor(42)
+print("Single Element Value:", single_value.item())
+
+\# 转置张量
+tensor_T = tensor.T
+print("Transposed Tensor:\n", tensor_T)
+```
+
+输出结果：
+
+```
+Tensor:
+ tensor([[1., 2., 3.],
+         [4., 5., 6.]])
+Shape: torch.Size([2, 3])
+Size: torch.Size([2, 3])
+Data Type: torch.float32
+Device: cpu
+Dimensions: 2
+Total Elements: 6
+Requires Grad: False
+Is CUDA: False
+Is Contiguous: True
+Single Element Value: 42
+Transposed Tensor:
+ tensor([[1., 4.],
+         [2., 5.],
+         [3., 6.]])
+```
+
+------
+
+**张量的操作**
+
+张量操作方法说明如下。
+
+**基础操作：**
+
+| **操作**                | **说明**                       | **示例代码**                  |
+| :---------------------- | :----------------------------- | :---------------------------- |
+| `+`, `-`, `*`, `/`      | 元素级加法、减法、乘法、除法。 | `z = x + y`                   |
+| `torch.matmul(x, y)`    | 矩阵乘法。                     | `z = torch.matmul(x, y)`      |
+| `torch.dot(x, y)`       | 向量点积（仅适用于 1D 张量）。 | `z = torch.dot(x, y)`         |
+| `torch.sum(x)`          | 求和。                         | `z = torch.sum(x)`            |
+| `torch.mean(x)`         | 求均值。                       | `z = torch.mean(x)`           |
+| `torch.max(x)`          | 求最大值。                     | `z = torch.max(x)`            |
+| `torch.min(x)`          | 求最小值。                     | `z = torch.min(x)`            |
+| `torch.argmax(x, dim)`  | 返回最大值的索引（指定维度）。 | `z = torch.argmax(x, dim=1)`  |
+| `torch.softmax(x, dim)` | 计算 softmax（指定维度）。     | `z = torch.softmax(x, dim=1)` |
+
+形状操作
+
+| **操作**                 | **说明**                       | **示例代码**                   |
+| :----------------------- | :----------------------------- | :----------------------------- |
+| `x.view(shape)`          | 改变张量的形状（不改变数据）。 | `z = x.view(3, 4)`             |
+| `x.reshape(shape)`       | 类似于 `view`，但更灵活。      | `z = x.reshape(3, 4)`          |
+| `x.t()`                  | 转置矩阵。                     | `z = x.t()`                    |
+| `x.unsqueeze(dim)`       | 在指定维度添加一个维度。       | `z = x.unsqueeze(0)`           |
+| `x.squeeze(dim)`         | 去掉指定维度为 1 的维度。      | `z = x.squeeze(0)`             |
+| `torch.cat((x, y), dim)` | 按指定维度连接多个张量。       | `z = torch.cat((x, y), dim=1)` |
+
+**实例**
+
+```python
+import torch
+
+# 创建一个 2D 张量
+tensor = torch.tensor([[1, 2, 3], [4, 5, 6]], dtype=torch.float32)
+print("原始张量:\n", tensor)
+
+# 1. 索引和切片操作
+print("\n【索引和切片】")
+print("获取第一行:", tensor[0]) # 获取第一行
+print("获取第一行第一列的元素:", tensor[0, 0]) # 获取特定元素
+print("获取第二列的所有元素:", tensor[:, 1]) # 获取第二列所有元素
+
+# 2. 形状变换操作
+print("\n【形状变换】")
+reshaped = tensor.view(3, 2) # 改变张量形状为 3x2
+print("改变形状后的张量:\n", reshaped)
+flattened = tensor.flatten() # 将张量展平成一维
+print("展平后的张量:\n", flattened)
+
+# 3. 数学运算操作
+print("\n【数学运算】")
+tensor_add = tensor + 10 # 张量加法
+print("张量加 10:\n", tensor_add)
+tensor_mul = tensor * 2 # 张量乘法
+print("张量乘 2:\n", tensor_mul)
+tensor_sum = tensor.sum() # 计算所有元素的和
+print("张量元素的和:", tensor_sum.item())
+
+# 4. 与其他张量的操作
+print("\n【与其他张量操作】")
+tensor2 = torch.tensor([[1, 1, 1], [1, 1, 1]], dtype=torch.float32)
+print("另一个张量:\n", tensor2)
+tensor_dot = torch.matmul(tensor, tensor2.T) # 张量矩阵乘法
+print("矩阵乘法结果:\n", tensor_dot)
+
+# 5. 条件判断和筛选
+print("\n【条件判断和筛选】")
+mask = tensor > 3 # 创建一个布尔掩码
+print("大于 3 的元素的布尔掩码:\n", mask)
+filtered_tensor = tensor[tensor > 3] # 筛选出符合条件的元素
+print("大于 3 的元素:\n", filtered_tensor)
+```
+
+输出结果：
+
+```
+原始张量:
+ tensor([[1., 2., 3.],
+         [4., 5., 6.]])
+
+【索引和切片】
+获取第一行: tensor([1., 2., 3.])
+获取第一行第一列的元素: tensor(1.)
+获取第二列的所有元素: tensor([2., 5.])
+
+【形状变换】
+改变形状后的张量:
+ tensor([[1., 2.],
+         [3., 4.],
+         [5., 6.]])
+展平后的张量:
+ tensor([1., 2., 3., 4., 5., 6.])
+
+【数学运算】
+张量加 10:
+ tensor([[11., 12., 13.],
+         [14., 15., 16.]])
+张量乘 2:
+ tensor([[ 2.,  4.,  6.],
+         [ 8., 10., 12.]])
+张量元素的和: 21.0
+
+【与其他张量操作】
+另一个张量:
+ tensor([[1., 1., 1.],
+         [1., 1., 1.]])
+矩阵乘法结果:
+ tensor([[ 6.,  6.],
+         [15., 15.]])
+
+【条件判断和筛选】
+大于 3 的元素的布尔掩码:
+ tensor([[False, False, False],
+         [ True,  True,  True]])
+大于 3 的元素:
+ tensor([4., 5., 6.])
+```
+
+------
+
+**张量的 GPU 加速**
+
+将张量转移到 GPU：
+
+```python
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+x = torch.tensor([1.0, 2.0, 3.0], device=device)
+```
+
+检查 GPU 是否可用：
+
+```python
+torch.cuda.is_available()  # 返回 True 或 False
+```
+
+------
+
+**张量与 NumPy 的互操作**
+
+张量与 NumPy 的互操作如下表所示：
+
+| **操作**                    | **说明**                                   | **示例代码**                     |
+| :-------------------------- | :----------------------------------------- | :------------------------------- |
+| `torch.from_numpy(ndarray)` | 将 NumPy 数组转换为张量。                  | `x = torch.from_numpy(np_array)` |
+| `x.numpy()`                 | 将张量转换为 NumPy 数组（仅限 CPU 张量）。 | `np_array = x.numpy()`           |
+
+**实例**
+
+```python
+import torch
+import numpy as np
+
+# 1. NumPy 数组转换为 PyTorch 张量
+print("1. NumPy 转为 PyTorch 张量")
+numpy_array = np.array([[1, 2, 3], [4, 5, 6]])
+print("NumPy 数组:\n", numpy_array)
+
+# 使用 torch.from_numpy() 将 NumPy 数组转换为张量
+tensor_from_numpy = torch.from_numpy(numpy_array)
+print("转换后的 PyTorch 张量:\n", tensor_from_numpy)
+
+# 修改 NumPy 数组，观察张量的变化（共享内存）
+numpy_array[0, 0] = 100
+print("修改后的 NumPy 数组:\n", numpy_array)
+print("PyTorch 张量也会同步变化:\n", tensor_from_numpy)
+
+# 2. PyTorch 张量转换为 NumPy 数组
+print("\n2. PyTorch 张量转为 NumPy 数组")
+tensor = torch.tensor([[7, 8, 9], [10, 11, 12]], dtype=torch.float32)
+print("PyTorch 张量:\n", tensor)
+
+# 使用 tensor.numpy() 将张量转换为 NumPy 数组
+numpy_from_tensor = tensor.numpy()
+print("转换后的 NumPy 数组:\n", numpy_from_tensor)
+
+# 修改张量，观察 NumPy 数组的变化（共享内存）
+tensor[0, 0] = 77
+print("修改后的 PyTorch 张量:\n", tensor)
+print("NumPy 数组也会同步变化:\n", numpy_from_tensor)
+
+# 3. 注意：不共享内存的情况（需要复制数据）
+print("\n3. 使用 clone() 保证独立数据")
+tensor_independent = torch.tensor([[13, 14, 15], [16, 17, 18]], dtype=torch.float32)
+numpy_independent = tensor_independent.clone().numpy() # 使用 clone 复制数据
+print("原始张量:\n", tensor_independent)
+tensor_independent[0, 0] = 0 # 修改张量数据
+print("修改后的张量:\n", tensor_independent)
+print("NumPy 数组（不会同步变化）:\n", numpy_independent)
+```
+
+输出结果：
+
+```
+1. NumPy 转为 PyTorch 张量
+NumPy 数组:
+ [[1 2 3]
+ [4 5 6]]
+转换后的 PyTorch 张量:
+ tensor([[1, 2, 3],
+         [4, 5, 6]])
+
+修改后的 NumPy 数组:
+ [[100   2   3]
+ [  4   5   6]]
+PyTorch 张量也会同步变化:
+ tensor([[100,   2,   3],
+         [  4,   5,   6]])
+
+2. PyTorch 张量转为 NumPy 数组
+PyTorch 张量:
+ tensor([[ 7.,  8.,  9.],
+         [10., 11., 12.]])
+转换后的 NumPy 数组:
+ [[ 7.  8.  9.]
+ [10. 11. 12.]]
+
+修改后的 PyTorch 张量:
+ tensor([[77.,  8.,  9.],
+         [10., 11., 12.]])
+NumPy 数组也会同步变化:
+ [[77.  8.  9.]
+ [10. 11. 12.]]
+
+3. 使用 clone() 保证独立数据
+原始张量:
+ tensor([[13., 14., 15.],
+         [16., 17., 18.]])
+修改后的张量:
+ tensor([[ 0., 14., 15.],
+         [16., 17., 18.]])
+NumPy 数组（不会同步变化）:
+ [[13. 14. 15.]
+ [16. 17. 18.]]
+```
+
+
+
+## 5.PyTorch 神经网络基础
+
+神经网络是一种模仿人脑处理信息方式的计算模型，它由许多相互连接的节点（神经元）组成，这些节点按层次排列。
+
+神经网络的强大之处在于其能够自动从大量数据中学习复杂的模式和特征，无需人工设计特征提取器。
+
+随着深度学习的发展，神经网络已经成为解决许多复杂问题的关键技术。
+
+**神经元（Neuron）**
+
+神经元是神经网络的基本单元，它接收输入信号，通过加权求和后与偏置（bias）相加，然后通过激活函数处理以产生输出。
+
+神经元的权重和偏置是网络学习过程中需要调整的参数。
+
+**输入和输出:**
+
+- **输入（Input）**：输入是网络的起始点，可以是特征数据，如图像的像素值或文本的词向量。
+- **输出（Output）**：输出是网络的终点，表示模型的预测结果，如分类任务中的类别标签。
+
+神经元接收多个输入（例如x1, x2, ..., xn），如果输入的加权和大于激活阈值（activation potential），则产生二进制输出。
+
+![img](https://raw.githubusercontent.com/GMyhf/img/main/img/1_upfpVueoUuKPkyX3PR3KBg.png)
+
+神经元的输出可以看作是输入的加权和加上偏置（bias），神经元的数学表示：
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/f0b929045ae6eef23514bd7024be62f0.png" alt="img" style="zoom:50%;" />
+
+这里，**wj** 是权重，**xj** 是输入，而 **Bias** 是偏置项。
+
+**层（Layer）**
+
+输入层和输出层之间的层被称为隐藏层，层与层之间的连接密度和类型构成了网络的配置。
+
+神经网络由多个层组成，包括：
+
+- **输入层（Input Layer）**：接收原始输入数据。
+- **隐藏层（Hidden Layer）**：对输入数据进行处理，可以有多个隐藏层。
+- **输出层（Output Layer）**：产生最终的输出结果。
+
+典型的神经网络架构:
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/1_3fA77_mLNiJTSgZFhYnU0Q3K5DV4.webp" alt="img" style="zoom: 50%;" />
+
+
+
+**前馈神经网络（Feedforward Neural Network，FNN）**
+
+前馈神经网络（Feedforward Neural Network，FNN）是神经网络家族中的基本单元。
+
+前馈神经网络特点是数据从输入层开始，经过一个或多个隐藏层，最后到达输出层，全过程没有循环或反馈。
+
+![img](https://raw.githubusercontent.com/GMyhf/img/main/img/neural-net.png)
+
+**前馈神经网络的基本结构：**
+
+- **输入层：** 数据进入网络的入口点。输入层的每个节点代表一个输入特征。
+- **隐藏层：**一个或多个层，用于捕获数据的非线性特征。每个隐藏层由多个神经元组成，每个神经元通过激活函数增加非线性能力。
+- **输出层：**输出网络的预测结果。节点数和问题类型相关，例如分类问题的输出节点数等于类别数。
+- **连接权重与偏置：**每个神经元的输入通过权重进行加权求和，并加上偏置值，然后通过激活函数传递。
+
+
+
+**循环神经网络（Recurrent Neural Network, RNN）**
+
+循环神经网络（Recurrent Neural Network, RNN）络是一类专门处理序列数据的神经网络，能够捕获输入数据中时间或顺序信息的依赖关系。
+
+RNN 的特别之处在于它具有"记忆能力"，可以在网络的隐藏状态中保存之前时间步的信息。
+
+循环神经网络用于处理随时间变化的数据模式。
+
+在 RNN 中，相同的层被用来接收输入参数，并在指定的神经网络中显示输出参数。
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/0_xs3Dya3qQBx6IU7C.png" alt="img" style="zoom:67%;" />
+
+PyTorch 提供了强大的工具来构建和训练神经网络。
+
+神经网络在 PyTorch 中是通过 **torch.nn** 模块来实现的。
+
+**torch.nn** 模块提供了各种网络层（如全连接层、卷积层等）、损失函数和优化器，让神经网络的构建和训练变得更加方便。
+
+![img](https://raw.githubusercontent.com/GMyhf/img/main/img/1_3DUs-90altOgaBcVJ9LTGg.png)
+
+在 PyTorch 中，构建神经网络通常需要继承 nn.Module 类。
+
+nn.Module 是所有神经网络模块的基类，你需要定义以下两个部分：
+
+- **`__init__()`**：定义网络层。
+- **`forward()`**：定义数据的前向传播过程。
+
+简单的全连接神经网络（Fully Connected Network）：
+
+**实例**
+
+```python
+import torch
+import torch.nn as nn
+
+# 定义一个简单的神经网络模型
+class SimpleNN(nn.Module):
+  def init(self):
+    super(SimpleNN, self).init()
+    # 定义一个输入层到隐藏层的全连接层
+    self.fc1 = nn.Linear(2, 2) # 输入 2 个特征，输出 2 个特征
+    # 定义一个隐藏层到输出层的全连接层
+    self.fc2 = nn.Linear(2, 1) # 输入 2 个特征，输出 1 个预测值
+
+  def forward(self, x):
+    # 前向传播过程
+    x = torch.relu(self.fc1(x)) # 使用 ReLU 激活函数
+    x = self.fc2(x) # 输出层
+    return x
+
+# 创建模型实例
+model = SimpleNN()
+
+# 打印模型
+print(model)
+```
+
+输出结果如下：
+
+```
+SimpleNN(
+  (fc1): Linear(in_features=2, out_features=2, bias=True)
+  (fc2): Linear(in_features=2, out_features=1, bias=True)
+)
+```
+
+PyTorch 提供了许多<mark>常见的神经网络层</mark>，以下是几个常见的：
+
+- **`nn.Linear(in_features, out_features)`**：全连接层，输入 `in_features` 个特征，输出 `out_features` 个特征。
+- **`nn.Conv2d(in_channels, out_channels, kernel_size)`**：2D 卷积层，用于图像处理。
+- **`nn.MaxPool2d(kernel_size)`**：2D 最大池化层，用于降维。
+- **`nn.ReLU()`**：ReLU 激活函数，常用于隐藏层。
+- **`nn.Softmax(dim)`**：Softmax 激活函数，通常用于输出层，适用于多类分类问题。
+
+
+
+**激活函数（Activation Function）**
+
+激活函数决定了神经元是否应该被激活。它们是非线性函数，使得神经网络能够学习和执行更复杂的任务。常见的激活函数包括：
+
+- Sigmoid：用于二分类问题，输出值在 0 和 1 之间。
+- Tanh：输出值在 -1 和 1 之间，常用于输出层之前。
+- ReLU（Rectified Linear Unit）：目前最流行的激活函数之一，定义为 `f(x) = max(0, x)`，有助于解决梯度消失问题。
+- Softmax：常用于多分类问题的输出层，将输出转换为概率分布。
+
+**实例**
+
+```python
+import torch.nn.functional as F
+
+# ReLU 激活
+output = F.relu(input_tensor)
+
+# Sigmoid 激活
+output = torch.sigmoid(input_tensor)
+
+# Tanh 激活
+output = torch.tanh(input_tensor)
+```
+
+
+
+**损失函数（Loss Function）**
+
+损失函数用于衡量模型的预测值与真实值之间的差异。
+
+常见的损失函数包括：
+
+- **均方误差（MSELoss）**：回归问题常用，计算输出与目标值的平方差。
+- **交叉熵损失（CrossEntropyLoss）**：分类问题常用，计算输出和真实标签之间的交叉熵。
+- **BCEWithLogitsLoss**：二分类问题，结合了 Sigmoid 激活和二元交叉熵损失。
+
+**实例**
+
+```python
+# 均方误差损失
+criterion = nn.MSELoss()
+
+# 交叉熵损失
+criterion = nn.CrossEntropyLoss()
+
+# 二分类交叉熵损失
+criterion = nn.BCEWithLogitsLoss()
+```
+
+
+
+**优化器（Optimizer）**
+
+<mark>优化器负责在训练过程中更新网络的权重和偏置</mark>。
+
+常见的优化器包括：
+
+- SGD（随机梯度下降）
+- Adam（自适应矩估计）
+- RMSprop（均方根传播）
+
+**实例**
+
+```python
+import torch.optim as optim
+
+# 使用 SGD 优化器
+optimizer = optim.SGD(model.parameters(), lr=0.01)
+
+# 使用 Adam 优化器
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+```
+
+
+
+**训练过程（Training Process）**
+
+训练神经网络涉及以下步骤：
+
+1. **准备数据**：通过 `DataLoader` 加载数据。
+2. **定义损失函数和优化器**。
+3. **前向传播**：计算模型的输出。
+4. **计算损失**：与目标进行比较，得到损失值。
+5. **反向传播**：通过 `loss.backward()` 计算梯度。
+6. **更新参数**：通过 `optimizer.step()` 更新模型的参数。
+7. **重复上述步骤**，直到达到预定的训练轮数。
+
+**实例**
+
+```python
+\# 假设已经定义好了模型、损失函数和优化器
+
+\# 训练数据示例
+X = torch.randn(10, 2) # 10 个样本，每个样本有 2 个特征
+Y = torch.randn(10, 1) # 10 个目标标签
+
+\# 训练过程
+for epoch in range(100):  # 训练 100 轮
+  model.train() # 设置模型为训练模式
+  optimizer.zero_grad() # 清除梯度
+  output = model(X) # 前向传播
+  loss = criterion(output, Y) # 计算损失
+  loss.backward() # 反向传播
+  optimizer.step() # 更新权重
+  
+  if (epoch + 1) % 10 == 0:  # 每 10 轮输出一次损失
+    print(f'Epoch [{epoch + 1}/100], Loss: {loss.item():.4f}')
+```
+
+
+
+**测试与评估**
+
+训练完成后，需要对模型进行测试和评估。
+
+常见的步骤包括：
+
+- **计算测试集的损失**：测试模型在未见过的数据上的表现。
+- **计算准确率（Accuracy）**：对于分类问题，计算正确预测的比例。
+
+**实例**
+
+```python
+# 假设你有测试集 X_test 和 Y_test
+model.eval() # 设置模型为评估模式
+with torch.no_grad():  # 在评估过程中禁用梯度计算
+  output = model(X_test)
+  loss = criterion(output, Y_test)
+  print(f'Test Loss: {loss.item():.4f}')
+```
+
+
+
+**神经网络类型**
+
+1. **前馈神经网络（Feedforward Neural Networks）**：数据单向流动，从输入层到输出层，无反馈连接。
+2. **卷积神经网络（Convolutional Neural Networks, CNNs）**：适用于图像处理，使用卷积层提取空间特征。
+3. **循环神经网络（Recurrent Neural Networks, RNNs）**：适用于序列数据，如时间序列分析和自然语言处理，允许信息反馈循环。
+4. **长短期记忆网络（Long Short-Term Memory, LSTM）**：一种特殊的RNN，能够学习长期依赖关系。
 
 
 

@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-11-28 00:39 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-11-29 12:35 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,6 +19,9 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1201 | 455A. Boredom | dp | 1500  | https://codeforces.com/problemset/problem/455/A    |
+| 1130 | 1195C. Basketball Exercise | dp | 1400  | https://codeforces.com/problemset/problem/1195/C    |
+| 1129 | 698A. Vacations | dp | 1400  | https://codeforces.com/problemset/problem/698/A    |
 | 1128 | 29741:神经网络之国 | dp      | Tough | http://cs101.openjudge.cn/practice/29741/           |
 | 1127 | 1145: Tree Summing | tree      | Medium | http://cs101.openjudge.cn/practice/01145/          |
 | 1126 | 2075C. Two Colors  | binary search, combinatorics, math      | 1500 | https://codeforces.com/contest/2075/problem/C          |

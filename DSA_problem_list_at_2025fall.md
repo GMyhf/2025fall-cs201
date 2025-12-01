@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-11-29 12:35 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-12-01 22:19 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,6 +19,7 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1202 | 210.课程表II      | topological sort   | Medium | https://leetcode.cn/problems/course-schedule-ii/
 | 1201 | 455A. Boredom | dp | 1500  | https://codeforces.com/problemset/problem/455/A    |
 | 1130 | 1195C. Basketball Exercise | dp | 1400  | https://codeforces.com/problemset/problem/1195/C    |
 | 1129 | 698A. Vacations | dp | 1400  | https://codeforces.com/problemset/problem/698/A    |

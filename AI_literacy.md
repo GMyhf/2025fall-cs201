@@ -3192,9 +3192,7 @@ https://github.com/GMyhf/2025fall-cs201/tree/main/LLM
 
 
 
-# 附录
-
-# A. PyTorch教程@runoob
+# 附录A. PyTorch教程@runoob
 
 https://www.runoob.com/pytorch/pytorch-tutorial.html
 

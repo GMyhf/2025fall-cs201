@@ -1,10 +1,9 @@
 # 人工智能概览
 
-*Updated 2025-12-03 18:31 GMT+8*  
+*Updated 2025-12-03 19:51 GMT+8*  
 *Compiled by Hongfei Yan (2025 Summer)*    
-https://github.com/GMyhf/2025fall-cs201/
 
-
+https://github.com/GMyhf/2025fall-cs201/blob/main/AI_literacy.md
 
 
 
@@ -49,23 +48,21 @@ https://github.com/GMyhf/2025fall-cs201/
 >
 > Q: 如何用**浏览器手动下载** `uer/roberta-base-chinese-extractive-qa` 模型，做到完全 **离线部署** 的步骤：
 >
-> 🔗 1. 打开模型页面
+> 1. 打开模型页面
 >
 > 浏览器访问：https://huggingface.co/uer/roberta-base-chinese-extractive-qa
 >
-> ------
->
-> 📁 2. 进入 “Files and versions” 页面，手动下载以下几个关键文件：
+> 2. 进入 “Files and versions” 页面，手动下载以下几个关键文件：
 >
 > | 文件名                    | 说明                           |
-> | ------------------------- | ------------------------------ |
+>| ------------------------- | ------------------------------ |
 > | `config.json`             | 模型结构配置                   |
 > | `pytorch_model.bin`       | 模型权重（很大，400MB 左右）   |
 > | `tokenizer_config.json`   | tokenizer 配置                 |
 > | `vocab.txt`               | 中文词表（必需）               |
 > | `special_tokens_map.json` | 特殊符号定义（可选但推荐）     |
 > | `tokenizer.json`          | tokenizer 的二进制形式（可选） |
->
+> 
 > 你可以在网页中依次点击这些文件，然后点击右上角 “Download”。
 >
 > 
@@ -73,13 +70,13 @@ https://github.com/GMyhf/2025fall-cs201/
 > 或者这里下载：
 >
 > https://disk.pku.edu.cn/link/AA5F507BA7BC504334ACA7FCBECFE64995
-> Name: model-roberta-chinese-qa.zip
+>Name: model-roberta-chinese-qa.zip
 > Expires: Never
 > Pickup Code: zXih
 
 
 
-🗂️ 我的clab云虚拟机beijing.zhengmao.ltd，`AI_literacy`文件夹
+我的clab云虚拟机beijing.zhengmao.ltd，`AI_literacy`文件夹
 
 ```
 [rocky@jensen AI_literacy]$ tree
@@ -154,7 +151,7 @@ Device set to use cpu
 
 > 用一个本地的中文问答模型，在一段文本里提取问题的答案。
 >
-> ✅ 1. 引入 Hugging Face 的 `pipeline`
+> 1. 引入 Hugging Face 的 `pipeline`
 >
 > ```python
 >from transformers import pipeline
@@ -164,7 +161,7 @@ Device set to use cpu
 >
 > 
 >
-> ✅ 2. 构造问答任务的 pipeline（使用本地模型）
+> 2. 构造问答任务的 pipeline（使用本地模型）
 >
 > ```python
 >qa = pipeline(
@@ -183,11 +180,11 @@ Device set to use cpu
 > | `model="./roberta-chinese-qa"` | 指向本地下载的模型文件夹，里面包含 `pytorch_model.bin`、`config.json` 等 |
 > | `framework="pt"`               | 显式要求使用 PyTorch，而不是 TensorFlow，防止意外加载 TF 模型引发错误 |
 > 
-> 📝 `tokenizer` 会自动从模型目录中加载，无需单独指定。
+> `tokenizer` 会自动从模型目录中加载，无需单独指定。
 >
 > ------
 >
-> ✅ 3. 运行问答推理
+> 3. 运行问答推理
 >
 > ```python
 >result = qa(
@@ -216,76 +213,73 @@ Device set to use cpu
 
 # 4. 深度学习与神经网络
 
-深度学习是连接主义流派的重要组成，主要使用多层神经网络自动学习特征和模式。本节重点介绍神经网络的关键算法与实战示例。
-
-**神经网络反向传播**
-
-反向传播（Backpropagation）是训练神经网络的核心算法。其思想是通过前向传播计算输出，然后反向传播误差并更新网络权重，以最小化损失函数[4]。前向传播阶段，从输入层经过加权求和、激活函数（如ReLU、Softmax）逐层计算输出；反向传播阶段，利用链式法则计算损失对每个参数的梯度，然后采用梯度下降或自适应优化器（如Adam）更新权重。反向传播使得多层深度网络的训练成为可能，是深度学习兴起的基石[3]。
-
-算法流程概述： 
-
-1. **前向传播**：将输入数据逐层传递，计算每层神经元输出并最终得到预测结果。 
-2. **误差计算**：使用损失函数（如交叉熵、均方误差）计算预测输出与真实标签之间的误差。 
-3. **反向传播**：从输出层向输入层反向传播误差，通过链式法则计算每个参数的梯度。 
-4. **参数更新**：根据梯度对权重和偏置进行更新（如$w \leftarrow w - \eta \frac{\partial L}{\partial w}$），常用优化算法有随机梯度下降、Adam等。 
-5. **重复迭代**：对所有训练样本多次迭代（多个epoch），直到损失收敛或达到训练轮次上限。
-
-反向传播的引入极大提高了网络训练效率，使得多层深度网络成为可行。需要注意的是，深层网络可能面临**梯度消失**或**梯度爆炸**等问题（尤其使用Sigmoid/Tanh激活函数时），现代实践常用ReLU及批归一化等方法缓解。
+深度学习是连接主义流派的核心方法之一，其核心思想是利用**多层神经网络**自动从数据中学习层次化的特征表示。本节将系统介绍神经网络的关键训练机制——**反向传播算法**，并结合5个由浅入深的PyTorch实战示例，帮助读者掌握从基础建模到复杂图像分类任务的完整流程。
 
 
 
-**交互可视化神经网络**
+**神经网络与反向传播**
+
+**反向传播（Backpropagation）** 是训练神经网络的基石算法。它通过两个阶段协同工作： 
+
+1. **前向传播**：输入数据逐层经过加权求和与非线性激活函数（如 ReLU、Softmax），最终输出预测结果； 
+2. **反向传播**：基于损失函数（如交叉熵、均方误差）计算预测值与真实标签之间的误差，并利用**链式法则**高效地计算损失对每一层参数的梯度。
+
+随后，优化器（如 SGD、Adam）依据这些梯度更新网络权重，目标是最小化整体损失。这一机制使得训练包含数十甚至上百层的深度网络成为可能，直接推动了深度学习的爆发式发展。
+
+**反向传播算法流程**
+
+1. **前向传播**：输入 → 逐层计算 → 输出预测值 $\hat{y}$ 
+2. **损失计算**：$L = \text{Loss}(\hat{y}, y)$ 
+3. **梯度反传**：从输出层向输入层，逐层计算 $\frac{\partial L}{\partial w}$ 和 $\frac{\partial L}{\partial b}$ 
+4. **参数更新**：例如使用梯度下降：
+   $$ w \leftarrow w - \eta \cdot \frac{\partial L}{\partial w} $$
+   其中 $\eta$ 为学习率。 
+5. **迭代训练**：遍历训练集多个 epoch，直至损失收敛或达到预设轮次。
+
+> ⚠️ **注意**：深层网络易遭遇**梯度消失**（vanishing gradients）或**梯度爆炸**（exploding gradients）问题，尤其在使用 Sigmoid 或 Tanh 激活函数时。现代实践中常采用 **ReLU 激活函数**、**批归一化（BatchNorm）** 和**残差连接（ResNet）** 等技术加以缓解。
+
+
+
+**交互可视化：理解神经网络**
+
+Google 提供了一个优秀的交互式神经网络训练工具，帮助直观理解模型如何分离非线性可分数据：
 
 https://developers.google.com/machine-learning/crash-course/neural-networks/interactive-exercises?hl=zh-cn
 
-**您的任务**：配置一个神经网络，使其能够将下图中的橙点与蓝点分开，并在训练数据和测试数据上实现低于 0.2 的损失。
+**任务目标**：配置一个神经网络，使其能够将下图中的橙点与蓝点分开，并在训练数据和测试数据上实现低于 0.2 的损失。
 
-**说明：**
+**操作指南：**
 
-在下方的互动式 widget 中：
+1. 调整网络结构：
+   - 点击 **HIDDEN LAYERS** 左侧的 **+ / –** 添加/删除隐藏层；
+   - 点击某隐藏层上方的 **+ / –** 调整该层神经元数量。
+2. 修改超参数：
+   - 从 **Learning rate** 下拉菜单选择合适的学习率（建议尝试 0.01 ~ 0.1）；
+   - 从 **Activation** 下拉菜单选择激活函数（推荐 **ReLU**）。
+3. 点击 ▶️ 开始训练，观察损失曲线与决策边界演化。
+4. 若未达标，点击 **Reset** 并尝试新配置。
 
-1. 通过尝试以下部分配置设置来修改神经网络超参数：
-   - 点击网络图中的**隐藏层**标题左侧的 **+** 和 **-** 按钮，添加或移除隐藏层。
-   - 点击隐藏层列上方的 **+** 和 **-** 按钮，即可在隐藏层中添加或移除神经元。
-   - 如需更改学习率，请从图表上方的**学习率**下拉菜单中选择一个新值。
-   - 通过从图表上方的**激活**下拉菜单中选择新值来更改激活函数。
-2. 点击图表上方的“播放”(▶️) 按钮，使用指定的参数训练神经网络模型。
-3. 在训练过程中，观察模型拟合数据的可视化效果，以及**输出**部分中的**测试损失**和**训练损失**值。
-4. 如果模型在测试数据和训练数据上的损失未达到 0.2 以下，请点击“重置”，然后使用另一组配置设置重复执行第 1-3 步。重复此过程，直到获得理想的结果。
-
-> **Your task:** configure a neural network that can separate the orange dots from the blue dots in the diagram, achieving a loss of less than 0.2 on both the training and test data.
->
-> **Instructions:**
->
-> In the interactive widget:
->
-> 1. Modify the neural network hyperparameters by experimenting with some of the following config settings:
->    - Add or remove hidden layers by clicking the **+** and **-** buttons to the left of the **HIDDEN LAYERS** heading in the network diagram.
->    - Add or remove neurons from a hidden layer by clicking the **+** and **-** buttons above a hidden-layer column.
->    - Change the learning rate by choosing a new value from the **Learning rate** drop-down above the diagram.
->    - Change the activation function by choosing a new value from the **Activation** drop-down above the diagram.
-> 2. Click the Play button above the diagram to train the neural network model using the specified parameters.
-> 3. Observe the visualization of the model fitting the data as training progresses, as well as the **Test loss** and **Training loss** values in the **Output** section.
-> 4. If the model does not achieve loss below 0.2 on the test and training data, click reset, and repeat steps 1–3 with a different set of configuration settings. Repeat this process until you achieve the preferred results.
->
-
-给出满足约束条件的<mark>截图</mark>，同学可以领悟概念和原理。
+**成功示例截图如下**（损失均低于 0.2）：
 
 <img src="https://raw.githubusercontent.com/GMyhf/img/main/img/6e8ec7f85c470b44edc373985d94337c.png" alt="6e8ec7f85c470b44edc373985d94337c" style="zoom: 50%;" />
 
 
 
+**PyTorch 实战：5 个神经网络应用示例**
+
+以下示例涵盖从手动实现到现代架构的完整演进路径。后四个示例使用PyTorch编写， 教程在 https://www.runoob.com/pytorch/pytorch-tutorial.html 或参看附录 A。
+
+| 编号 | 示例名称                     | 内容概述                                          | 技术要点                                   |
+| ---- | ---------------------------- | ------------------------------------------------- | ------------------------------------------ |
+| 1    | `0_xor_bp_neural_net_manual` | 手动实现反向传播，解决 XOR 非线性分类问题         | 张量运算、梯度手动计算、无框架依赖         |
+| 2    | `1_iris_neural_network`      | 使用全连接网络对鸢尾花数据集进行三分类            | 数据加载、`nn.Module`、交叉熵损失          |
+| 3    | `2_mnist_resnet18`           | 微调 ResNet18 对 MNIST 手写数字分类               | 迁移学习、图像预处理、`torchvision.models` |
+| 4    | `3_cifar10_resnet18`         | 在 CIFAR-10 上训练 ResNet18                       | 数据增强、学习率调度、GPU 加速             |
+| 5    | `4_tiny_imagenet_resnet50`   | 使用 ResNet50 处理更复杂的 Tiny ImageNet 分类任务 | 大规模数据处理、模型微调、性能评估         |
+
+> 所有代码均可在配套仓库（https://github.com/GMyhf/2025spring-cs201/tree/main/LLM）中找到，建议按顺序实践，逐步掌握从“理解原理”到“工程部署”的完整技能链。
 
 
-> 阅读：PyTorch 教程，https://www.runoob.com/pytorch/pytorch-tutorial.html，详见附录A。
->
-> 我使用PyTorch实现5个从基础模型到较复杂模型的训练与应用。
->
-> 1. `0_xor_bp_neural_net_manual`：手动实现反向传播的简单神经网络，用于异或问题。详见附录B。
-> 2. `1_iris_neural_network`：构建并训练用于鸢尾花分类的数据驱动神经网络。
-> 3. `2_mnist_resnet18`：使用 ResNet18 模型对 MNIST 手写数字进行分类。
-> 4. `3_cifar10_resnet18`：将 ResNet18 应用于 CIFAR-10 图像分类任务。
-> 5. `4_tiny_imagenet_resnet50`：基于 ResNet50 模型处理 Tiny ImageNet 图像分类任务。详见附录C。
 
 ## 4.1 在异或问题（XOR）中手动实现反向传播
 
@@ -314,6 +308,651 @@ for epoch in range(epochs):
 ```
 
 
+
+Backpropagation in Neural Network
+
+https://www.geeksforgeeks.org/machine-learning/backpropagation-in-neural-network/
+
+
+
+反向传播（Back Propagation），又称为“误差的反向传播”，是一种用于训练神经网络的方法。其目标是通过调整网络中的权重（weights）和偏置（biases），来减小模型预测输出与实际输出之间的差异。
+
+它通过迭代方式更新权重和偏置，以最小化损失函数（cost function）。在每一个训练周期（epoch）中，模型会根据误差梯度（error gradient）更新参数，常用的优化算法包括梯度下降（Gradient Descent）或随机梯度下降（SGD）。该算法使用微积分中的<mark>链式法则</mark>来计算梯度，从而能够有效地穿越复杂的神经网络结构，优化损失函数。
+
+> Back Propagation is also known as "Backward Propagation of Errors" is a method used to train neural network . Its goal is to reduce the difference between the model’s predicted output and the actual output by adjusting the weights and biases in the network.
+>
+> It works iteratively to adjust weights and bias to minimize the cost function. In each epoch the model adapts these parameters by reducing loss by following the error gradient. It often uses optimization algorithms like **gradient descent** or **stochastic gradient descent**. The algorithm computes the gradient using the chain rule from calculus allowing it to effectively navigate complex layers in the neural network to minimize the cost function.
+
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20250701163824448467/Backpropagation-in-Neural-Network-1.webp" alt="Backpropagation-in-Neural-Network-1" style="zoom:67%;" />
+
+<center>A simple illustration of how the backpropagation works by adjustments of weights</center>
+
+<center>通过权重调整，简单展示反向传播的工作方式</center>
+
+
+
+**反向传播的重要性：**
+
+- **高效的权重更新**：利用链式法则计算损失函数对每个权重的梯度，从而高效地更新参数。
+- **良好的扩展性**：适用于多层结构和复杂架构，是深度学习可行的核心算法。
+- **自动学习能力**：训练过程自动进行，模型会不断调整自身来优化性能。
+
+> **Back Propagation** plays a critical role in how neural networks improve over time. Here's why:
+>
+> 1. **Efficient Weight Update**: It computes the gradient of the loss function with respect to each weight using the chain rule making it possible to update weights efficiently.
+> 2. **Scalability**: The Back Propagation algorithm scales well to networks with multiple layers and complex architectures making deep learning feasible.
+> 3. **Automated Learning**: With Back Propagation the learning process becomes automated and the model can adjust itself to optimize its performance.
+
+
+
+### 4.1.1 反向传播算法的工作流程
+
+反向传播算法包括两个主要步骤：**前向传播（Forward Pass）** 和 **反向传播（Backward Pass）**
+
+#### 1. 前向传播
+
+输入数据从输入层开始，经过带权重的连接传递到隐藏层。例如，一个有两个隐藏层 h1 和 h2 的网络中，h1 的输出作为 h2 的输入。在应用激活函数前，还会加上偏置项。
+
+每一层都会计算输入的加权和（记作 `a`），再通过如 ReLU 等激活函数得到输出 `o`。最终，输出层通常会使用 softmax 激活函数将结果转换为分类概率。
+
+> ### Working of Back Propagation Algorithm
+>
+> The Back Propagation algorithm involves two main steps: the **Forward Pass** and the **Backward Pass**.
+>
+> ### 1. Forward Pass Work
+>
+> In **forward pass** the input data is fed into the input layer. These inputs combined with their respective weights are passed to hidden layers. For example in a network with two hidden layers (h1 and h2) the output from h1 serves as the input to h2. Before applying an activation function, a bias is added to the weighted inputs.
+>
+> Each hidden layer computes the weighted sum (`a`) of the inputs then applies an activation function like [**ReLU (Rectified Linear Unit)**](https://www.geeksforgeeks.org/deep-learning/relu-activation-function-in-deep-learning/) to obtain the output (`o`). The output is passed to the next layer where an activation function such as [**softmax**](https://www.geeksforgeeks.org/deep-learning/the-role-of-softmax-in-neural-networks-detailed-explanation-and-applications/) converts the weighted outputs into probabilities for classification.
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-2.webp" alt="Backpropagation-in-Neural-Network-2" style="zoom:67%;" />
+
+<center>The forward pass using weights and biases</center>
+
+> h1,h2，表示隐藏层的两个神经元
+
+
+
+#### 2. Backward Pass反向传播
+
+反向传播阶段会将预测输出与实际输出的误差向后传递，并调整每一层的权重和偏置。常见的误差计算方法是**均方误差（MSE）**：
+
+$MSE = (\text{Predicted Output} − \text{Actual Output})^2$
+
+在误差计算之后，通过链式法则计算梯度，这些梯度用于指导权重和偏置的更新方向和幅度。反向传播过程是逐层执行的，<mark>激活函数的导数在梯度计算中起着关键作用</mark>。
+
+
+
+**反向传播的示例：机器学习中的案例**
+
+假设我们使用 sigmoid 激活函数，目标输出为 0.5，学习率为 1。
+
+> #### 2. Backward Pass
+>
+> In the backward pass the error (the difference between the predicted and actual output) is propagated back through the network to adjust the weights and biases. One common method for error calculation is the [**Mean Squared Error (MSE)**](https://www.geeksforgeeks.org/maths/mean-squared-error/) given by:
+>
+> $MSE = (\text{Predicted Output} − \text{Actual Output})^2$
+>
+> Once the error is calculated the network adjusts weights using **gradients** which are computed with the chain rule. These gradients indicate how much each weight and bias should be adjusted to minimize the error in the next iteration. The backward pass continues layer by layer ensuring that the network learns and improves its performance. The activation function through its derivative plays a crucial role in computing these gradients during Back Propagation.
+>
+> 
+>
+> **Example of Back Propagation in Machine Learning**
+>
+> Let’s walk through an example of Back Propagation in machine learning. Assume the neurons use the sigmoid activation function for the forward and backward pass. The target output is 0.5 and the learning rate is 1.
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-3.webp" alt="Backpropagation-in-Neural-Network-3" style="zoom:67%;" />
+
+<center>Example (1) of backpropagation sum</center>
+
+
+
+### 4.1.2 前向传播
+
+#### 1. 初始计算
+
+The weighted sum at each node is calculated using:
+
+> $a_j=\sum(w_{i,j}∗x_i)$
+
+Where,
+
+- $a_j$ is the weighted sum of all the inputs and weights at each node
+- $w_{i,j}$ represents the weights between the $i^{th}$ input and the $j^{th}$ neuron
+- $x_i$ represents the value of the $i^{th}$ input
+
+`O (output):`After applying the activation function to `a`, we get the output of the neuron:
+
+> $o_j = \text{activation function}(a_j)$
+
+#### 2. Sigmoid函数
+
+The sigmoid function returns a value between 0 and 1, introducing non-linearity into the model.
+
+> $y_j = \frac{1}{1+e^{−a_j}}$ 
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-4.webp" alt="Backpropagation-in-Neural-Network-4" style="zoom:67%;" />
+
+<center>To find the outputs of y3, y4 and y5</center>
+
+
+
+#### 3. 输出计算
+
+h1 节点：
+$$
+a_1 = (w_{1,1} \times x_1) + (w_{2,1} \times x_2)
+$$
+
+$$
+a_1 = (0.2 \times 0.35) + (0.2 \times 0.7) = 0.21
+$$
+
+计算完 $a_1$ 后，我们可以继续计算 $y_3$ 的值：
+
+$$
+y_j = F(a_j) = \frac{1}{1 + e^{-a_1}}
+$$
+
+$$
+y_3 = F(0.21) = \frac{1}{1 + e^{-0.21}} = 0.56
+$$
+
+
+
+h2 节点：
+$$
+a_2 = (w_{1,2} \times x_1) + (w_{2,2} \times x_2) = (0.3 \times 0.35) + (0.3 \times 0.7) = 0.315
+$$
+
+$$
+y_4 = F(0.315) = \frac{1}{1 + e^{-0.315}} = 0.578
+$$
+
+
+
+输出节点 O3：
+$$
+a_3 = (w_{1,3} \times y_3) + (w_{2,3} \times y_4) = (0.3 \times 0.56) + (0.9 \times 0.58) = 0.702
+$$
+
+$$
+y_5 = F(0.702) = \frac{1}{1 + e^{-0.702}} = 0.67
+$$
+
+
+
+> At h1 node
+>
+> Once we calculated the a1 value, we can now proceed to find the y3 value:
+>
+> Similarly find the values of y4 at h2 and y5 at O3
+
+
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-5.webp" alt="Backpropagation-in-Neural-Network-5" style="zoom:67%;" />
+
+<center>Values of y3, y4 and y5</center>
+
+
+
+#### 4. 误差计算
+
+Our actual output is 0.5 but we obtained 0.67**.** To calculate the error we can use the below formula:
+
+> $Error_j=y_{target}−y_5$ 
+
+=> 0.5−0.67=−0.17
+
+Using this error value we will be backpropagating.
+
+
+
+### 4.1.3 反向传播
+
+#### 1. Calculating Gradients计算梯度
+
+The change in each weight is calculated as:
+
+> $Δw_{ij}=η×δ_j×O_j$
+
+Where:
+
+- $δ_j$ is the error term for each unit,
+- $η$ is the learning rate.
+
+#### 2. Output Unit Error输出层误差
+
+For O3:
+
+> $δ_5=y_5(1−y_5)(y_{target}−y_5)$
+
+=0.67(1−0.67)(−0.17)=−0.0376
+
+#### 3. Hidden Unit Error隐藏层误差
+
+For h1:
+
+> $δ_3=y_3(1−y_3)(w_{1,3}×δ_5)$
+
+=0.56(1−0.56)(0.3×−0.0376)=−0.0027
+
+
+
+For h2:
+
+> $δ_4=y_4(1−y_4)(w_{2,3}×δ_5)$
+
+=0.59(1−0.59)(0.9×−0.0376)=−0.0819
+
+
+
+#### 4. Weight Updates权重更新
+
+For the weights from hidden to output layer:
+
+> $Δw_{2,3}=1×(−0.0376)×0.59=−0.022184$
+
+New weight:
+
+> $w_{2,3}(new)=−0.022184+0.9=0.877816$
+
+For weights from input to hidden layer:
+
+> $Δw_{1,1}=1×(−0.0027)×0.35=0.000945$
+
+New weight:
+
+> $w_{1,1}(new)=0.000945+0.2=0.200945$
+
+Similarly other weights are updated:
+
+- $w_{1,2}(new)=0.273225$
+- $w_{1,3}(new)=0.086615$
+- $w_{2,1}(new)=0.269445$
+- $w_{2,2}(new)=0.18534$
+
+The updated weights are illustrated below
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-5-20251127160556998.webp" alt="Backpropagation-in-Neural-Network-5" style="zoom:67%;" />
+
+<center>Through backward pass the weights are updated</center>
+
+> 上图权重没有更新，例如：$w_{2,2}$应该更新为0.18534
+
+
+
+After updating the weights the forward pass is repeated yielding:
+
+- y3=0.57
+- y4=0.56
+- y5=0.61
+
+仍未达到目标值 0.5，因此继续进行反向传播，直到收敛。
+
+> Since y5=0.61 is still not the target output the process of calculating the error and backpropagating continues until the desired output is reached.
+
+
+
+This process demonstrates how Back Propagation iteratively updates weights by minimizing errors until the network accurately predicts the output.
+
+> $Error=y_{target}−y_5$
+
+=0.5−0.61=−0.11=0.5−0.61=−0.11
+
+This process is said to be continued until the actual output is gained by the neural network.
+
+
+
+### 4.1.4 用于 XOR 问题的反向传播实现
+
+**Q: XOR 问题是什么？**
+
+> XOR（异或）是一个经典的逻辑问题，它的输入输出如下：
+>
+> | 输入 A | 输入 B | 输出 |
+> | ------ | ------ | ---- |
+> | 0      | 0      | 0    |
+> | 0      | 1      | 1    |
+> | 1      | 0      | 1    |
+> | 1      | 1      | 0    |
+>
+> 这个问题**不能用一条直线分开**（不是线性可分的），所以单层感知机无法解决，必须用**至少一个隐藏层的神经网络**。
+
+
+
+> “**单层感知机**”（Single-Layer Perceptron）是神经网络最原始、最简单的形式，由 Frank Rosenblatt 在 1957 年提出。理解它，有助于明白为什么像 **XOR 这样的问题无法被它解决**，从而引出多层神经网络和反向传播的必要性。
+>
+> 单层感知机结构：
+>
+> - **输入层**：接收特征（比如 $x_1, x_2$）
+> - **输出层**：**直接输出结果**（没有隐藏层！）
+> - 每个输入有一个对应的权重 $w_1, w_2$，还有一个偏置 $b$
+>
+> **数学表达：**
+> $$
+> z = w_1 x_1 + w_2 x_2 + b
+> \nonumber
+> $$
+>
+> $$
+> \text{output} = \begin{cases} 1 & \text{if } z \geq 0 \\ 0 & \text{if } z < 0 \end{cases}
+> \nonumber
+> $$
+>
+> > 注意：**没有激活函数（或只有阶跃函数）**，**没有隐藏层**，所以叫“单层”。
+> >
+> > 阶跃函数是“硬判决”，适合理论分析；但因为不可导，不能用于现代神经网络的训练。
+>
+> ------
+>
+> **单层感知机能做什么**？
+>
+> 它只能解决 **线性可分**（linearly separable）的问题。
+>
+> **例子：AND 门**
+>
+> | x₁   | x₂   | y    |
+> | ---- | ---- | ---- |
+> | 0    | 0    | 0    |
+> | 0    | 1    | 0    |
+> | 1    | 0    | 0    |
+> | 1    | 1    | 1    |
+>
+> 可以用一条直线分开 0 和 1 → **线性可分** → **单层感知机可以学会**
+>
+> 比如：
+> 取 (w_1 = 1, w_2 = 1, b = -1.5)
+> 则：
+>
+> - (0+0-1.5 = -1.5 < 0 → 0)
+> - (1+1-1.5 = 0.5 ≥ 0 → 1)
+>
+> 完美！
+>
+> ------
+>
+> **单层感知机不能做什么？**
+>
+> **XOR 问题（异或）：**
+>
+> | x₁   | x₂   | y    |
+> | ---- | ---- | ---- |
+> | 0    | 0    | 0    |
+> | 0    | 1    | 1    |
+> | 1    | 0    | 1    |
+> | 1    | 1    | 0    |
+>
+> 在二维平面上画出来：
+>
+> ```
+> (0,1) ● (y=1)        (1,1) ○ (y=0)
+> 
+> (0,0) ○ (y=0)        (1,0) ● (y=1)
+> ```
+>
+> 你会发现：**无法用一条直线把 ● 和 ○ 完全分开**！
+>
+> → 这就是 **非线性可分问题**。
+>
+> **结论**： 
+>
+> > **单层感知机无法解决 XOR 问题**，因为它缺乏非线性表达能力。
+>
+> ------
+>
+> ** 那怎么办？——引入隐藏层！**
+>
+> 1969 年，Minsky 和 Papert 在《Perceptrons》一书中指出了这个局限，导致神经网络研究一度停滞。
+>
+> 直到后来人们发现：
+>
+> > **只要加一个隐藏层，并使用非线性激活函数（如 sigmoid、ReLU），神经网络就能逼近任意函数**（万能近似定理）。
+>
+> 于是，**多层感知机**（MLP） + **反向传播** 成为解决方案。
+>
+> ------
+>
+> **🔄 对比总结**
+>
+> | 特性                | 单层感知机         | 多层感知机（带反向传播） |
+> | ------------------- | ------------------ | ------------------------ |
+> | 隐藏层              | ❌ 没有             | ✅ 有（至少1层）          |
+> | 激活函数            | 阶跃函数（不可导） | Sigmoid / ReLU（可导）   |
+> | 能否解决 AND/OR/NOT | ✅ 可以             | ✅ 可以                   |
+> | 能否解决 XOR        | ❌ 不行             | ✅ 可以                   |
+> | 是否支持反向传播    | ❌ 不支持（不可导） | ✅ 支持                   |
+> | 学习能力            | 仅线性分类         | 非线性建模               |
+>
+> ------
+>
+> 小知识
+>
+> - “感知机”（Perceptron）通常特指**单层、使用阶跃激活、用感知机学习规则更新权重**的模型。
+> - 而我们今天说的“神经网络”，一般指**多层、可微激活、用梯度下降+反向传播训练**的模型，也叫 **多层感知机**（MLP），尽管名字里有“感知机”，但已经完全不同了。
+>
+> 
+
+
+
+以下代码演示了如何在神经网络中使用反向传播来解决 XOR 问题。该神经网络包含：
+
+> This code demonstrates how Back Propagation is used in a neural network to solve the XOR problem. The neural network consists of:
+>
+
+#### 1. 定义神经网络结构
+
+输入层：2个节点，隐藏层：4个神经元，输出层：1个神经元，激活函数：Sigmoid
+
+> We define a neural network as Input layer with 2 inputs, Hidden layer with 4 neurons, Output layer with 1 output neuron and use **Sigmoid** function as activation function.
+
+- **self.input_size = input_size**: stores the size of the input layer
+- **self.hidden_size = hidden_size:** stores the size of the hidden layer
+- **self.weights_input_hidden = np.random.randn(self.input_size, self.hidden_size)**: initializes weights for input to hidden layer
+- **self.weights_hidden_output = np.random.randn(self.hidden_size, self.output_size)**: initializes weights for hidden to output layer
+- **self.bias_hidden = np.zeros((1, self.hidden_size)):** initializes bias for hidden layer
+- **self.bias_output = np.zeros((1, self.output_size)):** initializes bias for output layer
+
+
+
+```python3
+import numpy as np
+
+
+class NeuralNetwork:
+    def __init__(self, input_size, hidden_size, output_size):
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+
+        self.weights_input_hidden = np.random.randn(
+            self.input_size, self.hidden_size)
+        self.weights_hidden_output = np.random.randn(
+            self.hidden_size, self.output_size)
+
+        self.bias_hidden = np.zeros((1, self.hidden_size))
+        self.bias_output = np.zeros((1, self.output_size))
+
+    def sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
+
+    def sigmoid_derivative(self, x):
+        return x * (1 - x)
+```
+
+
+
+#### 2. 定义前向传播
+
+In Forward pass inputs are passed through the network activating the hidden and output layers using the sigmoid function.
+
+- **self.hidden_activation = np.dot(X, self.weights_input_hidden) + self.bias_hidden**: calculates activation for hidden layer
+- **self.hidden_output= self.sigmoid(self.hidden_activation)**: applies activation function to hidden layer
+- **self.output_activation= np.dot(self.hidden_output, self.weights_hidden_output) + self.bias_output:** calculates activation for output layer
+- **self.predicted_output = self.sigmoid(self.output_activation):** applies activation function to output layer
+
+
+
+
+
+```python3
+def feedforward(self, X):
+    self.hidden_activation = np.dot(
+        X, self.weights_input_hidden) + self.bias_hidden
+    self.hidden_output = self.sigmoid(self.hidden_activation)
+
+    self.output_activation = np.dot(
+        self.hidden_output, self.weights_hidden_output) + self.bias_output
+    self.predicted_output = self.sigmoid(self.output_activation)
+
+    return self.predicted_output
+```
+
+
+
+#### 3. 定义反向传播
+
+In Backward pass or Back Propagation the errors between the predicted and actual outputs are computed. The gradients are calculated using the derivative of the sigmoid function and weights and biases are updated accordingly.
+
+- **output_error = y - self.predicted_output:** calculates the error at the output layer
+- **output_delta = output_error * self.sigmoid_derivative(self.predicted_output):** calculates the delta for the output layer
+- **hidden_error = np.dot(output_delta, self.weights_hidden_output.T):** calculates the error at the hidden layer
+- **hidden_delta = hidden_error \* self.sigmoid_derivative(self.hidden_output):** calculates the delta for the hidden layer
+- **self.weights_hidden_output += np.dot(self.hidden_output.T, output_delta) * learning_rate:** updates weights between hidden and output layers
+- **self.weights_input_hidden += np.dot(X.T, hidden_delta) * learning_rate:** updates weights between input and hidden layers
+
+
+
+```python3
+def backward(self, X, y, learning_rate):
+    output_error = y - self.predicted_output
+    output_delta = output_error * \
+        self.sigmoid_derivative(self.predicted_output)
+
+    hidden_error = np.dot(output_delta, self.weights_hidden_output.T)
+    hidden_delta = hidden_error * self.sigmoid_derivative(self.hidden_output)
+
+    self.weights_hidden_output += np.dot(self.hidden_output.T,
+                                         output_delta) * learning_rate
+    self.bias_output += np.sum(output_delta, axis=0,
+                               keepdims=True) * learning_rate
+    self.weights_input_hidden += np.dot(X.T, hidden_delta) * learning_rate
+    self.bias_hidden += np.sum(hidden_delta, axis=0,
+                               keepdims=True) * learning_rate
+```
+
+
+
+#### 4. 训练网络
+
+The network is trained over 10,000 epochs using the Back Propagation algorithm with a learning rate of 0.1 progressively reducing the error.
+
+- **output = self.feedforward(X):** computes the output for the current inputs
+- **self.backward(X, y, learning_rate):** updates weights and biases using Back Propagation
+- **loss = np.mean(np.square(y - output)):** calculates the mean squared error (MSE) loss
+
+
+
+```python3
+def train(self, X, y, epochs, learning_rate):
+    for epoch in range(epochs):
+        output = self.feedforward(X)
+        self.backward(X, y, learning_rate)
+        if epoch % 4000 == 0:
+            loss = np.mean(np.square(y - output))
+            print(f"Epoch {epoch}, Loss:{loss}")
+```
+
+#### 5. 测试神经网络
+
+- **X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]]):** defines the input data
+- **y = np.array([[0], [1], [1], [0]]):** defines the target values
+- **nn = NeuralNetwork(input_size=2, hidden_size=4, output_size=1):** initializes the neural network
+- **nn.train(X, y, epochs=10000, learning_rate=0.1):** trains the network
+- **output = nn.feedforward(X):** gets the final predictions after training
+
+
+
+
+
+```python3
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+y = np.array([[0], [1], [1], [0]])
+
+nn = NeuralNetwork(input_size=2, hidden_size=4, output_size=1)
+nn.train(X, y, epochs=10000, learning_rate=0.1)
+
+output = nn.feedforward(X)
+print("Predictions after training:")
+print(output)
+```
+
+**Output:**
+
+![Screenshot-2025-03-07-130223](https://raw.githubusercontent.com/GMyhf/img/main/img/Screenshot-2025-03-07-130223.png)
+
+<center>Trained Model</center>
+
+
+
+训练初期损失为 0.2713，逐步下降到 0.0066（第8000轮）。最终模型可以很好地逼近 XOR 函数的输出，即：
+
+- 对于输入 [0,0] 和 [1,1]，输出接近 0
+
+- 对于输入 [0,1] 和 [1,0]，输出接近 1
+
+  
+
+> - The output shows the training progress of a neural network over 10,000 epochs. Initially the loss was high (0.2713) but it gradually decreased as the network learned reaching a low value of 0.0066 by epoch 8000.
+> - The final predictions are close to the expected XOR outputs: approximately 0 for [0, 0] and [1, 1] and approximately 1 for [0, 1] and [1, 0] indicating that the network successfully learned to approximate the XOR function.
+
+
+
+### 4.1.5 反向传播的优点
+
+**易于实现**：适合初学者，无需太多神经网络背景
+
+**结构简单，灵活应用**：从简单前馈到复杂卷积/循环网络都可使用
+
+**高效**：直接根据误差更新权重，学习速度快
+
+**良好的泛化能力**：有助于模型在新数据上表现更好
+
+**可扩展性好**：适用于大型数据集和深层模型
+
+> **Advantages of Back Propagation for Neural Network Training**
+>
+> The key benefits of using the Back Propagation algorithm are:
+>
+> 1. **Ease of Implementation:** Back Propagation is beginner-friendly requiring no prior neural network knowledge and simplifies programming by adjusting weights with error derivatives.
+> 2. **Simplicity and Flexibility:** Its straightforward design suits a range of tasks from basic feedforward to complex convolutional or recurrent networks.
+> 3. **Efficiency**: Back Propagation accelerates learning by directly updating weights based on error especially in deep networks.
+> 4. **Generalization:** It helps models generalize well to new data improving prediction accuracy on unseen examples.
+> 5. **Scalability:** The algorithm scales efficiently with larger datasets and more complex networks making it ideal for large-scale tasks.
+
+
+
+### 4.1.6 反向传播面临的挑战
+
+**梯度消失**：在深层网络中梯度可能过小，导致学习困难（特别是在使用 sigmoid/tanh 时）
+
+**梯度爆炸**：梯度可能变得过大，使训练不稳定
+
+**过拟合**：模型结构过于复杂时，可能记住训练集而非学习一般性规律
+
+> **Challenges with Back Propagation**
+>
+> While Back Propagation is useful it does face some challenges:
+>
+> 1. **Vanishing Gradient Problem**: In deep networks the gradients can become very small during Back Propagation making it difficult for the network to learn. This is common when using activation functions like sigmoid or tanh.
+> 2. **Exploding Gradients**: The gradients can also become excessively large causing the network to diverge during training.
+> 3. **Overfitting:** If the network is too complex it might memorize the training data instead of learning general patterns.
+
+
+
+### 4.1.7 完整代码
+
+`xor_nn.py`
 
 ```python
 # 对于XOR问题（输入为[0,0], [0,1], [1,0], [1,1]），期望输出为[0,1,1,0]
@@ -420,6 +1059,8 @@ Predictions after training:
  [0.03919372]]
 """
 ```
+
+
 
 最终训练后，该网络可以准确学习XOR逻辑（训练数据：${([0,0]\to0),([0,1]\to1),([1,0]\to1),([1,1]\to0)}$），输出接近预期。该示例验证了多层网络和反向传播能解决线性模型无法处理的问题。
 
@@ -4469,774 +5110,6 @@ Epoch [2000/2000], Loss: 0.0659
 图中显示了原始数据点（红色和蓝色），以及模型学习到的分类边界。
 
 ![e9e452ad8bc0bc8b241d0c6c2d7d5d31](https://raw.githubusercontent.com/GMyhf/img/main/img/e9e452ad8bc0bc8b241d0c6c2d7d5d31.png)
-
-
-
-# B. 在异或问题中手动实现反向传播
-
-Backpropagation in Neural Network
-
-https://www.geeksforgeeks.org/machine-learning/backpropagation-in-neural-network/
-
-
-
-反向传播（Back Propagation），又称为“误差的反向传播”，是一种用于训练神经网络的方法。其目标是通过调整网络中的权重（weights）和偏置（biases），来减小模型预测输出与实际输出之间的差异。
-
-它通过迭代方式更新权重和偏置，以最小化损失函数（cost function）。在每一个训练周期（epoch）中，模型会根据误差梯度（error gradient）更新参数，常用的优化算法包括梯度下降（Gradient Descent）或随机梯度下降（SGD）。该算法使用微积分中的<mark>链式法则</mark>来计算梯度，从而能够有效地穿越复杂的神经网络结构，优化损失函数。
-
-> Back Propagation is also known as "Backward Propagation of Errors" is a method used to train neural network . Its goal is to reduce the difference between the model’s predicted output and the actual output by adjusting the weights and biases in the network.
->
-> It works iteratively to adjust weights and bias to minimize the cost function. In each epoch the model adapts these parameters by reducing loss by following the error gradient. It often uses optimization algorithms like **gradient descent** or **stochastic gradient descent**. The algorithm computes the gradient using the chain rule from calculus allowing it to effectively navigate complex layers in the neural network to minimize the cost function.
-
-<img src="https://media.geeksforgeeks.org/wp-content/uploads/20250701163824448467/Backpropagation-in-Neural-Network-1.webp" alt="Backpropagation-in-Neural-Network-1" style="zoom:67%;" />
-
-<center>A simple illustration of how the backpropagation works by adjustments of weights</center>
-
-<center>通过权重调整，简单展示反向传播的工作方式</center>
-
-
-
-**反向传播的重要性：**
-
-- **高效的权重更新**：利用链式法则计算损失函数对每个权重的梯度，从而高效地更新参数。
-- **良好的扩展性**：适用于多层结构和复杂架构，是深度学习可行的核心算法。
-- **自动学习能力**：训练过程自动进行，模型会不断调整自身来优化性能。
-
-> **Back Propagation** plays a critical role in how neural networks improve over time. Here's why:
->
-> 1. **Efficient Weight Update**: It computes the gradient of the loss function with respect to each weight using the chain rule making it possible to update weights efficiently.
-> 2. **Scalability**: The Back Propagation algorithm scales well to networks with multiple layers and complex architectures making deep learning feasible.
-> 3. **Automated Learning**: With Back Propagation the learning process becomes automated and the model can adjust itself to optimize its performance.
-
-
-
-## 反向传播算法的工作流程
-
-反向传播算法包括两个主要步骤：**前向传播（Forward Pass）** 和 **反向传播（Backward Pass）**
-
-### 1. Forward Pass Work前向传播
-
-输入数据从输入层开始，经过带权重的连接传递到隐藏层。例如，一个有两个隐藏层 h1 和 h2 的网络中，h1 的输出作为 h2 的输入。在应用激活函数前，还会加上偏置项。
-
-每一层都会计算输入的加权和（记作 `a`），再通过如 ReLU 等激活函数得到输出 `o`。最终，输出层通常会使用 softmax 激活函数将结果转换为分类概率。
-
-> ### Working of Back Propagation Algorithm
->
-> The Back Propagation algorithm involves two main steps: the **Forward Pass** and the **Backward Pass**.
->
-> ### 1. Forward Pass Work
->
-> In **forward pass** the input data is fed into the input layer. These inputs combined with their respective weights are passed to hidden layers. For example in a network with two hidden layers (h1 and h2) the output from h1 serves as the input to h2. Before applying an activation function, a bias is added to the weighted inputs.
->
-> Each hidden layer computes the weighted sum (`a`) of the inputs then applies an activation function like [**ReLU (Rectified Linear Unit)**](https://www.geeksforgeeks.org/deep-learning/relu-activation-function-in-deep-learning/) to obtain the output (`o`). The output is passed to the next layer where an activation function such as [**softmax**](https://www.geeksforgeeks.org/deep-learning/the-role-of-softmax-in-neural-networks-detailed-explanation-and-applications/) converts the weighted outputs into probabilities for classification.
-
-<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-2.webp" alt="Backpropagation-in-Neural-Network-2" style="zoom:67%;" />
-
-<center>The forward pass using weights and biases</center>
-
-> h1,h2，表示隐藏层的两个神经元
-
-
-
-### 2. Backward Pass反向传播
-
-反向传播阶段会将预测输出与实际输出的误差向后传递，并调整每一层的权重和偏置。常见的误差计算方法是**均方误差（MSE）**：
-
-$MSE = (\text{Predicted Output} − \text{Actual Output})^2$
-
-在误差计算之后，通过链式法则计算梯度，这些梯度用于指导权重和偏置的更新方向和幅度。反向传播过程是逐层执行的，<mark>激活函数的导数在梯度计算中起着关键作用</mark>。
-
-
-
-**反向传播的示例：机器学习中的案例**
-
-假设我们使用 sigmoid 激活函数，目标输出为 0.5，学习率为 1。
-
-> ### 2. Backward Pass
->
-> In the backward pass the error (the difference between the predicted and actual output) is propagated back through the network to adjust the weights and biases. One common method for error calculation is the [**Mean Squared Error (MSE)**](https://www.geeksforgeeks.org/maths/mean-squared-error/) given by:
->
-> $MSE = (\text{Predicted Output} − \text{Actual Output})^2$
->
-> Once the error is calculated the network adjusts weights using **gradients** which are computed with the chain rule. These gradients indicate how much each weight and bias should be adjusted to minimize the error in the next iteration. The backward pass continues layer by layer ensuring that the network learns and improves its performance. The activation function through its derivative plays a crucial role in computing these gradients during Back Propagation.
->
-> 
->
-> ## Example of Back Propagation in Machine Learning
->
-> Let’s walk through an example of Back Propagation in machine learning. Assume the neurons use the sigmoid activation function for the forward and backward pass. The target output is 0.5 and the learning rate is 1.
-
-<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-3.webp" alt="Backpropagation-in-Neural-Network-3" style="zoom:67%;" />
-
-<center>Example (1) of backpropagation sum</center>
-
-
-
-## 前向传播Forward Propagation
-
-### 1. Initial Calculation初始计算
-
-The weighted sum at each node is calculated using:
-
-> $a_j=\sum(w_{i,j}∗x_i)$
-
-Where,
-
-- $a_j$ is the weighted sum of all the inputs and weights at each node
-- $w_{i,j}$ represents the weights between the $i^{th}$ input and the $j^{th}$ neuron
-- $x_i$ represents the value of the $i^{th}$ input
-
-`O (output):`After applying the activation function to `a`, we get the output of the neuron:
-
-> $o_j = \text{activation function}(a_j)$
-
-### 2. Sigmoid Function
-
-The sigmoid function returns a value between 0 and 1, introducing non-linearity into the model.
-
-> $y_j = \frac{1}{1+e^{−a_j}}$ 
-
-<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-4.webp" alt="Backpropagation-in-Neural-Network-4" style="zoom:67%;" />
-
-<center>To find the outputs of y3, y4 and y5</center>
-
-
-
-### 3. Computing Outputs输出计算
-
-h1 节点：
-$$
-a_1 = (w_{1,1} \times x_1) + (w_{2,1} \times x_2)
-$$
-
-$$
-a_1 = (0.2 \times 0.35) + (0.2 \times 0.7) = 0.21
-$$
-
-计算完 $a_1$ 后，我们可以继续计算 $y_3$ 的值：
-
-$$
-y_j = F(a_j) = \frac{1}{1 + e^{-a_1}}
-$$
-
-$$
-y_3 = F(0.21) = \frac{1}{1 + e^{-0.21}} = 0.56
-$$
-
-
-
-h2 节点：
-$$
-a_2 = (w_{1,2} \times x_1) + (w_{2,2} \times x_2) = (0.3 \times 0.35) + (0.3 \times 0.7) = 0.315
-$$
-
-$$
-y_4 = F(0.315) = \frac{1}{1 + e^{-0.315}} = 0.578
-$$
-
-
-
-输出节点 O3：
-$$
-a_3 = (w_{1,3} \times y_3) + (w_{2,3} \times y_4) = (0.3 \times 0.56) + (0.9 \times 0.58) = 0.702
-$$
-
-$$
-y_5 = F(0.702) = \frac{1}{1 + e^{-0.702}} = 0.67
-$$
-
-
-
-> At h1 node
->
-> Once we calculated the a1 value, we can now proceed to find the y3 value:
->
-> Similarly find the values of y4 at h2 and y5 at O3
-
-
-
-<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-5.webp" alt="Backpropagation-in-Neural-Network-5" style="zoom:67%;" />
-
-<center>Values of y3, y4 and y5</center>
-
-
-
-### 4. Error Calculation误差计算
-
-Our actual output is 0.5 but we obtained 0.67**.** To calculate the error we can use the below formula:
-
-> $Error_j=y_{target}−y_5$ 
-
-=> 0.5−0.67=−0.17
-
-Using this error value we will be backpropagating.
-
-
-
-## 反向传播Back Propagation
-
-### 1. Calculating Gradients计算梯度
-
-The change in each weight is calculated as:
-
-> $Δw_{ij}=η×δ_j×O_j$
-
-Where:
-
-- $δ_j$ is the error term for each unit,
-- $η$ is the learning rate.
-
-### 2. Output Unit Error输出层误差
-
-For O3:
-
-> $δ_5=y_5(1−y_5)(y_{target}−y_5)$
-
-=0.67(1−0.67)(−0.17)=−0.0376
-
-### 3. Hidden Unit Error隐藏层误差
-
-For h1:
-
-> $δ_3=y_3(1−y_3)(w_{1,3}×δ_5)$
-
-=0.56(1−0.56)(0.3×−0.0376)=−0.0027
-
-
-
-For h2:
-
-> $δ_4=y_4(1−y_4)(w_{2,3}×δ_5)$
-
-=0.59(1−0.59)(0.9×−0.0376)=−0.0819
-
-
-
-### 4. Weight Updates权重更新
-
-For the weights from hidden to output layer:
-
-> $Δw_{2,3}=1×(−0.0376)×0.59=−0.022184$
-
-New weight:
-
-> $w_{2,3}(new)=−0.022184+0.9=0.877816$
-
-For weights from input to hidden layer:
-
-> $Δw_{1,1}=1×(−0.0027)×0.35=0.000945$
-
-New weight:
-
-> $w_{1,1}(new)=0.000945+0.2=0.200945$
-
-Similarly other weights are updated:
-
-- $w_{1,2}(new)=0.273225$
-- $w_{1,3}(new)=0.086615$
-- $w_{2,1}(new)=0.269445$
-- $w_{2,2}(new)=0.18534$
-
-The updated weights are illustrated below
-
-<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-5-20251127160556998.webp" alt="Backpropagation-in-Neural-Network-5" style="zoom:67%;" />
-
-<center>Through backward pass the weights are updated</center>
-
-> 上图权重没有更新，例如：$w_{2,2}$应该更新为0.18534
-
-
-
-After updating the weights the forward pass is repeated yielding:
-
-- y3=0.57
-- y4=0.56
-- y5=0.61
-
-仍未达到目标值 0.5，因此继续进行反向传播，直到收敛。
-
-> Since y5=0.61 is still not the target output the process of calculating the error and backpropagating continues until the desired output is reached.
-
-
-
-This process demonstrates how Back Propagation iteratively updates weights by minimizing errors until the network accurately predicts the output.
-
-> $Error=y_{target}−y_5$
-
-=0.5−0.61=−0.11=0.5−0.61=−0.11
-
-This process is said to be continued until the actual output is gained by the neural network.
-
-
-
-## Back Propagation Implementation in Python for XOR Problem
-
-**Q: XOR 问题是什么？**
-
-> XOR（异或）是一个经典的逻辑问题，它的输入输出如下：
->
-> | 输入 A | 输入 B | 输出 |
-> | ------ | ------ | ---- |
-> | 0      | 0      | 0    |
-> | 0      | 1      | 1    |
-> | 1      | 0      | 1    |
-> | 1      | 1      | 0    |
->
-> 这个问题**不能用一条直线分开**（不是线性可分的），所以单层感知机无法解决，必须用**至少一个隐藏层的神经网络**。
-
-
-
-> “**单层感知机**”（Single-Layer Perceptron）是神经网络最原始、最简单的形式，由 Frank Rosenblatt 在 1957 年提出。理解它，有助于明白为什么像 **XOR 这样的问题无法被它解决**，从而引出多层神经网络和反向传播的必要性。
->
-> 单层感知机结构：
->
-> - **输入层**：接收特征（比如 $x_1, x_2$）
-> - **输出层**：**直接输出结果**（没有隐藏层！）
-> - 每个输入有一个对应的权重 $w_1, w_2$，还有一个偏置 $b$
->
-> **数学表达：**
-> $$
-> z = w_1 x_1 + w_2 x_2 + b
-> \nonumber
-> $$
->
-> $$
-> \text{output} = \begin{cases} 1 & \text{if } z \geq 0 \\ 0 & \text{if } z < 0 \end{cases}
-> \nonumber
-> $$
->
-> > 注意：**没有激活函数（或只有阶跃函数）**，**没有隐藏层**，所以叫“单层”。
-> >
-> > 阶跃函数是“硬判决”，适合理论分析；但因为不可导，不能用于现代神经网络的训练。
->
-> ------
->
-> ✅ 单层感知机能做什么？
->
-> 它只能解决 **线性可分**（linearly separable）的问题。
->
-> **例子：AND 门**
->
-> | x₁   | x₂   | y    |
-> | ---- | ---- | ---- |
-> | 0    | 0    | 0    |
-> | 0    | 1    | 0    |
-> | 1    | 0    | 0    |
-> | 1    | 1    | 1    |
->
-> ✅ 可以用一条直线分开 0 和 1 → **线性可分** → **单层感知机可以学会**
->
-> 比如：
-> 取 (w_1 = 1, w_2 = 1, b = -1.5)
-> 则：
->
-> - (0+0-1.5 = -1.5 < 0 → 0)
-> - (1+1-1.5 = 0.5 ≥ 0 → 1)
->
-> 完美！
->
-> ------
->
-> **❌ 单层感知机不能做什么？**
->
-> **XOR 问题（异或）：**
->
-> | x₁   | x₂   | y    |
-> | ---- | ---- | ---- |
-> | 0    | 0    | 0    |
-> | 0    | 1    | 1    |
-> | 1    | 0    | 1    |
-> | 1    | 1    | 0    |
->
-> 在二维平面上画出来：
->
-> ```
-> (0,1) ● (y=1)        (1,1) ○ (y=0)
-> 
-> (0,0) ○ (y=0)        (1,0) ● (y=1)
-> ```
->
-> 你会发现：**无法用一条直线把 ● 和 ○ 完全分开**！
->
-> → 这就是 **非线性可分问题**。
->
-> **结论**： 
->
-> > **单层感知机无法解决 XOR 问题**，因为它缺乏非线性表达能力。
->
-> ------
->
-> ** 那怎么办？——引入隐藏层！**
->
-> 1969 年，Minsky 和 Papert 在《Perceptrons》一书中指出了这个局限，导致神经网络研究一度停滞。
->
-> 直到后来人们发现：
->
-> > **只要加一个隐藏层，并使用非线性激活函数（如 sigmoid、ReLU），神经网络就能逼近任意函数**（万能近似定理）。
->
-> 于是，**多层感知机**（MLP） + **反向传播** 成为解决方案。
->
-> ------
->
-> **🔄 对比总结**
->
-> | 特性                | 单层感知机         | 多层感知机（带反向传播） |
-> | ------------------- | ------------------ | ------------------------ |
-> | 隐藏层              | ❌ 没有             | ✅ 有（至少1层）          |
-> | 激活函数            | 阶跃函数（不可导） | Sigmoid / ReLU（可导）   |
-> | 能否解决 AND/OR/NOT | ✅ 可以             | ✅ 可以                   |
-> | 能否解决 XOR        | ❌ 不行             | ✅ 可以                   |
-> | 是否支持反向传播    | ❌ 不支持（不可导） | ✅ 支持                   |
-> | 学习能力            | 仅线性分类         | 非线性建模               |
->
-> ------
->
-> 📌 小知识
->
-> - “感知机”（Perceptron）通常特指**单层、使用阶跃激活、用感知机学习规则更新权重**的模型。
-> - 而我们今天说的“神经网络”，一般指**多层、可微激活、用梯度下降+反向传播训练**的模型，也叫 **多层感知机**（MLP），尽管名字里有“感知机”，但已经完全不同了。
->
-> 
-
-
-
-This code demonstrates how Back Propagation is used in a neural network to solve the XOR problem. The neural network consists of:
-
-### 1. Defining Neural Network定义神经网络结构
-
-输入层：2个节点，隐藏层：4个神经元，输出层：1个神经元，激活函数：Sigmoid
-
-> We define a neural network as Input layer with 2 inputs, Hidden layer with 4 neurons, Output layer with 1 output neuron and use **Sigmoid** function as activation function.
-
-- **self.input_size = input_size**: stores the size of the input layer
-- **self.hidden_size = hidden_size:** stores the size of the hidden layer
-- **self.weights_input_hidden = np.random.randn(self.input_size, self.hidden_size)**: initializes weights for input to hidden layer
-- **self.weights_hidden_output = np.random.randn(self.hidden_size, self.output_size)**: initializes weights for hidden to output layer
-- **self.bias_hidden = np.zeros((1, self.hidden_size)):** initializes bias for hidden layer
-- **self.bias_output = np.zeros((1, self.output_size)):** initializes bias for output layer
-
-
-
-```python3
-import numpy as np
-
-
-class NeuralNetwork:
-    def __init__(self, input_size, hidden_size, output_size):
-        self.input_size = input_size
-        self.hidden_size = hidden_size
-        self.output_size = output_size
-
-        self.weights_input_hidden = np.random.randn(
-            self.input_size, self.hidden_size)
-        self.weights_hidden_output = np.random.randn(
-            self.hidden_size, self.output_size)
-
-        self.bias_hidden = np.zeros((1, self.hidden_size))
-        self.bias_output = np.zeros((1, self.output_size))
-
-    def sigmoid(self, x):
-        return 1 / (1 + np.exp(-x))
-
-    def sigmoid_derivative(self, x):
-        return x * (1 - x)
-```
-
-
-
-### 2. Defining Feed Forward Network定义前向传播
-
-In Forward pass inputs are passed through the network activating the hidden and output layers using the sigmoid function.
-
-- **self.hidden_activation = np.dot(X, self.weights_input_hidden) + self.bias_hidden**: calculates activation for hidden layer
-- **self.hidden_output= self.sigmoid(self.hidden_activation)**: applies activation function to hidden layer
-- **self.output_activation= np.dot(self.hidden_output, self.weights_hidden_output) + self.bias_output:** calculates activation for output layer
-- **self.predicted_output = self.sigmoid(self.output_activation):** applies activation function to output layer
-
-
-
-
-
-```python3
-def feedforward(self, X):
-    self.hidden_activation = np.dot(
-        X, self.weights_input_hidden) + self.bias_hidden
-    self.hidden_output = self.sigmoid(self.hidden_activation)
-
-    self.output_activation = np.dot(
-        self.hidden_output, self.weights_hidden_output) + self.bias_output
-    self.predicted_output = self.sigmoid(self.output_activation)
-
-    return self.predicted_output
-```
-
-
-
-### 3. Defining Backward Network定义反向传播
-
-In Backward pass or Back Propagation the errors between the predicted and actual outputs are computed. The gradients are calculated using the derivative of the sigmoid function and weights and biases are updated accordingly.
-
-- **output_error = y - self.predicted_output:** calculates the error at the output layer
-- **output_delta = output_error * self.sigmoid_derivative(self.predicted_output):** calculates the delta for the output layer
-- **hidden_error = np.dot(output_delta, self.weights_hidden_output.T):** calculates the error at the hidden layer
-- **hidden_delta = hidden_error \* self.sigmoid_derivative(self.hidden_output):** calculates the delta for the hidden layer
-- **self.weights_hidden_output += np.dot(self.hidden_output.T, output_delta) * learning_rate:** updates weights between hidden and output layers
-- **self.weights_input_hidden += np.dot(X.T, hidden_delta) * learning_rate:** updates weights between input and hidden layers
-
-
-
-```python3
-def backward(self, X, y, learning_rate):
-    output_error = y - self.predicted_output
-    output_delta = output_error * \
-        self.sigmoid_derivative(self.predicted_output)
-
-    hidden_error = np.dot(output_delta, self.weights_hidden_output.T)
-    hidden_delta = hidden_error * self.sigmoid_derivative(self.hidden_output)
-
-    self.weights_hidden_output += np.dot(self.hidden_output.T,
-                                         output_delta) * learning_rate
-    self.bias_output += np.sum(output_delta, axis=0,
-                               keepdims=True) * learning_rate
-    self.weights_input_hidden += np.dot(X.T, hidden_delta) * learning_rate
-    self.bias_hidden += np.sum(hidden_delta, axis=0,
-                               keepdims=True) * learning_rate
-```
-
-
-
-### 4. Training Network训练网络
-
-The network is trained over 10,000 epochs using the Back Propagation algorithm with a learning rate of 0.1 progressively reducing the error.
-
-- **output = self.feedforward(X):** computes the output for the current inputs
-- **self.backward(X, y, learning_rate):** updates weights and biases using Back Propagation
-- **loss = np.mean(np.square(y - output)):** calculates the mean squared error (MSE) loss
-
-
-
-```python3
-def train(self, X, y, epochs, learning_rate):
-    for epoch in range(epochs):
-        output = self.feedforward(X)
-        self.backward(X, y, learning_rate)
-        if epoch % 4000 == 0:
-            loss = np.mean(np.square(y - output))
-            print(f"Epoch {epoch}, Loss:{loss}")
-```
-
-### 5. Testing Neural Network测试神经网络
-
-- **X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]]):** defines the input data
-- **y = np.array([[0], [1], [1], [0]]):** defines the target values
-- **nn = NeuralNetwork(input_size=2, hidden_size=4, output_size=1):** initializes the neural network
-- **nn.train(X, y, epochs=10000, learning_rate=0.1):** trains the network
-- **output = nn.feedforward(X):** gets the final predictions after training
-
-
-
-
-
-```python3
-X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-y = np.array([[0], [1], [1], [0]])
-
-nn = NeuralNetwork(input_size=2, hidden_size=4, output_size=1)
-nn.train(X, y, epochs=10000, learning_rate=0.1)
-
-output = nn.feedforward(X)
-print("Predictions after training:")
-print(output)
-```
-
-**Output:**
-
-![Screenshot-2025-03-07-130223](https://raw.githubusercontent.com/GMyhf/img/main/img/Screenshot-2025-03-07-130223.png)
-
-<center>Trained Model</center>
-
-
-
-训练初期损失为 0.2713，逐步下降到 0.0066（第8000轮）。最终模型可以很好地逼近 XOR 函数的输出，即：
-
-- 对于输入 [0,0] 和 [1,1]，输出接近 0
-
-- 对于输入 [0,1] 和 [1,0]，输出接近 1
-
-  
-
-> - The output shows the training progress of a neural network over 10,000 epochs. Initially the loss was high (0.2713) but it gradually decreased as the network learned reaching a low value of 0.0066 by epoch 8000.
-> - The final predictions are close to the expected XOR outputs: approximately 0 for [0, 0] and [1, 1] and approximately 1 for [0, 1] and [1, 0] indicating that the network successfully learned to approximate the XOR function.
-
-
-
-## 反向传播的优点
-
-**易于实现**：适合初学者，无需太多神经网络背景
-
-**结构简单，灵活应用**：从简单前馈到复杂卷积/循环网络都可使用
-
-**高效**：直接根据误差更新权重，学习速度快
-
-**良好的泛化能力**：有助于模型在新数据上表现更好
-
-**可扩展性好**：适用于大型数据集和深层模型
-
-> **Advantages of Back Propagation for Neural Network Training**
->
-> The key benefits of using the Back Propagation algorithm are:
->
-> 1. **Ease of Implementation:** Back Propagation is beginner-friendly requiring no prior neural network knowledge and simplifies programming by adjusting weights with error derivatives.
-> 2. **Simplicity and Flexibility:** Its straightforward design suits a range of tasks from basic feedforward to complex convolutional or recurrent networks.
-> 3. **Efficiency**: Back Propagation accelerates learning by directly updating weights based on error especially in deep networks.
-> 4. **Generalization:** It helps models generalize well to new data improving prediction accuracy on unseen examples.
-> 5. **Scalability:** The algorithm scales efficiently with larger datasets and more complex networks making it ideal for large-scale tasks.
-
-
-
-## 反向传播面临的挑战
-
-**梯度消失**：在深层网络中梯度可能过小，导致学习困难（特别是在使用 sigmoid/tanh 时）
-
-**梯度爆炸**：梯度可能变得过大，使训练不稳定
-
-**过拟合**：模型结构过于复杂时，可能记住训练集而非学习一般性规律
-
-> **Challenges with Back Propagation**
->
-> While Back Propagation is useful it does face some challenges:
->
-> 1. **Vanishing Gradient Problem**: In deep networks the gradients can become very small during Back Propagation making it difficult for the network to learn. This is common when using activation functions like sigmoid or tanh.
-> 2. **Exploding Gradients**: The gradients can also become excessively large causing the network to diverge during training.
-> 3. **Overfitting:** If the network is too complex it might memorize the training data instead of learning general patterns.
-
-
-
-## 完整`xor_nn.py`代码
-
-```python
-# 对于XOR问题（输入为[0,0], [0,1], [1,0], [1,1]），期望输出为[0,1,1,0]
-# 手动实现反向传播，没有使用深度学习框架，这有助于理解底层原理
-# https://www.geeksforgeeks.org/backpropagation-in-neural-network/
-import numpy as np
-
-
-class NeuralNetwork:
-    def __init__(self, input_size, hidden_size, output_size):
-        self.input_size = input_size  # 输入特征维度
-        self.hidden_size = hidden_size  # 隐藏层神经元数量
-        self.output_size = output_size  # 输出层神经元数量
-
-        # 输入层到隐藏层的权重，形状为 (输入维度, 隐藏层维度)
-        self.weights_input_hidden = np.random.randn(self.input_size, self.hidden_size)
-        # 隐藏层到输出层的权重，形状为 (隐藏层维度, 输出层维度)
-        self.weights_hidden_output = np.random.randn(self.hidden_size, self.output_size)
-
-        # 隐藏层的偏置，形状为 (1, 隐藏层维度)
-        self.bias_hidden = np.zeros((1, self.hidden_size))
-        # 输出层的偏置，形状为 (1, 输出层维度)
-        self.bias_output = np.zeros((1, self.output_size))
-
-    def sigmoid(self, x):  # 激活函数，将输入压缩到(0,1)区间
-        return 1 / (1 + np.exp(-x))
-
-    def sigmoid_derivative(self, x):
-        return x * (1 - x)  # Sigmoid的导数，用于反向传播中的梯度计算
-
-    def feedforward(self, X):
-        # 隐藏层计算
-        self.hidden_activation = np.dot(X, self.weights_input_hidden) + self.bias_hidden  # 线性变换
-        self.hidden_output = self.sigmoid(self.hidden_activation)  # 激活函数
-
-        # 输出层计算
-        self.output_activation = np.dot(self.hidden_output, self.weights_hidden_output) + self.bias_output
-        self.predicted_output = self.sigmoid(self.output_activation)
-
-        return self.predicted_output
-
-    def backward(self, X, y, learning_rate):
-        # 计算输出层误差
-        output_error = y - self.predicted_output  # 误差 = 真实值 - 预测值
-        # 计算输出层的delta（梯度的一部分，损失对激活输入的梯度）
-        output_delta = output_error * self.sigmoid_derivative(self.predicted_output)  # Delta = 误差 × 激活函数导数
-        # output_delta = (y - ŷ) * σ'(z_output)
-
-        # 计算隐藏层误差（反向传播）
-        hidden_error = np.dot(output_delta, self.weights_hidden_output.T)  # 将误差从输出层反向传播到隐藏层
-        # hidden_error = output_delta @ W_hidden_output^T
-        # 计算隐藏层的delta（损失对隐藏层激活输入的梯度）
-        hidden_delta = hidden_error * self.sigmoid_derivative(self.hidden_output)  # Delta = 误差 × 激活函数导数
-        # hidden_delta = (hidden_error) * σ'(z_hidden)
-
-        # 更新权重和偏置（使用梯度下降法）
-        # 计算并更新隐藏层到输出层的权重
-        self.weights_hidden_output += np.dot(self.hidden_output.T,
-                                             output_delta) * learning_rate  # 权重更新量 = 学习率 × (隐藏层输出转置 × 输出层delta)
-        # W_hidden_output += learning_rate * (hidden_output^T @ output_delta)
-
-        # 更新输出层偏置，基于所有样本的输出层delta沿列求和
-        self.bias_output += np.sum(output_delta, axis=0, keepdims=True) * learning_rate  # 偏置更新量 = 学习率 × (沿列求和输出层delta)
-        # b_output += learning_rate * sum(output_delta)
-
-        # 计算并更新从输入层到隐藏层的权重的梯度
-        self.weights_input_hidden += np.dot(X.T, hidden_delta) * learning_rate  # 权重更新量 = 学习率 × (输入数据转置 × 隐藏层delta)
-        # W_input_hidden += learning_rate * (X^T @ hidden_delta)
-
-        # 更新隐藏层偏置，基于所有样本的隐藏层delta沿列求和
-        # axis=0：沿列求和，聚合所有样本的梯度
-        # keepdims=True：保持原矩阵的行数维度，确保偏置更新的形状兼容性
-        self.bias_hidden += np.sum(hidden_delta, axis=0, keepdims=True) * learning_rate  # 偏置更新量 = 学习率 × (沿列求和隐藏层delta)
-        # b_hidden += learning_rate * sum(hidden_delta)
-
-    def train(self, X, y, epochs, learning_rate):
-        for epoch in range(epochs):
-            output = self.feedforward(X)  # 前向传播
-            self.backward(X, y, learning_rate)  # 反向传播与参数更新
-            if epoch % 4000 == 0:
-                loss = np.mean(np.square(y - output))  # 计算均方误差
-                print(f"Epoch {epoch}, Loss:{loss}")
-
-
-X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-y = np.array([[0], [1], [1], [0]])
-
-# 输入维度 2（二维二进制特征），隐藏层4个神经元，输出层1个神经元（二分类问题）
-nn = NeuralNetwork(input_size=2, hidden_size=4, output_size=1)
-# 训练总轮次, 学习率
-nn.train(X, y, epochs=10000, learning_rate=0.1)
-
-output = nn.feedforward(X)
-print("Predictions after training:")
-print(output)
-"""
-Epoch 0, Loss:0.2653166263520884
-Epoch 4000, Loss:0.007000926683956338
-Epoch 8000, Loss:0.001973630232951721
-Predictions after training:
-[[0.03613239]
- [0.96431351]
- [0.96058291]
- [0.03919372]]
-"""
-```
-
-
-
-
-
-# D. 
-
-
-
-
-
-# E. 
-
-
-
-# F. 
-
-
 
 
 

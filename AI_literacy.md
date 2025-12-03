@@ -1,6 +1,6 @@
 # 人工智能概览
 
-*Updated 2025-11-28 21:25 GMT+8*  
+*Updated 2025-12-03 18:31 GMT+8*  
 *Compiled by Hongfei Yan (2025 Summer)*    
 https://github.com/GMyhf/2025fall-cs201/
 
@@ -218,11 +218,11 @@ Device set to use cpu
 
 深度学习是连接主义流派的重要组成，主要使用多层神经网络自动学习特征和模式。本节重点介绍神经网络的关键算法与实战示例。
 
-## 4.1 反向传播算法
+**神经网络反向传播**
 
 反向传播（Backpropagation）是训练神经网络的核心算法。其思想是通过前向传播计算输出，然后反向传播误差并更新网络权重，以最小化损失函数[4]。前向传播阶段，从输入层经过加权求和、激活函数（如ReLU、Softmax）逐层计算输出；反向传播阶段，利用链式法则计算损失对每个参数的梯度，然后采用梯度下降或自适应优化器（如Adam）更新权重。反向传播使得多层深度网络的训练成为可能，是深度学习兴起的基石[3]。
 
-**算法流程概述**： 
+算法流程概述： 
 
 1. **前向传播**：将输入数据逐层传递，计算每层神经元输出并最终得到预测结果。 
 2. **误差计算**：使用损失函数（如交叉熵、均方误差）计算预测输出与真实标签之间的误差。 
@@ -234,7 +234,7 @@ Device set to use cpu
 
 
 
-### Q6.交互可视化neural network
+**交互可视化神经网络**
 
 https://developers.google.com/machine-learning/crash-course/neural-networks/interactive-exercises?hl=zh-cn
 
@@ -277,17 +277,17 @@ https://developers.google.com/machine-learning/crash-course/neural-networks/inte
 
 
 
-> 阅读：PyTorch 教程，https://www.runoob.com/pytorch/pytorch-tutorial.html
+> 阅读：PyTorch 教程，https://www.runoob.com/pytorch/pytorch-tutorial.html，详见附录A。
 >
-> 我使用PyTorch实现5个从基础模型到较复杂模型的训练与应用。相关代码及说明文档已整理于 Markdown 文件中，详见项目仓库：https://github.com/GMyhf/2025spring-cs201/tree/main/LLM
+> 我使用PyTorch实现5个从基础模型到较复杂模型的训练与应用。
 >
-> 1. `0_xor_bp_neural_net_manual`：手动实现反向传播的简单神经网络，用于异或问题。
+> 1. `0_xor_bp_neural_net_manual`：手动实现反向传播的简单神经网络，用于异或问题。详见附录B。
 > 2. `1_iris_neural_network`：构建并训练用于鸢尾花分类的数据驱动神经网络。
 > 3. `2_mnist_resnet18`：使用 ResNet18 模型对 MNIST 手写数字进行分类。
 > 4. `3_cifar10_resnet18`：将 ResNet18 应用于 CIFAR-10 图像分类任务。
-> 5. `4_tiny_imagenet_resnet50`：基于 ResNet50 模型处理 Tiny ImageNet 图像分类任务。
+> 5. `4_tiny_imagenet_resnet50`：基于 ResNet50 模型处理 Tiny ImageNet 图像分类任务。详见附录C。
 
-## 4.2 实例：异或问题（XOR）
+## 4.1 在异或问题（XOR）中手动实现反向传播
 
 异或问题是经典的非线性可分问题，用来演示神经网络的学习能力。一个简单的神经网络可手动实现反向传播来解决异或。以下先给出简洁的伪代码，再给出可以运行的Python代码示例展示了反向传播更新权重的方式：
 
@@ -425,20 +425,63 @@ Predictions after training:
 
 
 
-## 4.3 实例：Iris数据集分类
+## 4.2 基于简单的全连接网络鸢尾花数据集分类
 
-**任务描述**：使用全连接神经网络对经典的Iris（鸢尾花）数据集进行多分类。数据集包含150个样本，每个样本4个特征（花萼和花瓣长度/宽度），分为3个类别。
+**任务描述**：使用全连接神经网络对经典的Iris（鸢尾花）数据集进行多分类。鸢（yuān）尾花数据集包含三个类别，每个类别有50个样本，每个样本有四个特征：花萼长度、花萼宽度、花瓣长度、花瓣宽度。目标是根据这四个特征预测花的种类，属于多分类问题。
 
 **关键步骤**：数据预处理（标准化、训练/测试集划分）、模型构建、训练与评估。示例代码（PyTorch）：
 
-安装需要的包 pip install torchvision matplotlib
 
-> $ python iris_nn.py 
->
-> Traceback (most recent call last):
->  File "/home/rocky/AI_literacy/iris_nn.py", line 3, in <module>
->   from sklearn.datasets import load_iris
-> ModuleNotFoundError: No module named 'sklearn'
+
+### 准备数据
+
+鸢尾花数据集通常是通过scikit-learn的datasets模块获取的，所以可能需要结合scikit-learn来加载数据，然后转换成PyTorch的Tensor。
+
+数据预处理方面，需要将特征数据和标签分开。特征数据需要标准化或归一化，因为不同特征的量纲可能不同，这对神经网络的训练有帮助。标签需要转换成数值形式，比如0、1、2，然后可能还需要转换为长整型张量，因为交叉熵损失函数在PyTorch中通常要求这样的格式。
+
+
+
+### 训练模型和验证
+
+构建神经网络模型。考虑到鸢尾花数据集相对简单，可能不需要很深的网络。一个简单的全连接网络可能就足够了。比如，输入层4个节点，隐藏层可以选择10个节点，输出层3个节点对应三个类别。激活函数可以用ReLU，输出层用Softmax，不过更常见的做法是使用CrossEntropyLoss，它内部已经结合了Softmax，所以输出层不需要显式应用Softmax。
+
+接下来是数据集的划分，通常分为训练集和测试集。这里需要注意的是，鸢尾花数据集样本较少，可能需要进行分层抽样，确保每个类别的样本在训练集和测试集中的比例一致。或者使用交叉验证，但由于用户可能希望一个简单的示例，可能直接采用80-20的划分。
+
+将数据转换为PyTorch的DataLoader，方便批量训练。数据集进行训练可以分小批量处理。
+
+训练过程中，定义损失函数和优化器。交叉熵损失函数适用于多分类问题，优化器可以选择Adam或SGD。学习率需要适当设置，比如0.01或0.001。
+
+训练循环部分，需要迭代多个epoch，在每个epoch中进行前向传播、计算损失、反向传播和参数更新。同时，可以监控训练过程中的损失和准确率的变化。
+
+验证阶段，使用测试集评估模型的准确率，确保模型没有过拟合，并且泛化能力良好。
+
+可能需要注意的问题包括数据标准化应该在训练集上计算均值和标准差，然后应用到测试集，避免数据泄漏。另外，标签是否需要转换为one-hot编码？在PyTorch中，CrossEntropyLoss不需要，因为标签是类别的索引。
+
+现在，将这些步骤整合成代码：
+
+1. 导入必要的库：torch, sklearn.datasets中的load_iris，sklearn.model_selection的train_test_split，以及相关的PyTorch模块。
+2. 加载数据，划分训练集和测试集，并进行标准化处理。使用StandardScaler对特征进行标准化，处理时注意仅拟合训练数据。
+3. 转换数据为PyTorch的Tensor，并创建DataLoader。可能由于数据量小，直接使用整个数据集作为批量。
+4. 定义神经网络模型的结构，使用全连接层和ReLU激活函数。
+5. 初始化模型、损失函数和优化器。
+6. 编写训练循环，迭代epoch，计算损失，反向传播，记录准确率。
+7. 在测试集上评估模型性能。
+
+另外，由于鸢尾花数据集样本较少，模型可能会很快过拟合，所以可能需要早停或者调整网络结构，比如减少隐藏层的大小，或者添加正则化，比如Dropout层。不过，作为示例，可能保持简单即可。
+
+这样应该能完成一个基本的分类任务。不过可能需要调整超参数，比如学习率、epoch次数，或者网络结构，以达到更好的效果。例如，如果准确率不够高，可以尝试增加隐藏层的大小，或者增加更多的层。但鸢尾花数据集相对简单，可能简单的模型就足够。
+
+另外，可能需要注意数据划分时的随机种子，确保结果可复现。此外，标准化处理是否正确应用，避免数据泄漏。在示例中，已经正确使用fit_transform在训练集，transform在测试集。
+
+
+
+以下是使用PyTorch实现Fisher鸢尾花数据集分类的Python程序`iris_neural_network.py`，强调使用了神经网络进行分类。
+
+如果缺少module，安装即可，例如：pip install torch scikit-learn torchvision matplotlib等。
+
+
+
+**完整`iris_neural_network.py`代码**
 
 ```python
 import torch, torch.nn as nn, torch.optim as optim
@@ -605,139 +648,138 @@ if __name__ == "__main__":
    - 最终在测试集上评估模型准确率
    - 包含一个预测示例展示
 
-**输出示例：**
 
-```
-$ python iris_neural_network.py 
-Epoch [ 10/100], Loss: 0.2363
-Epoch [ 20/100], Loss: 0.0899
-Epoch [ 30/100], Loss: 0.0614
-Epoch [ 40/100], Loss: 0.0634
-Epoch [ 50/100], Loss: 0.0498
-Epoch [ 60/100], Loss: 0.0492
-Epoch [ 70/100], Loss: 0.0492
-Epoch [ 80/100], Loss: 0.0451
-Epoch [ 90/100], Loss: 0.0479
-Epoch [100/100], Loss: 0.0436
-
-✅ Test Accuracy: 100.00%
-🔍 Sample Prediction: True = 0, Predicted = 0
-```
 
 该网络经过训练后，通常能在测试集上达到90%以上的准确率。实验结果表明，使用多层全连接网络即可较好解决该多分类任务（Iris数据集规模小，网络不需过深）。
 
 
 
-**可视化：监督学习 + 无监督学习（Iris 数据集）**
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.datasets import load_iris
-from sklearn.linear_model import LogisticRegression
-from sklearn.cluster import KMeans
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score
-
-# 1. 加载数据
-iris = load_iris()
-X = iris.data
-y = iris.target
-
-# 2. 标准化数据
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
-# 3. 划分训练集和测试集（用于监督学习）
-train_x, test_x, train_y, test_y = train_test_split(X_scaled, y, test_size=0.3, random_state=42)
-
-# 4. 监督学习：逻辑回归分类
-clf = LogisticRegression(max_iter=200)
-clf.fit(train_x, train_y)
-pred = clf.predict(test_x)
-print("Logistic Regression Accuracy:", accuracy_score(test_y, pred))
-
-# 5. 无监督学习：KMeans 聚类（聚成3类）
-kmeans = KMeans(n_clusters=3, random_state=42)
-clusters = kmeans.fit_predict(X_scaled)
-
-# 6. 可视化聚类（降维到二维）
-from sklearn.decomposition import PCA
-pca = PCA(n_components=2)
-X_2d = pca.fit_transform(X_scaled)
-
-plt.figure(figsize=(10, 5))
-
-# 聚类结果
-plt.subplot(1, 2, 1)
-plt.scatter(X_2d[:, 0], X_2d[:, 1], c=clusters, cmap='viridis', s=50)
-plt.title("KMeans Clustering (unsupervised)")
-
-# 原始标签
-plt.subplot(1, 2, 2)
-plt.scatter(X_2d[:, 0], X_2d[:, 1], c=y, cmap='Set1', s=50)
-plt.title("Ground Truth Labels (supervised)")
-
-plt.show()
-
-```
-
-> 使用 `LogisticRegression` 训练一个有监督分类器，并输出测试集准确率；
+> **注意事项：**
 >
-> 使用 `KMeans` 进行无监督聚类；
+> 1. 由于数据集较小，模型可能很快达到100%训练准确率
+> 2. 可以调整以下参数优化性能：
+>    - 隐藏层大小（10）
+>    - 学习率（0.01）
+>    - epoch数量（100）
+>    - 优化器（尝试SGD等）
+> 3. 添加正则化（如Dropout层）可以防止过拟合
+> 4. 可以使用GPU加速（将数据和模型移动到`cuda`设备）
+
+
+
+> **可视化：监督学习 + 无监督学习（Iris 数据集）**
 >
-> 使用 PCA 将 4 维数据降维为 2 维，以便可视化聚类结果和真实标签；
+> ```python
+> import numpy as np
+> import matplotlib.pyplot as plt
+> from sklearn.datasets import load_iris
+> from sklearn.linear_model import LogisticRegression
+> from sklearn.cluster import KMeans
+> from sklearn.model_selection import train_test_split
+> from sklearn.preprocessing import StandardScaler
+> from sklearn.metrics import accuracy_score
+> 
+> # 1. 加载数据
+> iris = load_iris()
+> X = iris.data
+> y = iris.target
+> 
+> # 2. 标准化数据
+> scaler = StandardScaler()
+> X_scaled = scaler.fit_transform(X)
+> 
+> # 3. 划分训练集和测试集（用于监督学习）
+> train_x, test_x, train_y, test_y = train_test_split(X_scaled, y, test_size=0.3, random_state=42)
+> 
+> # 4. 监督学习：逻辑回归分类
+> clf = LogisticRegression(max_iter=200)
+> clf.fit(train_x, train_y)
+> pred = clf.predict(test_x)
+> print("Logistic Regression Accuracy:", accuracy_score(test_y, pred))
+> 
+> # 5. 无监督学习：KMeans 聚类（聚成3类）
+> kmeans = KMeans(n_clusters=3, random_state=42)
+> clusters = kmeans.fit_predict(X_scaled)
+> 
+> # 6. 可视化聚类（降维到二维）
+> from sklearn.decomposition import PCA
+> pca = PCA(n_components=2)
+> X_2d = pca.fit_transform(X_scaled)
+> 
+> plt.figure(figsize=(10, 5))
+> 
+> # 聚类结果
+> plt.subplot(1, 2, 1)
+> plt.scatter(X_2d[:, 0], X_2d[:, 1], c=clusters, cmap='viridis', s=50)
+> plt.title("KMeans Clustering (unsupervised)")
+> 
+> # 原始标签
+> plt.subplot(1, 2, 2)
+> plt.scatter(X_2d[:, 0], X_2d[:, 1], c=y, cmap='Set1', s=50)
+> plt.title("Ground Truth Labels (supervised)")
+> 
+> plt.show()
+> 
+> ```
+>
+> > 使用 `LogisticRegression` 训练一个有监督分类器，并输出测试集准确率；
+> >
+> > 使用 `KMeans` 进行无监督聚类；
+> >
+> > 使用 PCA 将 4 维数据降维为 2 维，以便可视化聚类结果和真实标签；
+> >
+>
+> 如图所示，通过使用PCA将特征降至二维，可视化聚类效果与真实分类的对比：
+>
+> 
+>
+> <img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20250727143806445.png" alt="image-20250727143806445" style="zoom: 67%;" />
+>
+> <center>图：Iris 数据聚类（左：网络聚类结果；右：真实类别）</center>
 >
 
-如图所示，通过使用PCA将特征降至二维，可视化聚类效果与真实分类的对比：
+
+
+## 4.3 基于 ResNet18 的MNIST手写数字识别
+
+通过手写数字识别的实例，我们可以看到神经网络的强大，也可以更好地理解它是如何运行的。
+
+MNIST 是计算机视觉领域最经典的基准数据集之一，包含 60,000 张训练图像和 10,000 张测试图像，均为 28×28 像素的灰度手写数字（0–9）。尽管任务看似简单，但它常被用于验证深度学习模型的基本能力。
+
+本示例使用 **ResNet18** 架构对 MNIST 进行分类。虽然 ResNet18 原为 RGB 图像（3通道）设计，但通过适当调整输入层，我们可将其成功应用于单通道灰度图像，并在 MNIST 上轻松达到 **99%+ 的准确率**。
+
+**关键步骤**
+
+1. **数据加载与增强**
+
+   - 使用 `torchvision.datasets.MNIST` 加载数据。
+   - 对训练集应用轻微的数据增强（如随机旋转 ±10°），提升泛化能力。
+   - 对图像进行标准化：均值和标准差均为 `0.5`（因像素值范围为 [0,1]）。
+
+2. **模型适配**
+
+   - 将 ResNet18 的首层卷积从 3 通道输入改为 **1 通道**：
+
+     ```python
+     net.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3, bias=False)
+     ```
+
+   - 修改全连接层输出维度为 **10**（对应 0–9 十个类别）。
+
+3. **训练策略**
+
+   - 优化器：SGD（学习率 0.01，动量 0.9，权重衰减 5e-4）
+   - 学习率调度：余弦退火（`CosineAnnealingLR`）
+   - 早停机制：若连续 10 个 epoch 验证损失无显著下降，则提前终止
+
+4. **评估与可视化**
+
+   - 报告整体准确率及每类准确率
+   - 可视化部分测试样本及其预测结果
 
 
 
-<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20250727143806445.png" alt="image-20250727143806445" style="zoom: 67%;" />
-
-<center>图：Iris 数据聚类（左：网络聚类结果；右：真实类别）</center>
-
-
-
-## 4.4 实例：MNIST手写数字识别
-
-MNIST是手写数字分类的基准数据集，包含60000张28×28的训练手写数字图片（0–9共10类）。我们使用经典的CNN（如ResNet18）来进行分类训练。
-
-关键点：加载MNIST数据集，定义卷积神经网络（例如预训练ResNet18或自定义小型CNN），训练多个epoch后评估。下面是示例代码：
-
-安装需要的包 
-
-> $ python MNIST_nn.py 
->
-> Traceback (most recent call last):
->  File "/home/rocky/AI_literacy/MNIST_nn.py", line 2, in <module>
->   import torchvision
-> ModuleNotFoundError: No module named 'torchvision'
-
-clab虚拟机需要登录网关，能访问外网，因为要下载数据
-
-> 否则，报302错误
->
-> (.venv) [rocky@jensen AI_literacy]$ python MNIST_nn.py 
-> Traceback (most recent call last):
->  File "/home/rocky/AI_literacy/MNIST_nn.py", line 166, in <module>
->   main()
->  File "/home/rocky/AI_literacy/MNIST_nn.py", line 25, in main
->   trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform_train)
->  File "/home/rocky/AI_literacy/.venv/lib64/python3.9/site-packages/torchvision/datasets/mnist.py", line 100, in __init__
->
->   self.download()
->
->  File "/home/rocky/AI_literacy/.venv/lib64/python3.9/site-packages/torchvision/datasets/mnist.py", line 197, in download
->   raise RuntimeError(s)
-> RuntimeError: Error downloading train-images-idx3-ubyte.gz:
-> Tried https://ossci-datasets.s3.amazonaws.com/mnist/, got:
-> <urlopen error [Errno 110] Connection timed out>
-> Tried http://yann.lecun.com/exdb/mnist/, got:
-> HTTP Error 302: Moved Temporarily
-
-
+**完整`mnist_resnet18.py`代码**
 
 ```python
 import torch
@@ -912,21 +954,44 @@ if __name__ == "__main__":
 
 典型结果：使用ResNet18能在MNIST上达到99%以上的准确率。该任务展示了深度卷积网络在图像分类中的强大能力。
 
-> 如果无法使用GPU
-> 
-> **在运行时强制使用CPU调试**
-> 
-> ```
->  CUDA_VISIBLE_DEVICES="" python mnist_resnet18.py
-> ```
-> 
-> 这样禁用CUDA，使用CPU。
+
+
+**常见问题解答**
+
+**Q: 为什么需要修改 `net.conv1`？**
+
+> ResNet18 默认输入为 3 通道（RGB），而 MNIST 是单通道灰度图。必须将第一个卷积层的输入通道数从 3 改为 1，否则会报维度不匹配错误。其余结构（如 kernel size=7、stride=2 等）保持不变以保留原始设计意图。
 >
-> 
+> **`nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)`** 这一行就是修改原来 `ResNet18` 中第一个卷积层（`conv1`）的定义，以使其能接收单通道的灰度图像（`1` 通道）。
+>
+> - **`1`**: 输入图像的通道数（即 MNIST 图像的灰度通道数）。
+> - **`64`**: 输出的卷积通道数（ResNet18 中通常是 64）。
+> - **`kernel_size=(7, 7)`**: 卷积核的大小为 7x7。这个值与原始 ResNet18 中的设置一致。
+> - **`stride=(2, 2)`**: 卷积的步长为 2，这意味着每次卷积后，图像尺寸会减少一半。
+> - **`padding=(3, 3)`**: 填充为 3，保持输入图像的尺寸在卷积后不至于变化太大（确保卷积后输出的空间维度适当）。
+> - **`bias=False`**: 通常在深度网络中，如果使用了批量归一化（BatchNorm）等层，卷积层可以去掉偏置项。
+
+**Q: 能否在 CPU 上运行？**
+
+> 可以。若无 GPU 或 MPS（Apple Silicon）支持，程序会自动回退到 CPU。如需强制使用 CPU（例如调试时），可运行：
+>
+> ```bash
+> CUDA_VISIBLE_DEVICES="" python mnist_resnet18.py
+> ```
 
 
 
-### 4.4.1 在16GB内存的 Mac mini 运行
+**总结**
+
+本项目展示了如何将为自然图像设计的现代 CNN（如 ResNet18）迁移到简单但经典的 MNIST 任务上。通过**输入层适配**、**合理训练策略**和**结果可视化**，不仅验证了模型有效性，也加深了对神经网络工作原理的理解。
+
+> **提示**：对于 MNIST 这类简单任务，小型 CNN（如 LeNet-5）已足够高效。使用 ResNet18 更多是为了演示模型迁移与适配技巧。
+
+
+
+### 实验结果
+
+#### 在16GB内存的 Mac mini 运行
 
 > 运行机器
 >
@@ -976,207 +1041,9 @@ if __name__ == "__main__":
 > [6,   300] loss: 0.047
 > [6,   400] loss: 0.005
 > [6] Avg Loss: 0.023
-> [7,   100] loss: 0.039
-> [7,   200] loss: 0.000
-> [7,   300] loss: 0.022
-> [7,   400] loss: 0.014
-> [7] Avg Loss: 0.018
-> [8,   100] loss: 0.001
-> [8,   200] loss: 0.044
-> [8,   300] loss: 0.021
-> [8,   400] loss: 0.002
-> [8] Avg Loss: 0.019
-> No improvement. Patience: 1/10
-> [9,   100] loss: 0.002
-> [9,   200] loss: 0.020
-> [9,   300] loss: 0.002
-> [9,   400] loss: 0.007
-> [9] Avg Loss: 0.017
-> [10,   100] loss: 0.027
-> [10,   200] loss: 0.034
-> [10,   300] loss: 0.031
-> [10,   400] loss: 0.004
-> [10] Avg Loss: 0.016
-> [11,   100] loss: 0.003
-> [11,   200] loss: 0.004
-> [11,   300] loss: 0.005
-> [11,   400] loss: 0.003
-> [11] Avg Loss: 0.015
-> [12,   100] loss: 0.011
-> [12,   200] loss: 0.000
-> [12,   300] loss: 0.031
-> [12,   400] loss: 0.003
-> [12] Avg Loss: 0.015
-> No improvement. Patience: 1/10
-> [13,   100] loss: 0.002
-> [13,   200] loss: 0.002
-> [13,   300] loss: 0.002
-> [13,   400] loss: 0.019
-> [13] Avg Loss: 0.013
-> [14,   100] loss: 0.019
-> [14,   200] loss: 0.004
-> [14,   300] loss: 0.025
-> [14,   400] loss: 0.003
-> [14] Avg Loss: 0.013
-> No improvement. Patience: 1/10
-> [15,   100] loss: 0.003
-> [15,   200] loss: 0.001
-> [15,   300] loss: 0.011
-> [15,   400] loss: 0.056
-> [15] Avg Loss: 0.013
-> [16,   100] loss: 0.034
-> [16,   200] loss: 0.008
-> [16,   300] loss: 0.001
-> [16,   400] loss: 0.003
-> [16] Avg Loss: 0.011
-> [17,   100] loss: 0.008
-> [17,   200] loss: 0.001
-> [17,   300] loss: 0.001
-> [17,   400] loss: 0.001
-> [17] Avg Loss: 0.011
-> [18,   100] loss: 0.009
-> [18,   200] loss: 0.015
-> [18,   300] loss: 0.002
-> [18,   400] loss: 0.036
-> [18] Avg Loss: 0.013
-> No improvement. Patience: 1/10
-> [19,   100] loss: 0.019
-> [19,   200] loss: 0.001
-> [19,   300] loss: 0.023
-> [19,   400] loss: 0.005
-> [19] Avg Loss: 0.011
-> [20,   100] loss: 0.002
-> [20,   200] loss: 0.007
-> [20,   300] loss: 0.007
-> [20,   400] loss: 0.005
-> [20] Avg Loss: 0.011
-> No improvement. Patience: 1/10
-> [21,   100] loss: 0.001
-> [21,   200] loss: 0.008
-> [21,   300] loss: 0.012
-> [21,   400] loss: 0.005
-> [21] Avg Loss: 0.011
-> [22,   100] loss: 0.007
-> [22,   200] loss: 0.001
-> [22,   300] loss: 0.001
-> [22,   400] loss: 0.002
-> [22] Avg Loss: 0.011
-> No improvement. Patience: 1/10
-> [23,   100] loss: 0.003
-> [23,   200] loss: 0.002
-> [23,   300] loss: 0.001
-> [23,   400] loss: 0.014
-> [23] Avg Loss: 0.011
-> No improvement. Patience: 2/10
-> [24,   100] loss: 0.003
-> [24,   200] loss: 0.001
-> [24,   300] loss: 0.003
-> [24,   400] loss: 0.002
-> [24] Avg Loss: 0.010
-> [25,   100] loss: 0.016
-> [25,   200] loss: 0.002
-> [25,   300] loss: 0.010
-> [25,   400] loss: 0.000
-> [25] Avg Loss: 0.009
-> [26,   100] loss: 0.001
-> [26,   200] loss: 0.002
-> [26,   300] loss: 0.006
-> [26,   400] loss: 0.021
-> [26] Avg Loss: 0.008
-> [27,   100] loss: 0.002
-> [27,   200] loss: 0.002
-> [27,   300] loss: 0.017
-> [27,   400] loss: 0.000
-> [27] Avg Loss: 0.010
-> No improvement. Patience: 1/10
-> [28,   100] loss: 0.001
-> [28,   200] loss: 0.012
-> [28,   300] loss: 0.009
-> [28,   400] loss: 0.000
-> [28] Avg Loss: 0.008
-> No improvement. Patience: 2/10
-> [29,   100] loss: 0.001
-> [29,   200] loss: 0.008
-> [29,   300] loss: 0.009
-> [29,   400] loss: 0.031
-> [29] Avg Loss: 0.010
-> No improvement. Patience: 3/10
-> [30,   100] loss: 0.038
-> [30,   200] loss: 0.001
-> [30,   300] loss: 0.031
-> [30,   400] loss: 0.001
-> [30] Avg Loss: 0.011
-> No improvement. Patience: 4/10
-> [31,   100] loss: 0.017
-> [31,   200] loss: 0.013
-> [31,   300] loss: 0.029
-> [31,   400] loss: 0.032
-> [31] Avg Loss: 0.010
-> No improvement. Patience: 5/10
-> [32,   100] loss: 0.002
-> [32,   200] loss: 0.000
-> [32,   300] loss: 0.003
-> [32,   400] loss: 0.001
-> [32] Avg Loss: 0.009
-> No improvement. Patience: 6/10
-> [33,   100] loss: 0.009
-> [33,   200] loss: 0.018
-> [33,   300] loss: 0.001
-> [33,   400] loss: 0.007
-> [33] Avg Loss: 0.010
-> No improvement. Patience: 7/10
-> [34,   100] loss: 0.001
-> [34,   200] loss: 0.001
-> [34,   300] loss: 0.001
-> [34,   400] loss: 0.011
-> [34] Avg Loss: 0.010
-> No improvement. Patience: 8/10
-> [35,   100] loss: 0.004
-> [35,   200] loss: 0.005
-> [35,   300] loss: 0.009
-> [35,   400] loss: 0.010
-> [35] Avg Loss: 0.011
-> No improvement. Patience: 9/10
-> [36,   100] loss: 0.001
-> [36,   200] loss: 0.004
-> [36,   300] loss: 0.013
-> [36,   400] loss: 0.007
-> [36] Avg Loss: 0.008
-> [37,   100] loss: 0.008
-> [37,   200] loss: 0.003
-> [37,   300] loss: 0.007
-> [37,   400] loss: 0.002
-> [37] Avg Loss: 0.010
-> No improvement. Patience: 1/10
-> [38,   100] loss: 0.002
-> [38,   200] loss: 0.002
-> [38,   300] loss: 0.011
-> [38,   400] loss: 0.004
-> [38] Avg Loss: 0.009
-> No improvement. Patience: 2/10
-> [39,   100] loss: 0.006
-> [39,   200] loss: 0.003
-> [39,   300] loss: 0.002
-> [39,   400] loss: 0.001
-> [39] Avg Loss: 0.008
-> No improvement. Patience: 3/10
-> [40,   100] loss: 0.000
-> [40,   200] loss: 0.012
-> [40,   300] loss: 0.011
-> [40,   400] loss: 0.001
-> [40] Avg Loss: 0.009
-> No improvement. Patience: 4/10
-> [41,   100] loss: 0.010
-> [41,   200] loss: 0.008
-> [41,   300] loss: 0.006
-> [41,   400] loss: 0.002
-> [41] Avg Loss: 0.008
-> No improvement. Patience: 5/10
-> [42,   100] loss: 0.005
-> [42,   200] loss: 0.003
-> [42,   300] loss: 0.014
-> [42,   400] loss: 0.005
-> [42] Avg Loss: 0.010
+> 
+> ...
+> 
 > No improvement. Patience: 6/10
 > [43,   100] loss: 0.010
 > [43,   200] loss: 0.000
@@ -1219,16 +1086,16 @@ if __name__ == "__main__":
 > Process finished with exit code 0
 > 
 > ```
->
 > 
->
+> 
+> 
 > <img src="https://raw.githubusercontent.com/GMyhf/img/main/img/202507261936331.png" alt="22485e1e277b7dfea954fe0cd8a1af4f" style="zoom:50%;" />
->
+> 
 > 
 
 
 
-### 4.4.2 在16GB内存的 window 机器运行
+#### 在16GB内存的 window 机器运行
 
 > 在window机器，用 WSL 安装 Ubuntu，用cpu运行
 >
@@ -1284,211 +1151,9 @@ if __name__ == "__main__":
 > [6,   400] loss: 0.039
 > [6] Avg Loss: 0.023
 > [7,   100] loss: 0.038
-> [7,   200] loss: 0.018
-> [7,   300] loss: 0.002
-> [7,   400] loss: 0.079
-> [7] Avg Loss: 0.022
-> [8,   100] loss: 0.002
-> [8,   200] loss: 0.005
-> [8,   300] loss: 0.044
-> [8,   400] loss: 0.004
-> [8] Avg Loss: 0.018
-> [9,   100] loss: 0.016
-> [9,   200] loss: 0.009
-> [9,   300] loss: 0.030
-> [9,   400] loss: 0.014
-> [9] Avg Loss: 0.015
-> [10,   100] loss: 0.004
-> [10,   200] loss: 0.023
-> [10,   300] loss: 0.027
-> [10,   400] loss: 0.023
-> [10] Avg Loss: 0.017
-> No improvement. Patience: 1/10
-> [11,   100] loss: 0.025
-> [11,   200] loss: 0.034
-> [11,   300] loss: 0.012
-> [11,   400] loss: 0.016
-> [11] Avg Loss: 0.014
-> [12,   100] loss: 0.004
-> [12,   200] loss: 0.002
-> [12,   300] loss: 0.014
-> [12,   400] loss: 0.005
-> [12] Avg Loss: 0.013
-> [13,   100] loss: 0.002
-> [13,   200] loss: 0.022
-> [13,   300] loss: 0.019
-> [13,   400] loss: 0.003
-> [13] Avg Loss: 0.013
-> [14,   100] loss: 0.010
-> [14,   200] loss: 0.004
-> [14,   300] loss: 0.028
-> [14,   400] loss: 0.018
-> [14] Avg Loss: 0.013
-> No improvement. Patience: 1/10
-> [15,   100] loss: 0.009
-> [15,   200] loss: 0.002
-> [15,   300] loss: 0.118
-> [15,   400] loss: 0.011
-> [15] Avg Loss: 0.012
-> [16,   100] loss: 0.025
-> [16,   200] loss: 0.001
-> [16,   300] loss: 0.058
-> [16,   400] loss: 0.005
-> [16] Avg Loss: 0.011
-> [17,   100] loss: 0.000
-> [17,   200] loss: 0.008
-> [17,   300] loss: 0.015
-> [17,   400] loss: 0.034
-> [17] Avg Loss: 0.013
-> No improvement. Patience: 1/10
-> [18,   100] loss: 0.002
-> [18,   200] loss: 0.015
-> [18,   300] loss: 0.001
-> [18,   400] loss: 0.001
-> [18] Avg Loss: 0.010
-> [19,   100] loss: 0.011
-> [19,   200] loss: 0.011
-> [19,   300] loss: 0.001
-> [19,   400] loss: 0.010
-> [19] Avg Loss: 0.011
-> No improvement. Patience: 1/10
-> [20,   100] loss: 0.013
-> [20,   200] loss: 0.000
-> [20,   300] loss: 0.006
-> [20,   400] loss: 0.001
-> [20] Avg Loss: 0.010
-> No improvement. Patience: 2/10
-> [21,   100] loss: 0.008
-> [21,   200] loss: 0.005
-> [21,   300] loss: 0.036
-> [21,   400] loss: 0.047
-> [21] Avg Loss: 0.012
-> No improvement. Patience: 3/10
-> [22,   100] loss: 0.001
-> [22,   200] loss: 0.006
-> [22,   300] loss: 0.003
-> [22,   400] loss: 0.001
-> [22] Avg Loss: 0.011
-> No improvement. Patience: 4/10
-> [23,   100] loss: 0.001
-> [23,   200] loss: 0.006
-> [23,   300] loss: 0.001
-> [23,   400] loss: 0.002
-> [23] Avg Loss: 0.010
-> No improvement. Patience: 5/10
-> [24,   100] loss: 0.008
-> [24,   200] loss: 0.010
-> [24,   300] loss: 0.047
-> [24,   400] loss: 0.056
-> [24] Avg Loss: 0.009
-> [25,   100] loss: 0.009
-> [25,   200] loss: 0.012
-> [25,   300] loss: 0.002
-> [25,   400] loss: 0.027
-> [25] Avg Loss: 0.010
-> No improvement. Patience: 1/10
-> [26,   100] loss: 0.017
-> [26,   200] loss: 0.000
-> [26,   300] loss: 0.011
-> [26,   400] loss: 0.003
-> [26] Avg Loss: 0.012
-> No improvement. Patience: 2/10
-> [27,   100] loss: 0.024
-> [27,   200] loss: 0.004
-> [27,   300] loss: 0.009
-> [27,   400] loss: 0.019
-> [27] Avg Loss: 0.009
-> No improvement. Patience: 3/10
-> [28,   100] loss: 0.004
-> [28,   200] loss: 0.005
-> [28,   300] loss: 0.029
-> [28,   400] loss: 0.029
-> [28] Avg Loss: 0.011
-> No improvement. Patience: 4/10
-> [29,   100] loss: 0.031
-> [29,   200] loss: 0.008
-> [29,   300] loss: 0.022
-> [29,   400] loss: 0.003
-> [29] Avg Loss: 0.009
-> [30,   100] loss: 0.055
-> [30,   200] loss: 0.009
-> [30,   300] loss: 0.002
-> [30,   400] loss: 0.010
-> [30] Avg Loss: 0.010
-> No improvement. Patience: 1/10
-> [31,   100] loss: 0.001
-> [31,   200] loss: 0.006
-> [31,   300] loss: 0.019
-> [31,   400] loss: 0.005
-> [31] Avg Loss: 0.010
-> No improvement. Patience: 2/10
-> [32,   100] loss: 0.001
-> [32,   200] loss: 0.007
-> [32,   300] loss: 0.001
-> [32,   400] loss: 0.001
-> [32] Avg Loss: 0.009
-> No improvement. Patience: 3/10
-> [33,   100] loss: 0.000
-> [33,   200] loss: 0.004
-> [33,   300] loss: 0.001
-> [33,   400] loss: 0.001
-> [33] Avg Loss: 0.009
-> [34,   100] loss: 0.002
-> [34,   200] loss: 0.003
-> [34,   300] loss: 0.020
-> [34,   400] loss: 0.002
-> [34] Avg Loss: 0.010
-> No improvement. Patience: 1/10
-> [35,   100] loss: 0.002
-> [35,   200] loss: 0.000
-> [35,   300] loss: 0.019
-> [35,   400] loss: 0.015
-> [35] Avg Loss: 0.009
-> No improvement. Patience: 2/10
-> [36,   100] loss: 0.002
-> [36,   200] loss: 0.080
-> [36,   300] loss: 0.001
-> [36,   400] loss: 0.010
-> [36] Avg Loss: 0.012
-> No improvement. Patience: 3/10
-> [37,   100] loss: 0.016
-> [37,   200] loss: 0.028
-> [37,   300] loss: 0.004
-> [37,   400] loss: 0.007
-> [37] Avg Loss: 0.008
-> [38,   100] loss: 0.001
-> [38,   200] loss: 0.001
-> [38,   300] loss: 0.002
-> [38,   400] loss: 0.004
-> [38] Avg Loss: 0.008
-> [39,   100] loss: 0.001
-> [39,   200] loss: 0.008
-> [39,   300] loss: 0.002
-> [39,   400] loss: 0.003
-> [39] Avg Loss: 0.008
-> No improvement. Patience: 1/10
-> [40,   100] loss: 0.001
-> [40,   200] loss: 0.008
-> [40,   300] loss: 0.006
-> [40,   400] loss: 0.003
-> [40] Avg Loss: 0.010
-> No improvement. Patience: 2/10
-> [41,   100] loss: 0.006
-> [41,   200] loss: 0.001
-> [41,   300] loss: 0.006
-> [41,   400] loss: 0.006
-> [41] Avg Loss: 0.009
-> No improvement. Patience: 3/10
-> [42,   100] loss: 0.004
-> [42,   200] loss: 0.005
-> [42,   300] loss: 0.010
-> [42,   400] loss: 0.002
-> [42] Avg Loss: 0.009
-> No improvement. Patience: 4/10
-> [43,   100] loss: 0.001
-> [43,   200] loss: 0.002
-> [43,   300] loss: 0.021
-> [43,   400] loss: 0.001
+> 
+> ...
+> 
 > [43] Avg Loss: 0.008
 > No improvement. Patience: 5/10
 > [44,   100] loss: 0.046
@@ -1535,18 +1200,44 @@ if __name__ == "__main__":
 > Accuracy of 8    : 99.38%
 > Accuracy of 9    : 98.41%
 > /home/yhf/NNCode/mnist_resnet18.py:142: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
->   plt.show()
+> plt.show()
 > ```
->
+> 
 > 
 
 
 
-### 4.4.3 在32GB内存的 clab 云虚拟机运行
+#### 在32GB内存的 clab 云虚拟机运行
 
 2025年11月26日，在clab云虚拟机跑。虚拟机只有CPU。
 
 <img src="https://raw.githubusercontent.com/GMyhf/img/main/img/33caace9ba4252b9bcc6707b67f18746.png" alt="33caace9ba4252b9bcc6707b67f18746" style="zoom: 33%;" />
+
+
+
+clab虚拟机需要登录网关，能访问外网，因为要下载数据
+
+> 否则，报302错误
+>
+> (.venv) [rocky@jensen AI_literacy]$ python MNIST_nn.py 
+> Traceback (most recent call last):
+> File "/home/rocky/AI_literacy/MNIST_nn.py", line 166, in <module>
+> main()
+> File "/home/rocky/AI_literacy/MNIST_nn.py", line 25, in main
+> trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform_train)
+> File "/home/rocky/AI_literacy/.venv/lib64/python3.9/site-packages/torchvision/datasets/mnist.py", line 100, in __init__
+>
+> self.download()
+>
+> File "/home/rocky/AI_literacy/.venv/lib64/python3.9/site-packages/torchvision/datasets/mnist.py", line 197, in download
+> raise RuntimeError(s)
+> RuntimeError: Error downloading train-images-idx3-ubyte.gz:
+> Tried https://ossci-datasets.s3.amazonaws.com/mnist/, got:
+> <urlopen error [Errno 110] Connection timed out>
+> Tried http://yann.lecun.com/exdb/mnist/, got:
+> HTTP Error 302: Moved Temporarily
+
+
 
 > 
 >
@@ -1590,194 +1281,9 @@ if __name__ == "__main__":
 > [6,   300] loss: 0.040
 > [6,   400] loss: 0.006
 > [6] Avg Loss: 0.023
-> [7,   100] loss: 0.026
-> [7,   200] loss: 0.004
-> [7,   300] loss: 0.038
-> [7,   400] loss: 0.020
-> [7] Avg Loss: 0.021
-> [8,   100] loss: 0.002
-> [8,   200] loss: 0.009
-> [8,   300] loss: 0.011
-> [8,   400] loss: 0.005
-> [8] Avg Loss: 0.019
-> [9,   100] loss: 0.024
-> [9,   200] loss: 0.002
-> [9,   300] loss: 0.037
-> [9,   400] loss: 0.010
-> [9] Avg Loss: 0.016
-> [10,   100] loss: 0.005
-> [10,   200] loss: 0.020
-> [10,   300] loss: 0.020
-> [10,   400] loss: 0.002
-> [10] Avg Loss: 0.017
-> No improvement. Patience: 1/10
-> [11,   100] loss: 0.001
-> [11,   200] loss: 0.049
-> [11,   300] loss: 0.004
-> [11,   400] loss: 0.089
-> [11] Avg Loss: 0.016
-> [12,   100] loss: 0.011
-> [12,   200] loss: 0.008
-> [12,   300] loss: 0.001
-> [12,   400] loss: 0.005
-> [12] Avg Loss: 0.014
-> [13,   100] loss: 0.005
-> [13,   200] loss: 0.001
-> [13,   300] loss: 0.004
-> [13,   400] loss: 0.002
-> [13] Avg Loss: 0.013
-> [14,   100] loss: 0.011
-> [14,   200] loss: 0.030
-> [14,   300] loss: 0.001
-> [14,   400] loss: 0.016
-> [14] Avg Loss: 0.013
-> No improvement. Patience: 1/10
-> [15,   100] loss: 0.002
-> [15,   200] loss: 0.002
-> [15,   300] loss: 0.000
-> [15,   400] loss: 0.004
-> [15] Avg Loss: 0.012
-> [16,   100] loss: 0.019
-> [16,   200] loss: 0.011
-> [16,   300] loss: 0.010
-> [16,   400] loss: 0.007
-> [16] Avg Loss: 0.012
-> No improvement. Patience: 1/10
-> [17,   100] loss: 0.000
-> [17,   200] loss: 0.004
-> [17,   300] loss: 0.001
-> [17,   400] loss: 0.001
-> [17] Avg Loss: 0.011
-> [18,   100] loss: 0.002
-> [18,   200] loss: 0.005
-> [18,   300] loss: 0.003
-> [18,   400] loss: 0.027
-> [18] Avg Loss: 0.012
-> No improvement. Patience: 1/10
-> [19,   100] loss: 0.001
-> [19,   200] loss: 0.002
-> [19,   300] loss: 0.008
-> [19,   400] loss: 0.013
-> [19] Avg Loss: 0.012
-> No improvement. Patience: 2/10
-> [20,   100] loss: 0.003
-> [20,   200] loss: 0.018
-> [20,   300] loss: 0.005
-> [20,   400] loss: 0.017
-> [20] Avg Loss: 0.011
-> No improvement. Patience: 3/10
-> [21,   100] loss: 0.012
-> [21,   200] loss: 0.007
-> [21,   300] loss: 0.001
-> [21,   400] loss: 0.019
-> [21] Avg Loss: 0.011
-> No improvement. Patience: 4/10
-> [22,   100] loss: 0.003
-> [22,   200] loss: 0.006
-> [22,   300] loss: 0.004
-> [22,   400] loss: 0.007
-> [22] Avg Loss: 0.009
-> [23,   100] loss: 0.014
-> [23,   200] loss: 0.015
-> [23,   300] loss: 0.024
-> [23,   400] loss: 0.005
-> [23] Avg Loss: 0.011
-> No improvement. Patience: 1/10
-> [24,   100] loss: 0.032
-> [24,   200] loss: 0.015
-> [24,   300] loss: 0.006
-> [24,   400] loss: 0.001
-> [24] Avg Loss: 0.011
-> No improvement. Patience: 2/10
-> [25,   100] loss: 0.004
-> [25,   200] loss: 0.001
-> [25,   300] loss: 0.011
-> [25,   400] loss: 0.000
-> [25] Avg Loss: 0.010
-> No improvement. Patience: 3/10
-> [26,   100] loss: 0.001
-> [26,   200] loss: 0.001
-> [26,   300] loss: 0.011
-> [26,   400] loss: 0.001
-> [26] Avg Loss: 0.009
-> No improvement. Patience: 4/10
-> [27,   100] loss: 0.009
-> [27,   200] loss: 0.011
-> [27,   300] loss: 0.001
-> [27,   400] loss: 0.005
-> [27] Avg Loss: 0.009
-> No improvement. Patience: 5/10
-> [28,   100] loss: 0.001
-> [28,   200] loss: 0.001
-> [28,   300] loss: 0.000
-> [28,   400] loss: 0.030
-> [28] Avg Loss: 0.008
-> [29,   100] loss: 0.005
-> [29,   200] loss: 0.002
-> [29,   300] loss: 0.003
-> [29,   400] loss: 0.003
-> [29] Avg Loss: 0.010
-> No improvement. Patience: 1/10
-> [30,   100] loss: 0.001
-> [30,   200] loss: 0.030
-> [30,   300] loss: 0.021
-> [30,   400] loss: 0.012
-> [30] Avg Loss: 0.011
-> No improvement. Patience: 2/10
-> [31,   100] loss: 0.004
-> [31,   200] loss: 0.002
-> [31,   300] loss: 0.010
-> [31,   400] loss: 0.006
-> [31] Avg Loss: 0.009
-> No improvement. Patience: 3/10
-> [32,   100] loss: 0.056
-> [32,   200] loss: 0.036
-> [32,   300] loss: 0.014
-> [32,   400] loss: 0.005
-> [32] Avg Loss: 0.009
-> No improvement. Patience: 4/10
-> [33,   100] loss: 0.006
-> [33,   200] loss: 0.011
-> [33,   300] loss: 0.050
-> [33,   400] loss: 0.075
-> [33] Avg Loss: 0.009
-> No improvement. Patience: 5/10
-> [34,   100] loss: 0.005
-> [34,   200] loss: 0.002
-> [34,   300] loss: 0.001
-> [34,   400] loss: 0.003
-> [34] Avg Loss: 0.010
-> No improvement. Patience: 6/10
-> [35,   100] loss: 0.009
-> [35,   200] loss: 0.014
-> [35,   300] loss: 0.001
-> [35,   400] loss: 0.021
-> [35] Avg Loss: 0.010
-> No improvement. Patience: 7/10
-> [36,   100] loss: 0.002
-> [36,   200] loss: 0.001
-> [36,   300] loss: 0.002
-> [36,   400] loss: 0.005
-> [36] Avg Loss: 0.008
-> [37,   100] loss: 0.002
-> [37,   200] loss: 0.041
-> [37,   300] loss: 0.000
-> [37,   400] loss: 0.015
-> [37] Avg Loss: 0.009
-> No improvement. Patience: 1/10
-> [38,   100] loss: 0.013
-> [38,   200] loss: 0.004
-> [38,   300] loss: 0.001
-> [38,   400] loss: 0.005
-> [38] Avg Loss: 0.010
-> No improvement. Patience: 2/10
-> [39,   100] loss: 0.021
-> [39,   200] loss: 0.002
-> [39,   300] loss: 0.001
-> [39,   400] loss: 0.003
-> [39] Avg Loss: 0.010
-> No improvement. Patience: 3/10
-> [40,   100] loss: 0.001
+> 
+> ...
+> 
 > [40,   200] loss: 0.001
 > [40,   300] loss: 0.019
 > [40,   400] loss: 0.076
@@ -1833,14 +1339,65 @@ if __name__ == "__main__":
 > Accuracy of 8    : 99.38%
 > Accuracy of 9    : 99.60%
 > ```
->
+> 
 > 
 
 
 
-## 4.5 实例：CIFAR-10图像分类
+## 4.4 基于 ResNet18 的 CIFAR-10 图像分类
 
-CIFAR-10 数据集包含 60,000 张 32×32彩色图像，共10个类别。由于图像更复杂，我们继续使用更强的模型（如ResNet18或ResNet34）进行训练。流程类似MNIST，但输入通道为3。训练后，现代架构通常能达到70%–90%的测试准确率（取决于网络深度和训练策略）。该实验帮助学生理解小型彩色图像集上的卷积网络训练要点（如数据增强、学习率调整）。
+本项目旨在复现并改进 菜鸟教程（https://www.runoob.com/pytorch/pytorch-image-classification.html）中的 CIFAR-10 分类示例。原始实现仅达到约 **76.8%** 的测试准确率，低于经典基线（如 cuda-convnet 报告的 **82%+**）。为此，我们引入 **ResNet18 架构**、**增强的数据预处理策略** 和 **学习率调度机制**，显著提升模型性能。
+
+最终在 Mac Studio（M1 Ultra）与 Clab 云服务器上均实现了 **>83.5%** 的测试准确率，成功超越基础 CNN 基线。
+
+
+
+### 数据集简介：CIFAR-10
+
+CIFAR-10 是由 Alex Krizhevsky 等人构建的经典图像分类数据集，源自 80 Million Tiny Images（http://people.csail.mit.edu/torralba/tinyimages/）。
+
+- **图像数量**：60,000 张 32×32 彩色图像 
+- **类别数**：10 类（互斥） 
+  - airplane, automobile, bird, cat, deer, dog, frog, horse, ship, truck
+- **划分**：
+  - 训练集：50,000 张（每类 5,000）
+  - 测试集：10,000 张（每类 1,000，均匀采样）
+
+> 官网：https://www.cs.toronto.edu/~kriz/cifar.html
+
+| Class      | 示例图像                                                     |
+| ---------- | ------------------------------------------------------------ |
+| airplane   | ![airplane](https://www.cs.toronto.edu/~kriz/cifar-10-sample/airplane1.png) … |
+| automobile | ![automobile](https://www.cs.toronto.edu/~kriz/cifar-10-sample/automobile1.png) … |
+| ...        | （其余略，详见官网）                                         |
+
+> 注意：“automobile” 指轿车/SUV，“truck” 仅指大型卡车，两者无重叠。
+>
+> **Baseline results**
+>
+> You can find some baseline replicable results on this dataset [on the project page for cuda-convnet](http://code.google.com/p/cuda-convnet/). These results were obtained with a convolutional neural network. Briefly, they are **18%** test error without data augmentation and 11% with. Additionally, [Jasper Snoek](http://www.cs.toronto.edu/~jasper/) has a [new paper](http://hips.seas.harvard.edu/content/practical-bayesian-optimization-machine-learning-algorithms) in which he used Bayesian hyperparameter optimization to find nice settings of the weight decay and other hyperparameters, which allowed him to obtain a test error rate of 15% (without data augmentation) using the architecture of the net that got 18%.
+
+------
+
+
+
+### 改进措施
+
+**现代网络架构（ResNet18） + 充分的数据增强 + 学习率调度**
+
+| 改进项         | 具体实现                                                     |
+| -------------- | ------------------------------------------------------------ |
+| **网络架构**   | 使用 `torchvision.models.resnet18(weights=None)`，从头训练   |
+| **输入尺寸**   | 保留原始 32×32（无需 Resize，因未加载 ImageNet 预训练权重）  |
+| **数据增强**   | `RandomCrop`, `HorizontalFlip`, `RandomRotation`, `ColorJitter` |
+| **优化器**     | SGD + momentum=0.9 + weight_decay=5e-4                       |
+| **学习率调度** | `CosineAnnealingLR`（平滑衰减）                              |
+| **训练控制**   | Early stopping（patience=10）防止过拟合                      |
+| **评估指标**   | 总体准确率 + 每类准确率 + 可视化预测网格                     |
+
+
+
+完整 `image_classification-ResNet18-RandomCropFlipLR_Cosine.py`代码
 
 ```python
 import torch
@@ -1854,7 +1411,7 @@ import numpy as np
 import time
 
 def main():
-    # 1. 数据增强 + 预处理
+    # === 1. 数据增强与加载 ===
     transform_train = transforms.Compose([
         transforms.RandomCrop(32, padding=4),
         transforms.RandomHorizontalFlip(),
@@ -1878,7 +1435,7 @@ def main():
     classes = ('plane', 'car', 'bird', 'cat', 'deer',
                'dog', 'frog', 'horse', 'ship', 'truck')
 
-    # 2. 设置设备和模型
+    # === 2. 模型与训练配置 ===
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
     print("Using device:", device)
 
@@ -1892,7 +1449,7 @@ def main():
     optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9, weight_decay=5e-4)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=100)
 
-    # 3. 训练过程
+    # === 3. 训练循环（含 Early Stopping）===
     best_loss = float('inf')
     patience = 10 # 提高耐心
     patience_counter = 0
@@ -1939,7 +1496,7 @@ def main():
     # 保存模型
     torch.save(net.state_dict(), './resnet18_cifar10_data_augument.pth')
 
-    # 4. 测试准确率
+    # === 4. 测试评估 ===
     correct = 0
     total = 0
     net.eval()
@@ -1971,8 +1528,7 @@ def main():
     for i in range(10):
         print(f'Accuracy of {classes[i]:5s}: {100 * class_correct[i] / class_total[i]:.2f}%')
 
-    # --- 可视化预测 ---
-
+    # === 5. 可视化预测结果 ===
     def imshow_grid(images, labels, preds=None, classes=None, rows=8, cols=8):
         images = images.cpu() / 2 + 0.5  # unnormalize
         npimg = images.numpy()
@@ -2018,7 +1574,32 @@ if __name__ == "__main__":
 
 
 
-> 详细训练日志：
+### 实验结果
+
+#### 在 Apple M1 Ultra (Mac Studio, 64GB RAM)
+
+- **设备**：`mps`
+- **训练耗时**：79.91 分钟
+- **早停轮次**：第 208 轮
+- **测试准确率**：**83.57%**
+
+| 类别    | 准确率              |
+| ------- | ------------------- |
+| plane   | 83.70%              |
+| car     | 92.20%              |
+| bird    | 78.70%              |
+| **cat** | **60.40%** ← 最弱项 |
+| deer    | 79.30%              |
+| dog     | 77.40%              |
+| frog    | 90.30%              |
+| horse   | 92.50%              |
+| ship    | 88.50%              |
+| truck   | 92.70%              |
+
+> 预测可视化：
+> <img src="https://raw.githubusercontent.com/GMyhf/img/main/img/202507280020181.jpg" alt="预测结果" style="zoom: 50%;" />
+
+> 运行输出结果如下：
 >
 > ```
 > /Users/hfyan/miniconda3/bin/python /Users/hfyan/Desktop/LLMs-from-scratch-main/runoob/pytorch-image-classification/image_classification-ResNet18-RandomCropFlipLR_Cosine.py 
@@ -2145,36 +1726,268 @@ if __name__ == "__main__":
 > ```
 >
 > 
+
+
+
+#### 在 Clab 云服务器 (32 vCPU, 32GB RAM)
+
+- **设备**：`cpu`
+- **训练耗时**：636.54 分钟（约 10.6 小时）
+- **早停轮次**：第 277 轮
+- **测试准确率**：**83.67%**
+
+| 类别    | 准确率                |
+| ------- | --------------------- |
+| plane   | 84.70%                |
+| car     | 91.90%                |
+| bird    | 84.00%                |
+| **cat** | **65.90%**** ← 最弱项 |
+| deer    | 81.10%                |
+| dog     | 77.60%                |
+| frog    | 89.40%                |
+| horse   | 85.00%                |
+| ship    | 91.70%                |
+| truck   | 85.40%                |
+
+> 预测可视化：
+> <img src="https://raw.githubusercontent.com/GMyhf/img/main/img/b353056ebdc1085718fc43ab6d2a1316.png" alt="云服务器结果" style="zoom:50%;" />
+
+
+
+> 结果如下：
 >
-> <img src="https://raw.githubusercontent.com/GMyhf/img/main/img/202507280020181.jpg" alt="d561be986280572516ac1023e9ff715c" style="zoom:50%;" />
+> ```
+> /home/rocky/AI_literacy/.venv/bin/python /home/rocky/AI_literacy/CIFAR-10_nn.py 
+> 100%|██████████| 170M/170M [00:15<00:00, 11.1MB/s]
+> /usr/lib64/python3.9/tarfile.py:2288: RuntimeWarning: The default behavior of tarfile extraction has been changed to disallow common exploits (including CVE-2007-4559). By default, absolute/parent paths are disallowed and some mode bits are cleared. See https://access.redhat.com/articles/7004769 for more details.
+>   warnings.warn(
+> Using device: cpu
+> Starting training with early stopping...
+> /home/rocky/AI_literacy/.venv/lib64/python3.9/site-packages/torch/utils/data/dataloader.py:666: UserWarning: 'pin_memory' argument is set as true but no accelerator is found, then device pinned memory won't be used.
+>   warnings.warn(warn_msg)
+> [1,   100] loss: 1.893
+> [1,   200] loss: 1.658
+> [1,   300] loss: 1.698
+> [1] Avg Loss: 1.804
+> [2,   100] loss: 1.399
+> [2,   200] loss: 1.580
+> [2,   300] loss: 1.407
+> [2] Avg Loss: 1.517
+> [3,   100] loss: 1.346
+> [3,   200] loss: 1.492
+> [3,   300] loss: 1.097
+> [3] Avg Loss: 1.373
+> [4,   100] loss: 1.309
+> [4,   200] loss: 1.182
+> [4,   300] loss: 1.187
+> [4] Avg Loss: 1.244
+> [5,   100] loss: 1.104
+> [5,   200] loss: 1.084
+> [5,   300] loss: 1.081
+> [5] Avg Loss: 1.151
+> ......
+> [267,   100] loss: 0.278
+> [267,   200] loss: 0.226
+> [267,   300] loss: 0.188
+> [267] Avg Loss: 0.249
+> [268,   100] loss: 0.218
+> [268,   200] loss: 0.220
+> [268,   300] loss: 0.206
+> [268] Avg Loss: 0.256
+> No improvement. Patience: 1/10
+> [269,   100] loss: 0.200
+> [269,   200] loss: 0.175
+> [269,   300] loss: 0.298
+> [269] Avg Loss: 0.256
+> No improvement. Patience: 2/10
+> [270,   100] loss: 0.325
+> [270,   200] loss: 0.265
+> [270,   300] loss: 0.319
+> [270] Avg Loss: 0.258
+> No improvement. Patience: 3/10
+> [271,   100] loss: 0.316
+> [271,   200] loss: 0.139
+> [271,   300] loss: 0.263
+> [271] Avg Loss: 0.251
+> No improvement. Patience: 4/10
+> [272,   100] loss: 0.260
+> [272,   200] loss: 0.184
+> [272,   300] loss: 0.141
+> [272] Avg Loss: 0.256
+> No improvement. Patience: 5/10
+> [273,   100] loss: 0.263
+> [273,   200] loss: 0.327
+> [273,   300] loss: 0.246
+> [273] Avg Loss: 0.250
+> No improvement. Patience: 6/10
+> [274,   100] loss: 0.193
+> [274,   200] loss: 0.221
+> [274,   300] loss: 0.227
+> [274] Avg Loss: 0.250
+> No improvement. Patience: 7/10
+> [275,   100] loss: 0.185
+> [275,   200] loss: 0.354
+> [275,   300] loss: 0.254
+> [275] Avg Loss: 0.258
+> No improvement. Patience: 8/10
+> [276,   100] loss: 0.354
+> [276,   200] loss: 0.326
+> [276,   300] loss: 0.246
+> [276] Avg Loss: 0.250
+> No improvement. Patience: 9/10
+> [277,   100] loss: 0.183
+> [277,   200] loss: 0.383
+> [277,   300] loss: 0.295
+> [277] Avg Loss: 0.256
+> No improvement. Patience: 10/10
+> Early stopping triggered.
+> ✅ Training completed in 636.54 minutes.
+> Accuracy on test images: 83.67%
+> Accuracy of plane: 84.70%
+> Accuracy of car  : 91.90%
+> Accuracy of bird : 84.00%
+> Accuracy of cat  : 65.90%
+> Accuracy of deer : 81.10%
+> Accuracy of dog  : 77.60%
+> Accuracy of frog : 89.40%
+> Accuracy of horse: 85.00%
+> Accuracy of ship : 91.70%
+> Accuracy of truck: 85.40%
+> 
+> Process finished with exit code 0
+> 
+> ```
+>
+> 
+>
+> ![f44849630ac92c19ff8f0b2e922801ab](https://raw.githubusercontent.com/GMyhf/img/main/img/f44849630ac92c19ff8f0b2e922801ab.png)
 >
 > 
 
 
 
-## 4.6 实例：Tiny ImageNet 图像分类
+### 常见问题解答（FAQ）
 
-Tiny ImageNet是一个更大规模的图像分类任务，包含200个类别的64×64彩色图像，每类约500张训练图像。我们使用更深的网络（如ResNet50或更大模型）和更充分的训练迭代来解决。该任务需要更多算力（GPU支持）和技术（比如学习率调度、正则化）。完成后学生将掌握从代码实现到实战调优的完整流程，体会训练高复杂度模型的工程挑战。
+**Q1: 为什么不用 `transforms.Resize(224)`？**
 
-### 1.准备Tiny ImageNet数据集
+- **关键点**：是否使用预训练权重。
+  - 若 `weights=None`（从头训练）→ **不需要 Resize**，可直接用 32×32 输入。
+  - 若 `weights=ResNet18_Weights.DEFAULT` → 必须 Resize 到 ≥224×224，或修改首层卷积核。
 
-Tiny ImageNet。它包含 200 个类别，每个类别 500 张训练图片，总数据量大约 500MB，非常适合实验和调试。
+> 本项目选择从头训练，故保留原始分辨率，避免信息失真。
 
-可以用下面方法下载及预处理，或者直接下载预处理好的数据。
+------
 
+**Q2: 如何解读 `_, predicted = torch.max(outputs, 1)`？**
+
+- `outputs`：形状为 `(N, 10)` 的 logits 张量。
+- `torch.max(..., dim=1)`：沿类别维度（dim=1）找最大值。
+  - 返回 `(values, indices)`
+  - `_` 忽略最大值，`predicted` 保留类别索引（0~9）
+
+> 示例：若输出 `[2.1, 4.2, ..., 3.3]`，则 `predicted = 1`（对应 "automobile"）
+
+------
+
+**Q3: 每类准确率是如何计算的？**
+
+通过遍历测试集，对每个样本：
+
+1. 判断 `predicted == label`
+2. 累加到对应类别的 `class_correct[label]`
+3. 同时累加 `class_total[label]`
+
+最终：`accuracy[i] = class_correct[i] / class_total[i]`
+
+> 这能揭示模型弱点（如“猫”类准确率显著偏低）。
+
+
+
+### 与 Baseline 对比总结
+
+| 方法                          | 准确率     | 是否超越 82%？ |
+| ----------------------------- | ---------- | -------------- |
+| 原始简易 CNN                  | 76.77%     | ❌              |
+| **本项目（ResNet18 + 增强）** | **83.57%** | ✅              |
+| cuda-convnet（无增强）        | 82%        | —              |
+| cuda-convnet（有增强）        | 89%        | ⚠️ 仍有差距     |
+
+> 下一步可尝试：MixUp、Cutout、Label Smoothing、更大模型（如 ResNet50）、迁移学习等。
+
+------
+
+
+
+> 附录：ImageNet Top-5 错误率演进（参考）
+>
+> ![ImageNet Top-5 Error](https://raw.githubusercontent.com/GMyhf/img/main/img/image-20250726164756658.png)
+>
+> - **2012 AlexNet**：开启深度学习时代（16.4% < 26%）
+> - **2015 ResNet**：首次超越人类（3.6% < 5.0%）
+> - **Top-5 定义**：只要真实标签在模型预测的前5名中，即视为正确。
+
+
+
+### 结论
+
+通过合理使用 **现代网络架构（ResNet18）** + **充分的数据增强** + **学习率调度**，我们在 CIFAR-10 上轻松超越了早期 CNN 基线，验证了“更强模型 + 更好训练策略 = 更高性能”的原则。
+
+
+
+
+
+## 4.5 基于 ResNet50 的 Tiny ImageNet 图像分类
+
+本项目演示如何使用 **PyTorch** 和 **torchvision** 在 **Tiny ImageNet** 数据集上微调 **预训练 ResNet50 模型**，完成图像分类任务。尽管 Tiny ImageNet（约 500MB）远小于完整 ImageNet（150GB+），但仍需合理配置数据路径、批大小（batch size）和设备资源。我们在 Apple Silicon（MPS 后端）上成功完成 25 轮训练，验证准确率达 **80.14%**，耗时约 4.5 小时。
+
+
+
+### 1. 背景知识
+
+#### 1.1 为什么选择 Tiny ImageNet？
+
+| 特性     | ImageNet                 | Tiny ImageNet     |
+| -------- | ------------------------ | ----------------- |
+| 类别数   | 1,000                    | 200               |
+| 训练图像 | ~128 万张                | 10 万张（500/类） |
+| 验证图像 | 5 万张                   | 1 万张（50/类）   |
+| 图像尺寸 | 通常 224×224（原始更大） | 固定 64×64        |
+| 磁盘占用 | ~150 GB                  | ~250 MB（压缩后） |
+
+Tiny ImageNet 保留了 ImageNet 的语义多样性，同时大幅降低计算开销，非常适合教学、原型验证和本地调试。
+
+#### 1.2 为什么使用 ResNet50？
+
+ResNet50 是由 He et al. (2015) 提出的经典深度卷积网络，其核心创新是**残差连接（skip connection）**，有效缓解了深层网络中的梯度消失与退化问题。
+
+- **结构**：50 层（含卷积、池化、全连接）
+- **输入尺寸**：224×224（需对 64×64 图像进行上采样）
+- **迁移学习优势**：在 ImageNet 上预训练的权重可显著加速收敛
+- **输出层**：默认 1000 类 → 微调为 200 类
+
+------
+
+### 2. 数据准备
+
+#### 2.1 下载与预处理
+
+官方数据集地址： 
+
+```bash
+wget http://cs231n.stanford.edu/tiny-imagenet-200.zip
+```
+
+> 或者直接下载预处理好的数据。
+>
 > tiny-imagenet-200.zip, https://disk.pku.edu.cn/link/AA068C93E37D564808A74B8F282DCE0F11
 > Name: tiny-imagenet-200.zip
 > Expires: Never
 
 
 
-下载 `wget http://cs231n.stanford.edu/tiny-imagenet-200.zip`，记237MB。
+解压后，`val/` 目录下的所有图像位于同一文件夹，不符合 `torchvision.datasets.ImageFolder` 的要求（需按类别分目录）。我们提供自动化脚本 `tinyimagenet.sh` 完成整理：
 
-验证集通常解压后所有图片会在同一个文件夹中，而 ImageFolder 要求每个类别有独立子文件夹。你需要根据官方提供的 验证集标签文件，如 val_annotations.txt，对图片进行分类整理。常见的做法是编写一个脚本，根据文件中的类别信息将图片移动到对应的子文件夹中。
-
-脚本`tinyimagenet.sh`
-
-```sh
+```bash
 #!/bin/bash
 
 # download and unzip dataset
@@ -2208,35 +2021,34 @@ for i in $(seq 1 $length); do
 done
 rm -r images
 echo "done"
-
 ```
 
-
-
-运行`sh tinyimagenet.sh`，数据解压并分类准备好，记472MB。
+运行后目录结构如下：
 
 ```
-% ls -l
-total 5200
-drwxrwxr-x    3 hfyan  staff       96 Dec 12  2014 test
-drwxrwxr-x  202 hfyan  staff     6464 Dec 12  2014 train
-drwxrwxr-x  203 hfyan  staff     6496 Feb 24 11:09 val
--rw-rw-r--    1 hfyan  staff     2000 Feb  9  2015 wnids.txt
--rw-------    1 hfyan  staff  2655750 Feb  9  2015 words.txt
-(base) hfyan@HongfeideMac-Studio tiny-imagenet-200 % pwd
-/Users/hfyan/data/tiny-imagenet-200
-
+tiny-imagenet-200/
+├── train/          # 200 个子目录，每类 500 张图
+├── val/            # 200 个子目录，每类 50 张图
+├── test/           # 无标签（用于竞赛）
+├── wnids.txt       # 类别 ID 列表
+└── words.txt       # 类别名称映射
 ```
 
+> 总大小约 **472 MB**。
 
+------
 
+### 3. 模型训练
 
+#### 3.1 环境与硬件
 
-### 2. 训练模型
+- **设备**：Mac Studio (Apple M1 Ultra, 64GB 统一内存)
+- **PyTorch 后端**：MPS（Metal Performance Shaders）
+- **关键限制**：MPS **不支持 float64**，需显式使用 `.float()`
 
-基于 PyTorch 和 torchvision 库的示例代码，该代码演示了如何加载 ImageNet 数据集、构建基于预训练 ResNet 模型的神经网络，并进行微调训练实现图像分类。
+#### 3.2 完整代码
 
-代码`tiny_imagenet_resnet50_epoch25.py`
+ `tiny_imagenet_resnet50_epoch25.py` 
 
 ```python
 import os
@@ -2334,7 +2146,7 @@ def main():
                                                 data_transforms[x])
                       for x in ['train', 'val']}
 
-    # 设置 num_workers 为 4 以利用多进程数据加载
+    # 设置 num_workers 为 8 以利用多进程数据加载
     dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x],
                                                     batch_size=128,    # 可根据实际情况调整
                                                     shuffle=True,
@@ -2377,7 +2189,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-
 ```
 
 > **说明**
@@ -2400,156 +2211,199 @@ if __name__ == '__main__':
 
 
 
-> **2025/2/24 11:30开始运行，16:00结束**
+**2025/2/24 11:30开始运行，16:00结束**
+
+>  File "/Users/hfyan/data/tiny_imagenet_resnet50_epoch25.py", line 47, in train_model
 >
-> ```
-> (base) hfyan@HongfeideMac-Studio data % python tiny_imagenet_resnet50_epoch25.py 
-> Using MPS device for GPU acceleration
-> Epoch 1/25
-> ----------
-> train Loss: 5.0366 Acc: 0.0720
-> val Loss: 4.1348 Acc: 0.2819
-> 
-> Epoch 2/25
-> ----------
-> train Loss: 3.2563 Acc: 0.3406
-> val Loss: 1.7006 Acc: 0.6197
-> 
-> Epoch 3/25
-> ----------
-> train Loss: 2.1834 Acc: 0.5065
-> val Loss: 1.2068 Acc: 0.7062
-> 
-> Epoch 4/25
-> ----------
-> train Loss: 1.8635 Acc: 0.5663
-> val Loss: 1.0010 Acc: 0.7498
-> 
-> Epoch 5/25
-> ----------
-> train Loss: 1.6788 Acc: 0.6029
-> val Loss: 0.8927 Acc: 0.7702
-> 
-> Epoch 6/25
-> ----------
-> train Loss: 1.5723 Acc: 0.6268
-> val Loss: 0.8407 Acc: 0.7808
-> 
-> Epoch 7/25
-> ----------
-> train Loss: 1.5044 Acc: 0.6390
-> val Loss: 0.7990 Acc: 0.7907
-> 
-> Epoch 8/25
-> ----------
-> train Loss: 1.4324 Acc: 0.6567
-> val Loss: 0.7788 Acc: 0.7939
-> 
-> Epoch 9/25
-> ----------
-> train Loss: 1.4212 Acc: 0.6571
-> val Loss: 0.7701 Acc: 0.7981
-> 
-> Epoch 10/25
-> ----------
-> train Loss: 1.4054 Acc: 0.6614
-> val Loss: 0.7669 Acc: 0.7966
-> 
-> Epoch 11/25
-> ----------
-> train Loss: 1.4035 Acc: 0.6615
-> val Loss: 0.7634 Acc: 0.7980
-> 
-> Epoch 12/25
-> ----------
-> train Loss: 1.3995 Acc: 0.6626
-> val Loss: 0.7595 Acc: 0.7990
-> 
-> Epoch 13/25
-> ----------
-> train Loss: 1.3882 Acc: 0.6647
-> val Loss: 0.7558 Acc: 0.7988
-> 
-> Epoch 14/25
-> ----------
-> train Loss: 1.3747 Acc: 0.6680
-> val Loss: 0.7517 Acc: 0.7997
-> 
-> Epoch 15/25
-> ----------
-> train Loss: 1.3754 Acc: 0.6683
-> val Loss: 0.7490 Acc: 0.8006
-> 
-> Epoch 16/25
-> ----------
-> train Loss: 1.3685 Acc: 0.6689
-> val Loss: 0.7592 Acc: 0.7970
-> 
-> Epoch 17/25
-> ----------
-> train Loss: 1.3771 Acc: 0.6681
-> val Loss: 0.7567 Acc: 0.8009
-> 
-> Epoch 18/25
-> ----------
-> train Loss: 1.3690 Acc: 0.6688
-> val Loss: 0.7508 Acc: 0.8011
-> 
-> Epoch 19/25
-> ----------
-> train Loss: 1.3716 Acc: 0.6694
-> val Loss: 0.7521 Acc: 0.8008
-> 
-> Epoch 20/25
-> ----------
-> train Loss: 1.3729 Acc: 0.6687
-> val Loss: 0.7527 Acc: 0.8002
-> 
-> Epoch 21/25
-> ----------
-> train Loss: 1.3709 Acc: 0.6689
-> val Loss: 0.7501 Acc: 0.8014
-> 
-> Epoch 22/25
-> ----------
-> train Loss: 1.3706 Acc: 0.6708
-> val Loss: 0.7516 Acc: 0.8008
-> 
-> Epoch 23/25
-> ----------
-> train Loss: 1.3681 Acc: 0.6696
-> val Loss: 0.7502 Acc: 0.8002
-> 
-> Epoch 24/25
-> ----------
-> train Loss: 1.3725 Acc: 0.6698
-> val Loss: 0.7508 Acc: 0.8003
-> 
-> Epoch 25/25
-> ----------
-> train Loss: 1.3708 Acc: 0.6696
-> val Loss: 0.7480 Acc: 0.8004
-> 
-> Best val Acc: 0.8014
-> Model saved as tiny_imagenet_resnet50_epoch25.pth
-> 
-> ```
+>  epoch_acc = running_corrects.double() / dataset_sizes[phase]
 >
-> 跑了4小时30分钟。
+>  TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead.
 >
-> <img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20250224171542842.png" alt="image-20250224171542842" style="zoom:50%;" />
->
-> 
->
-> ```
-> % ls -lh *.pth
-> -rw-r--r--  1 hfyan  staff    92M Feb 24 16:02 tiny_imagenet_resnet50_epoch25.pth
-> ```
->
+>  (base) hfyan@HongfeideMac-Studio data % python tiny_imagenet_resnet50_epoch25.py 
+
+```
+(base) hfyan@HongfeideMac-Studio data % python tiny_imagenet_resnet50_epoch25.py 
+Using MPS device for GPU acceleration
+Epoch 1/25
+----------
+train Loss: 5.0366 Acc: 0.0720
+val Loss: 4.1348 Acc: 0.2819
+
+Epoch 2/25
+----------
+train Loss: 3.2563 Acc: 0.3406
+val Loss: 1.7006 Acc: 0.6197
+
+Epoch 3/25
+----------
+train Loss: 2.1834 Acc: 0.5065
+val Loss: 1.2068 Acc: 0.7062
+
+Epoch 4/25
+----------
+train Loss: 1.8635 Acc: 0.5663
+val Loss: 1.0010 Acc: 0.7498
+
+Epoch 5/25
+----------
+train Loss: 1.6788 Acc: 0.6029
+val Loss: 0.8927 Acc: 0.7702
+
+Epoch 6/25
+----------
+train Loss: 1.5723 Acc: 0.6268
+val Loss: 0.8407 Acc: 0.7808
+
+Epoch 7/25
+----------
+train Loss: 1.5044 Acc: 0.6390
+val Loss: 0.7990 Acc: 0.7907
+
+Epoch 8/25
+----------
+train Loss: 1.4324 Acc: 0.6567
+val Loss: 0.7788 Acc: 0.7939
+
+Epoch 9/25
+----------
+train Loss: 1.4212 Acc: 0.6571
+val Loss: 0.7701 Acc: 0.7981
+
+Epoch 10/25
+----------
+train Loss: 1.4054 Acc: 0.6614
+val Loss: 0.7669 Acc: 0.7966
+
+Epoch 11/25
+----------
+train Loss: 1.4035 Acc: 0.6615
+val Loss: 0.7634 Acc: 0.7980
+
+Epoch 12/25
+----------
+train Loss: 1.3995 Acc: 0.6626
+val Loss: 0.7595 Acc: 0.7990
+
+Epoch 13/25
+----------
+train Loss: 1.3882 Acc: 0.6647
+val Loss: 0.7558 Acc: 0.7988
+
+Epoch 14/25
+----------
+train Loss: 1.3747 Acc: 0.6680
+val Loss: 0.7517 Acc: 0.7997
+
+Epoch 15/25
+----------
+train Loss: 1.3754 Acc: 0.6683
+val Loss: 0.7490 Acc: 0.8006
+
+Epoch 16/25
+----------
+train Loss: 1.3685 Acc: 0.6689
+val Loss: 0.7592 Acc: 0.7970
+
+Epoch 17/25
+----------
+train Loss: 1.3771 Acc: 0.6681
+val Loss: 0.7567 Acc: 0.8009
+
+Epoch 18/25
+----------
+train Loss: 1.3690 Acc: 0.6688
+val Loss: 0.7508 Acc: 0.8011
+
+Epoch 19/25
+----------
+train Loss: 1.3716 Acc: 0.6694
+val Loss: 0.7521 Acc: 0.8008
+
+Epoch 20/25
+----------
+train Loss: 1.3729 Acc: 0.6687
+val Loss: 0.7527 Acc: 0.8002
+
+Epoch 21/25
+----------
+train Loss: 1.3709 Acc: 0.6689
+val Loss: 0.7501 Acc: 0.8014
+
+Epoch 22/25
+----------
+train Loss: 1.3706 Acc: 0.6708
+val Loss: 0.7516 Acc: 0.8008
+
+Epoch 23/25
+----------
+train Loss: 1.3681 Acc: 0.6696
+val Loss: 0.7502 Acc: 0.8002
+
+Epoch 24/25
+----------
+train Loss: 1.3725 Acc: 0.6698
+val Loss: 0.7508 Acc: 0.8003
+
+Epoch 25/25
+----------
+train Loss: 1.3708 Acc: 0.6696
+val Loss: 0.7480 Acc: 0.8004
+
+Best val Acc: 0.8014
+Model saved as tiny_imagenet_resnet50_epoch25.pth
+
+```
+
+跑了4小时30分钟。
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20250224171542842.png" alt="image-20250224171542842" style="zoom:50%;" />
 
 
 
-### 3.加载训练好的的模型并进行验证
+```
+% ls -lh *.pth
+-rw-r--r--  1 hfyan  staff    92M Feb 24 16:02 tiny_imagenet_resnet50_epoch25.pth
+```
+
+
+
+
+
+
+
+#### 3.3 常见问题解答
+
+##### Q1：为何每次运行都重新下载 ResNet50 权重？
+
+PyTorch 默认缓存至 `~/.cache/torch/hub/checkpoints/`。若重复下载，请检查：
+
+- 文件是否存在且完整（`resnet50-11ad3fa6.pth` ≈ 97MB）
+- 目录写权限
+- 是否使用临时环境（如容器）
+
+可通过设置环境变量指定缓存路径：
+
+```bash
+export TORCH_HOME=/path/to/stable/cache
+```
+
+##### Q2：MPS 报错 “Cannot convert to float64”？
+
+Apple MPS 不支持 double 精度。务必使用：
+
+```python
+accuracy = correct.float() / total  # ✅ 正确
+# accuracy = correct.double() / total  # ❌ 错误
+```
+
+##### Q3：如何命名模型文件？
+
+推荐格式：`{dataset}_{model}_{epochs}.pth`
+示例：`tiny_imagenet_resnet50_epoch25.pth`
+
+------
+
+### 4. 模型评估
 
 前面已经保存了模型权重，可以通过如下步骤加载模型并在验证集上进行评估：
 
@@ -2629,8 +2483,8 @@ if __name__ == '__main__':
 
 ```
 
-> **验证步骤**：  
->
+验证步骤：  
+
 > - 加载与你训练时一致的模型结构。  
 > - 使用 `model.load_state_dict()` 加载权重。  
 > - 调用 `model.eval()` 进入验证模式。  
@@ -2652,7 +2506,34 @@ if __name__ == '__main__':
 > Validation Accuracy: 0.8014
 > (base) hfyan@HongfeideMac-Studio data % 
 > ```
->
+
+
+
+
+
+### 5. 扩展与优化
+
+#### 5.1 性能对比：ImageNet vs Tiny ImageNet
+
+| 指标      | ImageNet (ResNet50)           | Tiny ImageNet (本实验)   |
+| --------- | ----------------------------- | ------------------------ |
+| Top-1 Acc | ~76.5%（原始）→ 84%（优化后） | **80.14%**               |
+| 训练时间  | 数天（8×V100）                | **4.5 小时**（M1 Ultra） |
+| 显存需求  | >16 GB                        | <8 GB（batch=128）       |
+
+------
+
+#### 5.2 关于多进程与 GIL
+
+- `DataLoader(num_workers>0)` 使用 **多进程**（非线程），绕过 Python GIL
+- PyTorch 底层计算（C++/CUDA/Metal）不受 GIL 限制
+- 小规模任务（如小矩阵乘法）并行可能因通信开销而变慢
+
+
+
+#### 总结
+
+本项目完整展示了从数据准备、模型微调到评估的全流程，适合入门者理解迁移学习与 PyTorch 实践。通过合理利用 Apple Silicon 的 MPS 加速，可在消费级设备上高效完成中等规模视觉任务。
 
 
 
@@ -2670,7 +2551,9 @@ https://github.com/GMyhf/2025fall-cs201/tree/main/LLM
 
 
 
-# 附录A. PyTorch教程@runoob
+# 附录
+
+# A. PyTorch教程@runoob
 
 https://www.runoob.com/pytorch/pytorch-tutorial.html
 
@@ -2682,7 +2565,7 @@ PyTorch 以其灵活性和易用性而闻名，特别适合于深度学习研究
 
 
 
-## A1.PyTorch安装
+## A.1 PyTorch安装
 
 在已经安装好的python环境中，在terminal窗口命令行中，激活环境，并安装torch包
 
@@ -2802,7 +2685,7 @@ tensor(0.8318)
 
 
 
-## A2.PyTorch 简介
+## A.2 PyTorch 简介
 
 PyTorch 是一个开源的 Python 机器学习库，基于 Torch 库，底层由 C++ 实现，应用于人工智能领域，如计算机视觉和自然语言处理。
 
@@ -2942,7 +2825,7 @@ PyTorch 的前身是 Torch，这是一个基于 Lua 语言的科学计算框架�
 
 
 
-## A3.PyTorch 基础
+## A.3 PyTorch 基础
 
 PyTorch 是一个开源的深度学习框架，以其灵活性和动态计算图而广受欢迎。
 
@@ -3442,7 +3325,7 @@ Y = Y.to(device)
 
 
 
-## A4.PyTorch 张量（Tensor）
+## A.4 PyTorch 张量（Tensor）
 
 张量是一个多维数组，可以是标量、向量、矩阵或更高维度的数据结构。
 
@@ -3877,7 +3760,7 @@ NumPy 数组（不会同步变化）:
 
 
 
-## A5.PyTorch 神经网络基础
+## A.5 PyTorch 神经网络基础
 
 神经网络是一种模仿人脑处理信息方式的计算模型，它由许多相互连接的节点（神经元）组成，这些节点按层次排列。
 
@@ -4157,7 +4040,7 @@ with torch.no_grad():  # 在评估过程中禁用梯度计算
 
 
 
-## A6.PyTorch 第一个神经网络
+## A.6 PyTorch 第一个神经网络
 
 本章节我们将介绍如何用 PyTorch 实现一个简单的前馈神经网络，完成一个二分类任务。
 
@@ -4586,6 +4469,776 @@ Epoch [2000/2000], Loss: 0.0659
 图中显示了原始数据点（红色和蓝色），以及模型学习到的分类边界。
 
 ![e9e452ad8bc0bc8b241d0c6c2d7d5d31](https://raw.githubusercontent.com/GMyhf/img/main/img/e9e452ad8bc0bc8b241d0c6c2d7d5d31.png)
+
+
+
+# B. 在异或问题中手动实现反向传播
+
+Backpropagation in Neural Network
+
+https://www.geeksforgeeks.org/machine-learning/backpropagation-in-neural-network/
+
+
+
+反向传播（Back Propagation），又称为“误差的反向传播”，是一种用于训练神经网络的方法。其目标是通过调整网络中的权重（weights）和偏置（biases），来减小模型预测输出与实际输出之间的差异。
+
+它通过迭代方式更新权重和偏置，以最小化损失函数（cost function）。在每一个训练周期（epoch）中，模型会根据误差梯度（error gradient）更新参数，常用的优化算法包括梯度下降（Gradient Descent）或随机梯度下降（SGD）。该算法使用微积分中的<mark>链式法则</mark>来计算梯度，从而能够有效地穿越复杂的神经网络结构，优化损失函数。
+
+> Back Propagation is also known as "Backward Propagation of Errors" is a method used to train neural network . Its goal is to reduce the difference between the model’s predicted output and the actual output by adjusting the weights and biases in the network.
+>
+> It works iteratively to adjust weights and bias to minimize the cost function. In each epoch the model adapts these parameters by reducing loss by following the error gradient. It often uses optimization algorithms like **gradient descent** or **stochastic gradient descent**. The algorithm computes the gradient using the chain rule from calculus allowing it to effectively navigate complex layers in the neural network to minimize the cost function.
+
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20250701163824448467/Backpropagation-in-Neural-Network-1.webp" alt="Backpropagation-in-Neural-Network-1" style="zoom:67%;" />
+
+<center>A simple illustration of how the backpropagation works by adjustments of weights</center>
+
+<center>通过权重调整，简单展示反向传播的工作方式</center>
+
+
+
+**反向传播的重要性：**
+
+- **高效的权重更新**：利用链式法则计算损失函数对每个权重的梯度，从而高效地更新参数。
+- **良好的扩展性**：适用于多层结构和复杂架构，是深度学习可行的核心算法。
+- **自动学习能力**：训练过程自动进行，模型会不断调整自身来优化性能。
+
+> **Back Propagation** plays a critical role in how neural networks improve over time. Here's why:
+>
+> 1. **Efficient Weight Update**: It computes the gradient of the loss function with respect to each weight using the chain rule making it possible to update weights efficiently.
+> 2. **Scalability**: The Back Propagation algorithm scales well to networks with multiple layers and complex architectures making deep learning feasible.
+> 3. **Automated Learning**: With Back Propagation the learning process becomes automated and the model can adjust itself to optimize its performance.
+
+
+
+## 反向传播算法的工作流程
+
+反向传播算法包括两个主要步骤：**前向传播（Forward Pass）** 和 **反向传播（Backward Pass）**
+
+### 1. Forward Pass Work前向传播
+
+输入数据从输入层开始，经过带权重的连接传递到隐藏层。例如，一个有两个隐藏层 h1 和 h2 的网络中，h1 的输出作为 h2 的输入。在应用激活函数前，还会加上偏置项。
+
+每一层都会计算输入的加权和（记作 `a`），再通过如 ReLU 等激活函数得到输出 `o`。最终，输出层通常会使用 softmax 激活函数将结果转换为分类概率。
+
+> ### Working of Back Propagation Algorithm
+>
+> The Back Propagation algorithm involves two main steps: the **Forward Pass** and the **Backward Pass**.
+>
+> ### 1. Forward Pass Work
+>
+> In **forward pass** the input data is fed into the input layer. These inputs combined with their respective weights are passed to hidden layers. For example in a network with two hidden layers (h1 and h2) the output from h1 serves as the input to h2. Before applying an activation function, a bias is added to the weighted inputs.
+>
+> Each hidden layer computes the weighted sum (`a`) of the inputs then applies an activation function like [**ReLU (Rectified Linear Unit)**](https://www.geeksforgeeks.org/deep-learning/relu-activation-function-in-deep-learning/) to obtain the output (`o`). The output is passed to the next layer where an activation function such as [**softmax**](https://www.geeksforgeeks.org/deep-learning/the-role-of-softmax-in-neural-networks-detailed-explanation-and-applications/) converts the weighted outputs into probabilities for classification.
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-2.webp" alt="Backpropagation-in-Neural-Network-2" style="zoom:67%;" />
+
+<center>The forward pass using weights and biases</center>
+
+> h1,h2，表示隐藏层的两个神经元
+
+
+
+### 2. Backward Pass反向传播
+
+反向传播阶段会将预测输出与实际输出的误差向后传递，并调整每一层的权重和偏置。常见的误差计算方法是**均方误差（MSE）**：
+
+$MSE = (\text{Predicted Output} − \text{Actual Output})^2$
+
+在误差计算之后，通过链式法则计算梯度，这些梯度用于指导权重和偏置的更新方向和幅度。反向传播过程是逐层执行的，<mark>激活函数的导数在梯度计算中起着关键作用</mark>。
+
+
+
+**反向传播的示例：机器学习中的案例**
+
+假设我们使用 sigmoid 激活函数，目标输出为 0.5，学习率为 1。
+
+> ### 2. Backward Pass
+>
+> In the backward pass the error (the difference between the predicted and actual output) is propagated back through the network to adjust the weights and biases. One common method for error calculation is the [**Mean Squared Error (MSE)**](https://www.geeksforgeeks.org/maths/mean-squared-error/) given by:
+>
+> $MSE = (\text{Predicted Output} − \text{Actual Output})^2$
+>
+> Once the error is calculated the network adjusts weights using **gradients** which are computed with the chain rule. These gradients indicate how much each weight and bias should be adjusted to minimize the error in the next iteration. The backward pass continues layer by layer ensuring that the network learns and improves its performance. The activation function through its derivative plays a crucial role in computing these gradients during Back Propagation.
+>
+> 
+>
+> ## Example of Back Propagation in Machine Learning
+>
+> Let’s walk through an example of Back Propagation in machine learning. Assume the neurons use the sigmoid activation function for the forward and backward pass. The target output is 0.5 and the learning rate is 1.
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-3.webp" alt="Backpropagation-in-Neural-Network-3" style="zoom:67%;" />
+
+<center>Example (1) of backpropagation sum</center>
+
+
+
+## 前向传播Forward Propagation
+
+### 1. Initial Calculation初始计算
+
+The weighted sum at each node is calculated using:
+
+> $a_j=\sum(w_{i,j}∗x_i)$
+
+Where,
+
+- $a_j$ is the weighted sum of all the inputs and weights at each node
+- $w_{i,j}$ represents the weights between the $i^{th}$ input and the $j^{th}$ neuron
+- $x_i$ represents the value of the $i^{th}$ input
+
+`O (output):`After applying the activation function to `a`, we get the output of the neuron:
+
+> $o_j = \text{activation function}(a_j)$
+
+### 2. Sigmoid Function
+
+The sigmoid function returns a value between 0 and 1, introducing non-linearity into the model.
+
+> $y_j = \frac{1}{1+e^{−a_j}}$ 
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-4.webp" alt="Backpropagation-in-Neural-Network-4" style="zoom:67%;" />
+
+<center>To find the outputs of y3, y4 and y5</center>
+
+
+
+### 3. Computing Outputs输出计算
+
+h1 节点：
+$$
+a_1 = (w_{1,1} \times x_1) + (w_{2,1} \times x_2)
+$$
+
+$$
+a_1 = (0.2 \times 0.35) + (0.2 \times 0.7) = 0.21
+$$
+
+计算完 $a_1$ 后，我们可以继续计算 $y_3$ 的值：
+
+$$
+y_j = F(a_j) = \frac{1}{1 + e^{-a_1}}
+$$
+
+$$
+y_3 = F(0.21) = \frac{1}{1 + e^{-0.21}} = 0.56
+$$
+
+
+
+h2 节点：
+$$
+a_2 = (w_{1,2} \times x_1) + (w_{2,2} \times x_2) = (0.3 \times 0.35) + (0.3 \times 0.7) = 0.315
+$$
+
+$$
+y_4 = F(0.315) = \frac{1}{1 + e^{-0.315}} = 0.578
+$$
+
+
+
+输出节点 O3：
+$$
+a_3 = (w_{1,3} \times y_3) + (w_{2,3} \times y_4) = (0.3 \times 0.56) + (0.9 \times 0.58) = 0.702
+$$
+
+$$
+y_5 = F(0.702) = \frac{1}{1 + e^{-0.702}} = 0.67
+$$
+
+
+
+> At h1 node
+>
+> Once we calculated the a1 value, we can now proceed to find the y3 value:
+>
+> Similarly find the values of y4 at h2 and y5 at O3
+
+
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-5.webp" alt="Backpropagation-in-Neural-Network-5" style="zoom:67%;" />
+
+<center>Values of y3, y4 and y5</center>
+
+
+
+### 4. Error Calculation误差计算
+
+Our actual output is 0.5 but we obtained 0.67**.** To calculate the error we can use the below formula:
+
+> $Error_j=y_{target}−y_5$ 
+
+=> 0.5−0.67=−0.17
+
+Using this error value we will be backpropagating.
+
+
+
+## 反向传播Back Propagation
+
+### 1. Calculating Gradients计算梯度
+
+The change in each weight is calculated as:
+
+> $Δw_{ij}=η×δ_j×O_j$
+
+Where:
+
+- $δ_j$ is the error term for each unit,
+- $η$ is the learning rate.
+
+### 2. Output Unit Error输出层误差
+
+For O3:
+
+> $δ_5=y_5(1−y_5)(y_{target}−y_5)$
+
+=0.67(1−0.67)(−0.17)=−0.0376
+
+### 3. Hidden Unit Error隐藏层误差
+
+For h1:
+
+> $δ_3=y_3(1−y_3)(w_{1,3}×δ_5)$
+
+=0.56(1−0.56)(0.3×−0.0376)=−0.0027
+
+
+
+For h2:
+
+> $δ_4=y_4(1−y_4)(w_{2,3}×δ_5)$
+
+=0.59(1−0.59)(0.9×−0.0376)=−0.0819
+
+
+
+### 4. Weight Updates权重更新
+
+For the weights from hidden to output layer:
+
+> $Δw_{2,3}=1×(−0.0376)×0.59=−0.022184$
+
+New weight:
+
+> $w_{2,3}(new)=−0.022184+0.9=0.877816$
+
+For weights from input to hidden layer:
+
+> $Δw_{1,1}=1×(−0.0027)×0.35=0.000945$
+
+New weight:
+
+> $w_{1,1}(new)=0.000945+0.2=0.200945$
+
+Similarly other weights are updated:
+
+- $w_{1,2}(new)=0.273225$
+- $w_{1,3}(new)=0.086615$
+- $w_{2,1}(new)=0.269445$
+- $w_{2,2}(new)=0.18534$
+
+The updated weights are illustrated below
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/Backpropagation-in-Neural-Network-5-20251127160556998.webp" alt="Backpropagation-in-Neural-Network-5" style="zoom:67%;" />
+
+<center>Through backward pass the weights are updated</center>
+
+> 上图权重没有更新，例如：$w_{2,2}$应该更新为0.18534
+
+
+
+After updating the weights the forward pass is repeated yielding:
+
+- y3=0.57
+- y4=0.56
+- y5=0.61
+
+仍未达到目标值 0.5，因此继续进行反向传播，直到收敛。
+
+> Since y5=0.61 is still not the target output the process of calculating the error and backpropagating continues until the desired output is reached.
+
+
+
+This process demonstrates how Back Propagation iteratively updates weights by minimizing errors until the network accurately predicts the output.
+
+> $Error=y_{target}−y_5$
+
+=0.5−0.61=−0.11=0.5−0.61=−0.11
+
+This process is said to be continued until the actual output is gained by the neural network.
+
+
+
+## Back Propagation Implementation in Python for XOR Problem
+
+**Q: XOR 问题是什么？**
+
+> XOR（异或）是一个经典的逻辑问题，它的输入输出如下：
+>
+> | 输入 A | 输入 B | 输出 |
+> | ------ | ------ | ---- |
+> | 0      | 0      | 0    |
+> | 0      | 1      | 1    |
+> | 1      | 0      | 1    |
+> | 1      | 1      | 0    |
+>
+> 这个问题**不能用一条直线分开**（不是线性可分的），所以单层感知机无法解决，必须用**至少一个隐藏层的神经网络**。
+
+
+
+> “**单层感知机**”（Single-Layer Perceptron）是神经网络最原始、最简单的形式，由 Frank Rosenblatt 在 1957 年提出。理解它，有助于明白为什么像 **XOR 这样的问题无法被它解决**，从而引出多层神经网络和反向传播的必要性。
+>
+> 单层感知机结构：
+>
+> - **输入层**：接收特征（比如 $x_1, x_2$）
+> - **输出层**：**直接输出结果**（没有隐藏层！）
+> - 每个输入有一个对应的权重 $w_1, w_2$，还有一个偏置 $b$
+>
+> **数学表达：**
+> $$
+> z = w_1 x_1 + w_2 x_2 + b
+> \nonumber
+> $$
+>
+> $$
+> \text{output} = \begin{cases} 1 & \text{if } z \geq 0 \\ 0 & \text{if } z < 0 \end{cases}
+> \nonumber
+> $$
+>
+> > 注意：**没有激活函数（或只有阶跃函数）**，**没有隐藏层**，所以叫“单层”。
+> >
+> > 阶跃函数是“硬判决”，适合理论分析；但因为不可导，不能用于现代神经网络的训练。
+>
+> ------
+>
+> ✅ 单层感知机能做什么？
+>
+> 它只能解决 **线性可分**（linearly separable）的问题。
+>
+> **例子：AND 门**
+>
+> | x₁   | x₂   | y    |
+> | ---- | ---- | ---- |
+> | 0    | 0    | 0    |
+> | 0    | 1    | 0    |
+> | 1    | 0    | 0    |
+> | 1    | 1    | 1    |
+>
+> ✅ 可以用一条直线分开 0 和 1 → **线性可分** → **单层感知机可以学会**
+>
+> 比如：
+> 取 (w_1 = 1, w_2 = 1, b = -1.5)
+> 则：
+>
+> - (0+0-1.5 = -1.5 < 0 → 0)
+> - (1+1-1.5 = 0.5 ≥ 0 → 1)
+>
+> 完美！
+>
+> ------
+>
+> **❌ 单层感知机不能做什么？**
+>
+> **XOR 问题（异或）：**
+>
+> | x₁   | x₂   | y    |
+> | ---- | ---- | ---- |
+> | 0    | 0    | 0    |
+> | 0    | 1    | 1    |
+> | 1    | 0    | 1    |
+> | 1    | 1    | 0    |
+>
+> 在二维平面上画出来：
+>
+> ```
+> (0,1) ● (y=1)        (1,1) ○ (y=0)
+> 
+> (0,0) ○ (y=0)        (1,0) ● (y=1)
+> ```
+>
+> 你会发现：**无法用一条直线把 ● 和 ○ 完全分开**！
+>
+> → 这就是 **非线性可分问题**。
+>
+> **结论**： 
+>
+> > **单层感知机无法解决 XOR 问题**，因为它缺乏非线性表达能力。
+>
+> ------
+>
+> ** 那怎么办？——引入隐藏层！**
+>
+> 1969 年，Minsky 和 Papert 在《Perceptrons》一书中指出了这个局限，导致神经网络研究一度停滞。
+>
+> 直到后来人们发现：
+>
+> > **只要加一个隐藏层，并使用非线性激活函数（如 sigmoid、ReLU），神经网络就能逼近任意函数**（万能近似定理）。
+>
+> 于是，**多层感知机**（MLP） + **反向传播** 成为解决方案。
+>
+> ------
+>
+> **🔄 对比总结**
+>
+> | 特性                | 单层感知机         | 多层感知机（带反向传播） |
+> | ------------------- | ------------------ | ------------------------ |
+> | 隐藏层              | ❌ 没有             | ✅ 有（至少1层）          |
+> | 激活函数            | 阶跃函数（不可导） | Sigmoid / ReLU（可导）   |
+> | 能否解决 AND/OR/NOT | ✅ 可以             | ✅ 可以                   |
+> | 能否解决 XOR        | ❌ 不行             | ✅ 可以                   |
+> | 是否支持反向传播    | ❌ 不支持（不可导） | ✅ 支持                   |
+> | 学习能力            | 仅线性分类         | 非线性建模               |
+>
+> ------
+>
+> 📌 小知识
+>
+> - “感知机”（Perceptron）通常特指**单层、使用阶跃激活、用感知机学习规则更新权重**的模型。
+> - 而我们今天说的“神经网络”，一般指**多层、可微激活、用梯度下降+反向传播训练**的模型，也叫 **多层感知机**（MLP），尽管名字里有“感知机”，但已经完全不同了。
+>
+> 
+
+
+
+This code demonstrates how Back Propagation is used in a neural network to solve the XOR problem. The neural network consists of:
+
+### 1. Defining Neural Network定义神经网络结构
+
+输入层：2个节点，隐藏层：4个神经元，输出层：1个神经元，激活函数：Sigmoid
+
+> We define a neural network as Input layer with 2 inputs, Hidden layer with 4 neurons, Output layer with 1 output neuron and use **Sigmoid** function as activation function.
+
+- **self.input_size = input_size**: stores the size of the input layer
+- **self.hidden_size = hidden_size:** stores the size of the hidden layer
+- **self.weights_input_hidden = np.random.randn(self.input_size, self.hidden_size)**: initializes weights for input to hidden layer
+- **self.weights_hidden_output = np.random.randn(self.hidden_size, self.output_size)**: initializes weights for hidden to output layer
+- **self.bias_hidden = np.zeros((1, self.hidden_size)):** initializes bias for hidden layer
+- **self.bias_output = np.zeros((1, self.output_size)):** initializes bias for output layer
+
+
+
+```python3
+import numpy as np
+
+
+class NeuralNetwork:
+    def __init__(self, input_size, hidden_size, output_size):
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+
+        self.weights_input_hidden = np.random.randn(
+            self.input_size, self.hidden_size)
+        self.weights_hidden_output = np.random.randn(
+            self.hidden_size, self.output_size)
+
+        self.bias_hidden = np.zeros((1, self.hidden_size))
+        self.bias_output = np.zeros((1, self.output_size))
+
+    def sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
+
+    def sigmoid_derivative(self, x):
+        return x * (1 - x)
+```
+
+
+
+### 2. Defining Feed Forward Network定义前向传播
+
+In Forward pass inputs are passed through the network activating the hidden and output layers using the sigmoid function.
+
+- **self.hidden_activation = np.dot(X, self.weights_input_hidden) + self.bias_hidden**: calculates activation for hidden layer
+- **self.hidden_output= self.sigmoid(self.hidden_activation)**: applies activation function to hidden layer
+- **self.output_activation= np.dot(self.hidden_output, self.weights_hidden_output) + self.bias_output:** calculates activation for output layer
+- **self.predicted_output = self.sigmoid(self.output_activation):** applies activation function to output layer
+
+
+
+
+
+```python3
+def feedforward(self, X):
+    self.hidden_activation = np.dot(
+        X, self.weights_input_hidden) + self.bias_hidden
+    self.hidden_output = self.sigmoid(self.hidden_activation)
+
+    self.output_activation = np.dot(
+        self.hidden_output, self.weights_hidden_output) + self.bias_output
+    self.predicted_output = self.sigmoid(self.output_activation)
+
+    return self.predicted_output
+```
+
+
+
+### 3. Defining Backward Network定义反向传播
+
+In Backward pass or Back Propagation the errors between the predicted and actual outputs are computed. The gradients are calculated using the derivative of the sigmoid function and weights and biases are updated accordingly.
+
+- **output_error = y - self.predicted_output:** calculates the error at the output layer
+- **output_delta = output_error * self.sigmoid_derivative(self.predicted_output):** calculates the delta for the output layer
+- **hidden_error = np.dot(output_delta, self.weights_hidden_output.T):** calculates the error at the hidden layer
+- **hidden_delta = hidden_error \* self.sigmoid_derivative(self.hidden_output):** calculates the delta for the hidden layer
+- **self.weights_hidden_output += np.dot(self.hidden_output.T, output_delta) * learning_rate:** updates weights between hidden and output layers
+- **self.weights_input_hidden += np.dot(X.T, hidden_delta) * learning_rate:** updates weights between input and hidden layers
+
+
+
+```python3
+def backward(self, X, y, learning_rate):
+    output_error = y - self.predicted_output
+    output_delta = output_error * \
+        self.sigmoid_derivative(self.predicted_output)
+
+    hidden_error = np.dot(output_delta, self.weights_hidden_output.T)
+    hidden_delta = hidden_error * self.sigmoid_derivative(self.hidden_output)
+
+    self.weights_hidden_output += np.dot(self.hidden_output.T,
+                                         output_delta) * learning_rate
+    self.bias_output += np.sum(output_delta, axis=0,
+                               keepdims=True) * learning_rate
+    self.weights_input_hidden += np.dot(X.T, hidden_delta) * learning_rate
+    self.bias_hidden += np.sum(hidden_delta, axis=0,
+                               keepdims=True) * learning_rate
+```
+
+
+
+### 4. Training Network训练网络
+
+The network is trained over 10,000 epochs using the Back Propagation algorithm with a learning rate of 0.1 progressively reducing the error.
+
+- **output = self.feedforward(X):** computes the output for the current inputs
+- **self.backward(X, y, learning_rate):** updates weights and biases using Back Propagation
+- **loss = np.mean(np.square(y - output)):** calculates the mean squared error (MSE) loss
+
+
+
+```python3
+def train(self, X, y, epochs, learning_rate):
+    for epoch in range(epochs):
+        output = self.feedforward(X)
+        self.backward(X, y, learning_rate)
+        if epoch % 4000 == 0:
+            loss = np.mean(np.square(y - output))
+            print(f"Epoch {epoch}, Loss:{loss}")
+```
+
+### 5. Testing Neural Network测试神经网络
+
+- **X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]]):** defines the input data
+- **y = np.array([[0], [1], [1], [0]]):** defines the target values
+- **nn = NeuralNetwork(input_size=2, hidden_size=4, output_size=1):** initializes the neural network
+- **nn.train(X, y, epochs=10000, learning_rate=0.1):** trains the network
+- **output = nn.feedforward(X):** gets the final predictions after training
+
+
+
+
+
+```python3
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+y = np.array([[0], [1], [1], [0]])
+
+nn = NeuralNetwork(input_size=2, hidden_size=4, output_size=1)
+nn.train(X, y, epochs=10000, learning_rate=0.1)
+
+output = nn.feedforward(X)
+print("Predictions after training:")
+print(output)
+```
+
+**Output:**
+
+![Screenshot-2025-03-07-130223](https://raw.githubusercontent.com/GMyhf/img/main/img/Screenshot-2025-03-07-130223.png)
+
+<center>Trained Model</center>
+
+
+
+训练初期损失为 0.2713，逐步下降到 0.0066（第8000轮）。最终模型可以很好地逼近 XOR 函数的输出，即：
+
+- 对于输入 [0,0] 和 [1,1]，输出接近 0
+
+- 对于输入 [0,1] 和 [1,0]，输出接近 1
+
+  
+
+> - The output shows the training progress of a neural network over 10,000 epochs. Initially the loss was high (0.2713) but it gradually decreased as the network learned reaching a low value of 0.0066 by epoch 8000.
+> - The final predictions are close to the expected XOR outputs: approximately 0 for [0, 0] and [1, 1] and approximately 1 for [0, 1] and [1, 0] indicating that the network successfully learned to approximate the XOR function.
+
+
+
+## 反向传播的优点
+
+**易于实现**：适合初学者，无需太多神经网络背景
+
+**结构简单，灵活应用**：从简单前馈到复杂卷积/循环网络都可使用
+
+**高效**：直接根据误差更新权重，学习速度快
+
+**良好的泛化能力**：有助于模型在新数据上表现更好
+
+**可扩展性好**：适用于大型数据集和深层模型
+
+> **Advantages of Back Propagation for Neural Network Training**
+>
+> The key benefits of using the Back Propagation algorithm are:
+>
+> 1. **Ease of Implementation:** Back Propagation is beginner-friendly requiring no prior neural network knowledge and simplifies programming by adjusting weights with error derivatives.
+> 2. **Simplicity and Flexibility:** Its straightforward design suits a range of tasks from basic feedforward to complex convolutional or recurrent networks.
+> 3. **Efficiency**: Back Propagation accelerates learning by directly updating weights based on error especially in deep networks.
+> 4. **Generalization:** It helps models generalize well to new data improving prediction accuracy on unseen examples.
+> 5. **Scalability:** The algorithm scales efficiently with larger datasets and more complex networks making it ideal for large-scale tasks.
+
+
+
+## 反向传播面临的挑战
+
+**梯度消失**：在深层网络中梯度可能过小，导致学习困难（特别是在使用 sigmoid/tanh 时）
+
+**梯度爆炸**：梯度可能变得过大，使训练不稳定
+
+**过拟合**：模型结构过于复杂时，可能记住训练集而非学习一般性规律
+
+> **Challenges with Back Propagation**
+>
+> While Back Propagation is useful it does face some challenges:
+>
+> 1. **Vanishing Gradient Problem**: In deep networks the gradients can become very small during Back Propagation making it difficult for the network to learn. This is common when using activation functions like sigmoid or tanh.
+> 2. **Exploding Gradients**: The gradients can also become excessively large causing the network to diverge during training.
+> 3. **Overfitting:** If the network is too complex it might memorize the training data instead of learning general patterns.
+
+
+
+## 完整`xor_nn.py`代码
+
+```python
+# 对于XOR问题（输入为[0,0], [0,1], [1,0], [1,1]），期望输出为[0,1,1,0]
+# 手动实现反向传播，没有使用深度学习框架，这有助于理解底层原理
+# https://www.geeksforgeeks.org/backpropagation-in-neural-network/
+import numpy as np
+
+
+class NeuralNetwork:
+    def __init__(self, input_size, hidden_size, output_size):
+        self.input_size = input_size  # 输入特征维度
+        self.hidden_size = hidden_size  # 隐藏层神经元数量
+        self.output_size = output_size  # 输出层神经元数量
+
+        # 输入层到隐藏层的权重，形状为 (输入维度, 隐藏层维度)
+        self.weights_input_hidden = np.random.randn(self.input_size, self.hidden_size)
+        # 隐藏层到输出层的权重，形状为 (隐藏层维度, 输出层维度)
+        self.weights_hidden_output = np.random.randn(self.hidden_size, self.output_size)
+
+        # 隐藏层的偏置，形状为 (1, 隐藏层维度)
+        self.bias_hidden = np.zeros((1, self.hidden_size))
+        # 输出层的偏置，形状为 (1, 输出层维度)
+        self.bias_output = np.zeros((1, self.output_size))
+
+    def sigmoid(self, x):  # 激活函数，将输入压缩到(0,1)区间
+        return 1 / (1 + np.exp(-x))
+
+    def sigmoid_derivative(self, x):
+        return x * (1 - x)  # Sigmoid的导数，用于反向传播中的梯度计算
+
+    def feedforward(self, X):
+        # 隐藏层计算
+        self.hidden_activation = np.dot(X, self.weights_input_hidden) + self.bias_hidden  # 线性变换
+        self.hidden_output = self.sigmoid(self.hidden_activation)  # 激活函数
+
+        # 输出层计算
+        self.output_activation = np.dot(self.hidden_output, self.weights_hidden_output) + self.bias_output
+        self.predicted_output = self.sigmoid(self.output_activation)
+
+        return self.predicted_output
+
+    def backward(self, X, y, learning_rate):
+        # 计算输出层误差
+        output_error = y - self.predicted_output  # 误差 = 真实值 - 预测值
+        # 计算输出层的delta（梯度的一部分，损失对激活输入的梯度）
+        output_delta = output_error * self.sigmoid_derivative(self.predicted_output)  # Delta = 误差 × 激活函数导数
+        # output_delta = (y - ŷ) * σ'(z_output)
+
+        # 计算隐藏层误差（反向传播）
+        hidden_error = np.dot(output_delta, self.weights_hidden_output.T)  # 将误差从输出层反向传播到隐藏层
+        # hidden_error = output_delta @ W_hidden_output^T
+        # 计算隐藏层的delta（损失对隐藏层激活输入的梯度）
+        hidden_delta = hidden_error * self.sigmoid_derivative(self.hidden_output)  # Delta = 误差 × 激活函数导数
+        # hidden_delta = (hidden_error) * σ'(z_hidden)
+
+        # 更新权重和偏置（使用梯度下降法）
+        # 计算并更新隐藏层到输出层的权重
+        self.weights_hidden_output += np.dot(self.hidden_output.T,
+                                             output_delta) * learning_rate  # 权重更新量 = 学习率 × (隐藏层输出转置 × 输出层delta)
+        # W_hidden_output += learning_rate * (hidden_output^T @ output_delta)
+
+        # 更新输出层偏置，基于所有样本的输出层delta沿列求和
+        self.bias_output += np.sum(output_delta, axis=0, keepdims=True) * learning_rate  # 偏置更新量 = 学习率 × (沿列求和输出层delta)
+        # b_output += learning_rate * sum(output_delta)
+
+        # 计算并更新从输入层到隐藏层的权重的梯度
+        self.weights_input_hidden += np.dot(X.T, hidden_delta) * learning_rate  # 权重更新量 = 学习率 × (输入数据转置 × 隐藏层delta)
+        # W_input_hidden += learning_rate * (X^T @ hidden_delta)
+
+        # 更新隐藏层偏置，基于所有样本的隐藏层delta沿列求和
+        # axis=0：沿列求和，聚合所有样本的梯度
+        # keepdims=True：保持原矩阵的行数维度，确保偏置更新的形状兼容性
+        self.bias_hidden += np.sum(hidden_delta, axis=0, keepdims=True) * learning_rate  # 偏置更新量 = 学习率 × (沿列求和隐藏层delta)
+        # b_hidden += learning_rate * sum(hidden_delta)
+
+    def train(self, X, y, epochs, learning_rate):
+        for epoch in range(epochs):
+            output = self.feedforward(X)  # 前向传播
+            self.backward(X, y, learning_rate)  # 反向传播与参数更新
+            if epoch % 4000 == 0:
+                loss = np.mean(np.square(y - output))  # 计算均方误差
+                print(f"Epoch {epoch}, Loss:{loss}")
+
+
+X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+y = np.array([[0], [1], [1], [0]])
+
+# 输入维度 2（二维二进制特征），隐藏层4个神经元，输出层1个神经元（二分类问题）
+nn = NeuralNetwork(input_size=2, hidden_size=4, output_size=1)
+# 训练总轮次, 学习率
+nn.train(X, y, epochs=10000, learning_rate=0.1)
+
+output = nn.feedforward(X)
+print("Predictions after training:")
+print(output)
+"""
+Epoch 0, Loss:0.2653166263520884
+Epoch 4000, Loss:0.007000926683956338
+Epoch 8000, Loss:0.001973630232951721
+Predictions after training:
+[[0.03613239]
+ [0.96431351]
+ [0.96058291]
+ [0.03919372]]
+"""
+```
+
+
+
+
+
+# D. 
+
+
+
+
+
+# E. 
+
+
+
+# F. 
+
+
+
+
 
 
 

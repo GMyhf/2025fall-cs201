@@ -137,7 +137,7 @@ mst, http://cs101.openjudge.cn/practice/27351/
 
 ### T30193:哈密顿激活层
 
-DFS+剪枝, http://cs101.openjudge.cn/2025fallcs101testing/T30193/
+DFS+剪枝, http://cs101.openjudge.cn/practice/30193/
 
 思路：
 

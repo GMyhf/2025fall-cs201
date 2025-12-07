@@ -1,9 +1,15 @@
 # 人工智能
 
-*Updated 2025-12-07 13:34 GMT+8*  
+*Updated 2025-12-07 22:21 GMT+8*  
 *Compiled by Hongfei Yan (2025 Summer)*    
 
 https://github.com/GMyhf/2025fall-cs201/blob/main/AI_literacy.md
+
+
+
+> 2025年秋季学期，数算B 的笔试内容覆盖 Test Yourself On Build a Large Language.pdf
+>
+> 如：附录B 大模型自我检测指南
 
 
 
@@ -3248,9 +3254,13 @@ https://github.com/GMyhf/2025fall-cs201/tree/main/LLM
 
 
 
+附录B《大模型自我检测指南》（Test Yourself On Build a Large Language.pdf）的结构与《从零构建大语言模型》完全对应，聚焦于各章节的核心概念。可以通过多项选择题、代码与关键概念相关问题，以及需要深入思考的开放式问答题来检验自己的理解。所有题目均附有答案。
+
+无论你当前的知识水平如何，指南都能以不同方式助你一臂之力：在阅读完某一章后使用它，可巩固所学内容；而在阅读前先浏览它，同样大有裨益——通过预先测试核心概念及其相互关系，你能更轻松地理解章节内容，并为吸收新知识做好准备。
 
 
-# 附录A. PyTorch教程
+
+# 附录A PyTorch教程
 
 https://www.runoob.com/pytorch/pytorch-tutorial.html
 
@@ -5169,6 +5179,845 @@ Epoch [2000/2000], Loss: 0.0659
 
 
 
+# 附录B 大模型自我检测指南
+
+Test Yourself on Build a Large Language Model
+
+关于本书
+
+塞巴斯蒂安·拉施卡（Sebastian Raschka）的畅销书《从零构建大语言模型》（Build a Large Language Model (From Scratch)）是学习大语言模型工作原理的最佳途径。全书共七章，另附五个附录，总计350余页，循序渐进地指导你构建一个类似于GPT-2的完整大语言模型。书中使用Python语言和PyTorch深度学习库，采用了一种独特而高效的学习方式——许多人认为，唯有亲手构建模型，才能真正掌握这一领域。
+
+尽管原书已提供了清晰的讲解、图示和代码，但学习如此复杂的主题依然颇具挑战。本《自我检测指南》（Test Yourself guide）旨在让这一过程变得稍微轻松一些。其结构与《从零构建大语言模型》完全对应，聚焦于各章节的核心概念。你可以通过多项选择题、代码与关键概念相关问题，以及需要深入思考的开放式问答题来检验自己的理解。所有题目均附有答案。
+
+无论你当前的知识水平如何，本指南都能以不同方式助你一臂之力：在阅读完某一章后使用它，可巩固所学内容；而在阅读前先浏览它，同样大有裨益——通过预先测试核心概念及其相互关系，你能更轻松地理解章节内容，并为吸收新知识做好准备。
+
+我们建议你在阅读前后都使用本指南，并在日后开始遗忘相关内容时再次回顾。重复学习有助于强化记忆，并将新知识与长期记忆中已有的相关知识有机整合。
+
+
+
+## 1 理解大语言模型
+
+第1章对大语言模型（LLM）进行了高层次的概述，探讨了其应用场景、构建阶段以及底层的Transformer架构。本章讨论了预训练（pretraining）和微调（fine-tuning）这两个开发高效LLM的关键步骤，并介绍了Transformer架构及其核心组件，包括编码器（encoder）和解码器（decoder）模块，以及自注意力（self-attention）机制。此外，本章还提出了一个从零开始构建LLM的实施计划，概述了三个主要阶段：数据准备与采样、注意力机制的实现，以及在无标签数据上进行预训练，从而获得一个基础模型，用于后续的微调。
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20251207202936020.png" alt="image-20251207202936020" style="zoom:33%;" />
+
+### **核心概念快速问答**
+
+1. 在大语言模型的背景下，深度学习与传统机器学习的主要区别是什么？
+   A. 深度学习更适合处理结构化数据，而传统机器学习更适合非结构化数据。
+   **B. 深度学习无需手动特征提取，而传统机器学习需要。**
+   C. 深度学习在所有任务上都比传统机器学习更准确。
+   D. 深度学习比传统机器学习计算效率更高。
+2. 大语言模型（LLM）的主要功能是什么？
+
+​	A. 分析和解读图像。
+​	B. 预测未来事件。
+​	**C. 理解、生成并回应类人文本。**
+​	D. 控制和操作机器人。
+
+3. 与通用大语言模型相比，定制构建的大语言模型（custom-built LLMs）的主要优势是什么？
+   **A. 它们在特定任务或领域中可以超越通用大语言模型。**
+   B. 它们更具通用性，可用于更广泛的任务。
+   C. 它们在处理大型数据集时效率更高。
+   D. 它们的训练成本更低。
+
+4. Transformer架构在大语言模型中的重要意义是什么？
+   A. 它为大型数据集提供了更快的处理速度。
+   **B. 它使模型在进行预测时能够有选择性地关注输入文本的不同部分。**
+   C. 它使模型能够从未标注的数据中学习。
+   D. 它使模型无需专门训练即可实现语言翻译。
+
+5. 对大语言模型进行预训练（pretraining）的主要目的是什么？
+   A. 为特定任务微调模型。
+   B. 评估模型在各种任务上的表现。
+   C. 创建一个能够翻译语言的模型。
+   **D. 通过在大规模、多样化的数据集上训练，使模型获得对语言的广泛理解。**
+
+**按章节小节划分的问题**
+接下来，我们将更详细地逐节回顾本章内容。
+
+### 1.1 什么是大语言模型？
+
+1. 什么是大语言模型（LLM）？它是如何工作的？ 
+
+   
+
+2. “大语言模型”中的“大”有何重要意义？
+
+   
+
+3. How do LLMs relate to generative AI?
+
+   
+
+4. Label this diagram 
+
+   
+
+5. What is the difference between traditional machine learning and deep learning in terms of feature extraction?
+
+   
+
+6. Match the terms to its description on the right:
+
+| Large Language Model (LLM) |      | A subset of machine learning that uses deep neural networks to model complex patterns and abstractions in data. |
+| -------------------------- | ---- | ------------------------------------------------------------ |
+| Transformer                |      | A type of artificial intelligence that can create new content, such as text, images, or audio. |
+| Generative AI              |      | An architecture used in LLMs that allows them to pay selective attention to different parts of the input when making predictions, making them adept at handling the nuances of human language. |
+| Deep Learning              |      | A type of artificial intelligence that uses deep learning to understand, generate, and respond to human-like text. |
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 4    | 3    | 2    | 1    |
+
+
+
+### 1.2 大语言模型的应用
+
+
+
+5. Match the terms to its description on the right:
+
+| Natural Language Processing |      | a field of computer science that focuses on enabling computers to understand and process human language. |
+| --------------------------- | ---- | ------------------------------------------------------------ |
+| Machine Translation         |      | computer programs designed to simulate conversation with human users. |
+| Chatbots                    |      | the process of extracting relevant information from large amounts of data. |
+| Knowledge Retrieval         |      | the automatic translation of text from one language to another. |
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 1    | 4    | 2    | 3    |
+
+
+
+
+
+### 1.3 构建和使用大语言模型的各个阶段
+
+
+
+6. Match the terms to its description on the right:
+
+| Pretraining                |      | A type of fine-tuning where the labeled dataset consists of instruction and answer pairs, such as a query to translate a text accompanied by the correctly translated text. |
+| -------------------------- | ---- | ------------------------------------------------------------ |
+| Fine-tuning                |      | A type of fine-tuning where the labeled dataset consists of texts and associated class labels, for example, emails associated with "spam" and "not spam" labels. |
+| Instruction Fine-tuning    |      | The process of further training a pretrained LLM on a narrower dataset that is more specific to particular tasks or domains. |
+| Classification Fine-tuning |      | The initial phase of training an LLM on a large, diverse dataset to develop a broad understanding of language. |
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 4    | 3    | 1    | 2    |
+
+
+
+1.4 Transformer架构介绍
+
+
+
+### 1.5 利用大型数据集
+
+
+
+8. Match the terms to its description on the right:
+
+| Encoder                  |      | The ability of a model to generalize to completely unseen tasks without any prior specific examples. |
+| ------------------------ | ---- | ------------------------------------------------------------ |
+| Decoder                  |      | The part of the transformer architecture that takes the encoded vectors from the encoder and generates the output text. |
+| Self-attention mechanism |      | The part of the transformer architecture that processes the input text and encodes it into a series of numerical representations or vectors that capture the contextual information of the input. |
+| Zero-shot learning       |      | Allows the model to weigh the importance of different words or tokens in a sequence relative to each other, enabling it to capture long-range dependencies and contextual relationships within the input data. |
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 3    | 2    | 4    | 1    |
+
+
+
+
+
+### 1.6 深入剖析GPT架构
+
+
+
+7. Match the terms to its description on the right:
+
+| Pretrained Models |      | Pretrained models that serve as a foundation for further fine-tuning on specific tasks. |
+| ----------------- | ---- | ------------------------------------------------------------ |
+| Fine-tuning       |      | The models are trained on massive datasets of text and code, allowing them to perform well on various tasks, including language syntax, semantics, and context. |
+| Base Models       |      | A process of adapting a pretrained model to a specific task by training it on a smaller dataset related to that task. |
+
+Fill the table with the column mappings:
+
+
+
+| Left Hand Column  | 1    | 2    | 3    |
+| ----------------- | ---- | ---- | ---- |
+| Right Hand Column | 2    | 3    | 1    |
+
+
+
+
+
+### 1.7 构建大语言模型
+
+
+
+6. Put these stages of creating a pretrained LLM (base model) in order:
+
+   A. Evaluate the model's performance on text generation tasks.
+
+   B. Implement the transformer decoder architecture (GPT-like).
+
+   C. Prepare the text data by cleaning and tokenizing it.
+
+   D. Train the model using a next-word prediction task on a large text dataset.
+
+Fill the table with your answer:
+
+| Step Order  | Step  |
+| ----------- | ---- |
+| 1 |  C   |
+| 2 |  B   |
+| 4 |  D   |
+| 4 |  A   |
+
+
+
+7. Match the terms to its description on the right:
+
+| Autoregressive Model      |      | The task of predicting the next word in a sequence, which is used to train GPT models. |
+| ------------------------- | ---- | ------------------------------------------------------------ |
+| Self-Supervised Learning  |      | A type of machine learning where the model learns from the data itself, without requiring explicit labels. |
+| Next-Word Prediction      |      | A type of model that generates text by predicting the next word in a sequence based on the words that have already been generated. |
+| Decoder-Only Architecture |      | The architecture of GPT models, which uses only the decoder portion of the transformer architecture, making it suitable for text generation. |
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 3    | 2    | 1    | 4    |
+
+
+
+
+
+## 2 处理文本数据
+
+第二章重点介绍如何通过将文本转换为称为“嵌入”（embeddings）的数值表示形式，为大语言模型（LLM）的训练准备文本数据。本章探讨了分词（tokenization）过程，即将文本拆分为单个词或子词单元，并利用词汇表将这些词元（tokens）转换为对应的数值ID。书中涵盖了多种分词技术，包括GPT等模型所采用的字节对编码（Byte Pair Encoding, BPE）。此外，本章还解释了如何创建词元嵌入（token embeddings）——即词元的向量表示，并加入位置嵌入（positional embeddings）以编码词元在序列中的位置信息，从而为后续的大语言模型模块提供必要的输入。
+
+
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20251207203013472.png" alt="image-20251207203013472" style="zoom:33%;" />
+
+### 主要概念快速问答
+
+1. 在大语言模型（LLMs）的上下文中，分词（tokenization）的主要目的是什么？
+   A. 分词用于将文本转换为小写。
+   **B. 分词将文本拆分为单个词或特殊字符。**
+   C. 分词用于识别句子中的词性。
+   D. 分词用于从文本中移除停用词。
+2. 在用于大语言模型的词汇表中，<|unk|> 词元的作用是什么？
+   A. <|unk|> 词元用于表示标点符号。
+   ​B. <|unk|> 词元用于标记句子的开头。
+   **C. <|unk|> 词元用于表示训练数据中未出现过的未知词。**
+   ​D. <|unk|> 词元用于标记句子的结尾。
+
+1. 大语言模型（LLM）在训练期间的主要任务是什么？
+   A. LLM 被训练用于将文本从一种语言翻译成另一种语言。
+   B. LLM 被训练用于对文本进行摘要。
+   C. LLM 被训练用于根据给定文本回答问题。
+   **D. LLM 被训练用于根据前面的上下文预测序列中的下一个词。**
+2. 绝对位置嵌入（absolute positional embeddings）与相对位置嵌入（relative positional embeddings）之间的区别是什么？
+   **A. 绝对位置嵌入编码词元在序列中的确切位置，而相对位置嵌入编码词元之间的相对距离。**
+   B. 绝对位置嵌入仅用于短序列，而相对位置嵌入用于长序列。
+   C. 绝对位置嵌入比相对位置嵌入更高效。
+   D. 相对位置嵌入比绝对位置嵌入更准确。
+3. 在大语言模型的上下文中，________ 的作用是提供序列中词元的顺序和位置信息，帮助模型理解词语之间的关系。
+   A. 注意力机制（attention mechanism）
+   **B. 位置嵌入（positional embeddings）**
+   C. 分词（tokenization）
+
+6. 在输入处理流程中，送入大语言模型主层之前的最终输出是什么？
+   A. 最终输出是词汇表中每个词的概率张量。
+   B. 最终输出是文本词元的张量。
+   **C. 最终输出是输入嵌入张量，由词元嵌入和位置嵌入组合而成。**
+   D. 最终输出是词元 ID 的张量。
+
+
+
+2.1 理解词嵌入
+
+### 2.2 文本分词
+
+5. Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 4    | 1    | 3    | 2    |
+
+
+
+
+
+### 2.3 将词元转换为词元ID
+
+
+
+6. Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 4    | 1    | 2    | 3    |
+
+
+
+
+
+### 2.4 引入特殊上下文词元
+
+
+
+6. 3 1 4 2Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 3    | 1    | 4    | 2    |
+
+
+
+2.5 BPE
+
+
+
+### 2.6 使用滑动窗口进行数据采样
+
+3. C D D
+
+
+
+6. B C
+
+
+
+8. Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 4    | 3    | 1    | 2    |
+
+
+
+### 2.7 创建词元嵌入
+
+
+
+6. Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 3    | 4    | 2    | 1    |
+
+
+
+2.8 编码单词位置信息
+
+
+
+## 3 编码注意力机制
+
+第三章重点介绍在大语言模型（LLMs）中至关重要的各类注意力机制的编码实现，尤其聚焦于GPT架构中所采用的自注意力（self-attention）机制。自注意力是一种机制，它允许输入序列中的每个位置在计算序列表示时，考虑（或“关注”）同一序列中所有其他位置的相关性。自注意力是基于Transformer架构的当代大语言模型（如GPT系列）的核心组成部分。
+
+
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20251207203049082.png" alt="image-20251207203049082" style="zoom:33%;" />
+
+
+
+**核心概念快速问答**
+
+1. 使用传统的编码器-解码器RNN架构进行语言翻译时，尤其是在处理长句子时，主要存在什么问题？
+   **A. RNN难以保留输入序列早期部分的上下文信息，因为它依赖于单一的隐藏状态。**
+   B. RNN容易出现梯度消失问题，难以学习长期依赖关系。
+   C. RNN计算开销大，训练速度慢。
+   D. RNN不适合处理文本等序列数据。
+2. 自注意力机制中“查询（query）”向量的作用是什么？
+   A. 查询向量用于组合键（key）和值（value）向量。
+   B. 查询向量用于计算注意力权重。
+   **C. 查询向量代表序列中当前模型关注的元素，并用于探测其他元素的相关性。**
+   D. 查询向量用于生成输出序列。
+3. 语言模型中注意力机制的主要功能是什么？
+   A. 提高模型处理长序列的能力。
+   B. 降低模型的计算复杂度。
+   C. 生成更具创造性和多样性的输出。
+   **D. 有选择性地聚焦于输入序列的特定部分。**
+4. 在____________注意力机制中，使用多个注意力头（attention heads）的主要优势在于，使模型能够同时关注输入序列的不同方面，从而更好地捕捉复杂关系。
+   **A. 多头注意力（multi-head attention）**
+   B. 单头注意力（single-head attention）
+   C. 神经注意力（neural attention）
+5. 注意力机制中的____________用于在训练过程中随机丢弃部分注意力权重，防止模型过度依赖某些特定连接。
+   A. dropout（丢弃法）
+   **B. 正则化（regularization）**
+   C. 编码（encoding）
+6. ____________类在一个单一类中集成了多头功能，而MultiHeadAttentionWrapper类则使用多个独立的CausalAttention对象组成的列表。
+   A. CausalAttention
+   **B. MultiHeadAttention**
+   C. Functionality
+7. MultiHeadAttention类中输出投影层（output projection layer）的作用是什么？
+   **A. 将多个注意力头的合并输出转换为期望的输出维度。**
+   B. 降低注意力机制的计算复杂度。
+   C. 确保注意力权重之和为1。
+   D. 增强模型对噪声的鲁棒性。
+
+
+
+3.1 长序列建模中的问题
+
+### 3.2 使用注意力机制捕获数据依赖关系
+
+
+
+3.Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 3    | 4    | 1    | 2    |
+
+
+
+### 3.3 通过自注意力机制关注输入的不同部分
+
+
+
+10.Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    |
+| ----------------- | ---- | ---- | ---- |
+| Right Hand Column | 3    | 1    | 2    |
+
+
+
+3.4 实现带可训练权重的自注意力机制
+
+
+
+### 3.5 利用因果注意力隐藏未来词汇
+
+
+
+7. Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    |
+| ----------------- | ---- | ---- | ---- |
+| Right Hand Column | 3    | 1    | 1    |
+
+
+
+
+
+### 3.6 将单头注意力扩展到多头注意力
+
+
+
+7. Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    |
+| ----------------- | ---- | ---- | ---- |
+| Right Hand Column | 3    | 2    | 1    |
+
+
+
+
+
+## 4 从头实现GPT模型进行文本生成
+
+第四章重点介绍实现类似 GPT 的大语言模型（LLM）架构，包括其 Transformer 块——其中包含上一章所讲的带掩码的多头注意力模块。本章解释了层归一化（layer normalization）、前馈网络（feed-forward networks）和捷径连接（shortcut connections）等概念。此外，本章还涵盖如何组装一个 GPT 模型，并使用该模型逐个 token 地生成文本。本章以拥有 1.24 亿参数的 GPT-2 模型为参考，明确了相关配置并演示了如何实例化该模型。
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20251207202746531.png" alt="image-20251207202746531" style="zoom:33%;" />
+
+
+
+**核心概念快速问答**
+
+1. GPT_CONFIG_124M 字典中的 context_length 参数的作用是什么？
+   A. 指定模型中 Transformer 块的数量。
+   B. 表示多头注意力机制中注意力头的数量。
+   C. 表示嵌入维度大小，将每个 token 转换为向量。
+   **D. 表示模型通过位置编码所能处理的最大输入 token 数量。** 
+2. GPT 模型中层归一化（layer normalization）的主要目的是将神经网络层的激活值调整为均值为 0、__________ 为 1。
+   **A. 方差（variance）**
+   B. 梯度（gradient）
+   C. 权重（weight） 
+3. 在大语言模型（LLMs）中，层归一化相较于批归一化（batch normalization）的主要优势是什么？
+   A. 层归一化更适合处理序列数据。
+   **B. 层归一化对每个输入独立进行归一化，不依赖于批次大小。**
+   C. 层归一化的计算效率更高。
+   D. 层归一化在防止过拟合方面更有效。 
+4. GPT-2 等大语言模型中常用的激活函数是什么？它比 ReLU 更平滑。
+   A. ReLU（Rectified Linear Unit）
+   **B. GELU（Gaussian Error Linear Unit）**
+   C. Sigmoid
+   D. Tanh 
+5. 深度神经网络中捷径连接（shortcut connections）的主要作用是什么？
+   A. 减少模型参数数量。
+   **B. 在训练的反向传播过程中保持梯度流动。**
+   C. 通过在训练期间随机丢弃神经元来防止过拟合。
+   D. 提高模型的计算效率。 
+6. GPT 模型中一个 Transformer 块的主要组成部分有哪些？
+   A. 卷积层、池化层和 Maxout 激活函数。
+   B. 线性层、ReLU 激活函数和批归一化。
+   **C. 多头注意力、层归一化、Dropout、前馈层和 GELU 激活函数。**
+   D. Token 嵌入、位置嵌入和 Dropout。 
+7. 为什么未经过训练的 GPT 模型会生成无意义的乱码？
+   A. 模型没有使用正确的激活函数。
+   B. 模型没有使用正确的分词器（tokenizer）。
+   **C. 模型尚未学习到词语之间以及语言中的模式关系。**
+   D. 模型没有使用正确的 Dropout 比率。
+
+
+
+4.1 构建一个大语言模型架构
+
+### 4.2 使用层归一化进行归一化激活
+
+6.Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column |      |      |      |      |
+
+
+
+4.3 实现具有GELU激活函数的前馈神经网络
+
+4.4 添加快捷连接
+
+4.5 连接Transformer块中的注意力层和线性层
+
+### 4.6 实现GPT模型
+
+7.Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    |
+| ----------------- | ---- | ---- | ---- |
+| Right Hand Column | 3    | 1    | 2    |
+
+
+
+4.7 生成文本
+
+
+
+## 5 在无标签数据上进行预训练
+
+第五章聚焦于大型语言模型（LLM）的预训练，并通过计算训练损失和验证损失等方法评估其性能。本章还探讨了多种解码策略，包括温度调节（temperature scaling）和 top-k 采样（top-k sampling），以控制生成文本的随机性并提升其原创性。此外，本章还介绍了保存和加载模型权重的实际操作步骤，使用户能够恢复训练，或从 OpenAI 的 GPT 模型等来源加载预训练权重。这些步骤对于开发和微调 LLM 以适应各种下游任务至关重要。
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20251207202838273.png" alt="image-20251207202838273" style="zoom:33%;" />
+
+
+
+**核心概念快速问答**
+
+1. 交叉熵损失函数在 LLM 训练中的主要作用是什么？
+   A. 为评估目的生成文本样本。
+   B. 防止模型对训练数据过拟合。
+   C. 评估模型在特定任务（如文本分类）上的表现。
+   **D. 衡量模型预测的词元概率分布与训练数据中真实词元分布之间的差异。**
+2. 文本生成中温度调节（temperature scaling）的作用是什么？
+   **A. 通过调整词元的概率分布，控制生成文本的随机性和多样性。**
+   B. 提高模型预测下一个词元的准确性。
+   C. 降低文本生成的计算成本。
+   D. 防止模型对训练数据过拟合。
+3. 大型语言模型（LLM）预训练的主要目标是什么？
+   A. 提升模型生成连贯且语法正确的文本的能力。
+   B. 针对特定任务（如文本分类）对模型进行微调。
+   **C. 从海量文本数据中学习通用的语言模式和表征。**
+   D. 降低模型训练的计算成本。
+4. 使用 OpenAI 提供的预训练权重对 LLM 的主要好处是什么？
+   **A. 无需从头开始进行大量且昂贵的预训练。**
+   B. 降低模型对训练数据过拟合的风险。
+   C. 保证模型在任何任务上都能表现良好。
+   D. 简化针对特定任务微调模型的过程。
+5. 在 PyTorch 中保存模型状态字典（state dictionary）的主要优势是什么？
+   A. 提高模型在未见数据上的表现。
+   **B. 允许加载并复用已训练好的模型，而无需从头重新训练。**
+   C. 防止模型对训练数据过拟合。
+   D. 降低模型训练的计算成本。
+
+
+
+5.1 评估文本生成模型
+
+### 5.2 训练大语言模型
+
+7.Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 3    | 1    | 4    | 2    |
+
+
+
+5.3 控制随机性的解码策略
+
+### 5.4 使用 PyTorch 加载和保存模型权重
+
+5.Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 2    | 1    | 4    | 3    |
+
+
+
+### 5.5 从 OpenAI 加载预训练权重
+
+6.Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 1    | 3    | 2    | 4    |
+
+
+
+
+
+## 6 针对分类的微调 
+
+第6章聚焦于分类微调（classification fine-tuning），这是一种将预训练的大语言模型（LLM）适配到特定分类任务的技术，例如识别垃圾短信。本章引导读者完成以下步骤：准备一个短信文本数据集；通过替换预训练LLM的输出层以适应分类任务；并实现一个训练函数，对模型进行微调以执行垃圾短信分类。此外，本章还涵盖了如何评估微调后模型的准确率，并演示了如何使用该模型将新的短信文本分类为“垃圾”或“非垃圾”。
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20251207202547257.png" alt="image-20251207202547257" style="zoom: 33%;" />
+
+
+
+**核心概念快速问答**
+
+1. ____________ 的主要目的是训练模型识别并预测特定的类别标签。
+   **A. 分类微调（classification-finetuning）**
+   B. 回归（regression）
+   C. 聚类（clustering）
+2. 语言模型微调的两大主要类别是什么？
+   **A. 指令微调（Instruction-finetuning）和分类微调（classification-finetuning）**
+   B. 生成式模型与判别式模型（Generative and discriminative models）
+   C. 预训练与微调（Pretraining and fine-tuning）
+   D. 监督学习与无监督学习（Supervised and unsupervised learning）
+3. 在垃圾短信数据集中对文本消息进行填充（padding）的目的是什么？
+   **A. 确保所有文本消息具有相同长度，以便进行批处理（batch processing）。**
+   B. 降低处理文本消息的计算成本。
+   C. 从文本消息中移除无关信息。
+   D. 提高模型理解文本上下文的能力。
+4. 在 SpamDataset 类中，填充标记（padding token）的作用是什么？
+   A. 标记文本消息的开始和结束。
+   B. 表示新句子的开始。
+   C. 表示未知词或词汇表外的词（out-of-vocabulary words）。
+   **D. 填充较短文本消息中的空缺，使其长度与最长消息一致。**
+5. 为什么在分类微调中选择 GPT 模型的最后一个输出 token 进行分类？
+   A. 因为最后一个 token 最有可能包含类别标签信息。
+   B. 因为最后一个 token 对模型来说最容易处理。
+   C. 因为最后一个 token 是文本消息中最重要的 token。
+   **D. 因为由于因果注意力掩码（causal attention mask），最后一个 token 能够累积来自所有先前 token 的信息。**
+6. 在垃圾短信分类任务中，交叉熵损失函数（cross entropy loss function）的作用是什么？
+   A. 确定训练所需的轮数（epochs）。
+   B. 计算模型预测的准确率。
+   **C. 衡量模型预测概率与真实类别标签之间的差异。**
+   D. 识别文本消息中最重要的特征。
+7. 模型在测试集上的准确率有何意义？
+   **A. 它表明模型在新、未见过的数据上的泛化能力。**
+   B. 它决定了训练所需的轮数。
+   C. 它反映了模型在训练数据上的表现。
+   D. 它表明模型从训练数据中学习的能力。
+
+
+
+6.1 不同类型的微调
+
+### 6.2 准备数据集
+
+7.Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 1    | 4    | 2    | 3    |
+
+
+
+6.3 创建数据加载器
+
+6.4 初始化带有预训练权重的模型
+
+6.5 添加分类头
+
+6.6 计算分类损失和准确率
+
+6.7 在有监督数据上微调模型
+
+6.8 使用大语言模型作为垃圾分类分类器
+
+
+
+## 7 通过微调遵循人类指令
+
+第7章探讨了指令微调（instruction fine-tuning），这是一种使预训练大语言模型（LLM）能够遵循特定指令并生成期望响应的过程，从而超越其最初的文本补全能力。本章内容包括：准备指令数据集、将数据组织成批次以实现高效训练、加载预训练的LLM，以及对模型进行微调以使其能够遵循指令。此外，还介绍了如何提取和评估LLM生成的响应，以衡量微调后模型的性能，并讲解了使用另一个LLM（例如Llama 3）对响应进行评分等技术。第7章强调的目标是提升LLM理解和有效执行指令的能力，这与第6章专注于用于分类任务的微调相呼应。
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20251207202654653.png" alt="image-20251207202654653" style="zoom:33%;" />
+
+
+
+**核心概念快速问答**
+
+1. 预训练大语言模型在处理指令时通常面临的主要挑战是什么？
+   A. 无法完成句子。
+   B. 难以生成连贯文本。
+   C. 词汇量有限。
+   **D. 难以处理特定指令，如语法修正或语态转换。**
+2. 在为监督式指令微调准备数据集时，关键组成部分是什么？
+   A. 预训练语言模型。
+   B. 优化算法。
+   **C. 指令-响应对（instruction-response pairs）。**
+   D. 分词（tokenization）算法。
+3. 指令数据集通常采用哪种数据格式，因其对人类和机器都具有良好的可读性？
+   **A. JSON（JavaScript对象表示法）。**
+   B. CSV（逗号分隔值）。
+   C. YAML（YAML Ain't Markup Language）。
+   D. XML（可扩展标记语言）。
+4. 在指令微调中，自定义整合函数（custom collate function）的作用是什么？
+   A. 优化模型架构。
+   **B. 处理指令微调数据集特有的格式和要求。**
+   C. 对输入数据进行预处理。
+   D. 评估模型性能。
+5. 在自定义整合函数中使用 ignore_index 参数（值为 -100）的目的是什么？
+   A. 标记序列的结束。
+   B. 表示未知词元（token）。
+   **C. 在损失计算中排除填充（padding）词元。**
+   D. 标识序列的开始。
+6. 保存微调后模型的状态字典（state dictionary）的目的是什么？
+   A. 压缩模型以节省存储空间。
+   B. 可视化模型架构。
+   **C. 保存模型参数，以便后续使用或在其他项目中复用。**
+   D. 提升模型性能。
+
+
+
+7.1 指令微调介绍
+
+### 7.2 为有监督指令微调准备数据
+
+6.Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 3    | 4    | 2    | 1    |
+
+
+
+7.3 将数据组织成训练批次
+
+### 7.4 创建指令数据集的数据加载器
+
+7.Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    | 4    |
+| ----------------- | ---- | ---- | ---- | ---- |
+| Right Hand Column | 2    | 1    | 3    | 4    |
+
+
+
+7.5 加载预训练的大语言模型
+
+7.6 在指令数据上微调大语言模型
+
+7.7 抽取并保存模型回复
+
+### 7.8 评估微调后的大语言模型
+
+6.Match the terms to its description on the right:
+
+
+
+Fill the table with the column mappings:
+
+| Left Hand Column  | 1    | 2    | 3    |
+| ----------------- | ---- | ---- | ---- |
+| Right Hand Column | 3    | 2    | 1    |
+
+
+
+
+
 
 
 # 参考文献
@@ -5192,3 +6041,9 @@ https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)
 [5] GPT-4 | OpenAI. March 14, 2023.
 
 https://openai.com/index/gpt-4-research/
+
+[6] 从零构建大模型 (Sebastian Raschka, 塞巴斯蒂安·拉施卡, 覃立波, 冯晓骋, 刘乾) 
+
+Build a Large Language Model (From Scratch) (Sebastian Raschka) 
+
+[7] Test Yourself On Build a Large Language.pdf

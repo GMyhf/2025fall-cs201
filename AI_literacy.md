@@ -1,15 +1,15 @@
 # 人工智能
 
-*Updated 2025-12-07 22:21 GMT+8*  
+*Updated 2025-12-08 18:18 GMT+8*  
 *Compiled by Hongfei Yan (2025 Summer)*    
 
 https://github.com/GMyhf/2025fall-cs201/blob/main/AI_literacy.md
 
 
 
-> 2025年秋季学期，数算B 的笔试内容覆盖 Test Yourself On Build a Large Language.pdf
+> 2025年秋季数算B的笔试内容与往年不同，因为只有我们一个班，自主出题。内容是构建大语言模型相关。如：附录B 大模型自我检测指南
 >
-> 如：附录B 大模型自我检测指南
+> 2025年秋季计概B的人工智能部分，也是这份讲义，但是笔试考到的可能只有AI三大流派、AI的三要素两个小部分。
 
 
 
@@ -62,7 +62,2097 @@ https://github.com/GMyhf/2025fall-cs201/blob/main/AI_literacy.md
 - **智能博弈：AlphaGo/AlphaZero**：DeepMind的AlphaGo结合了深度卷积神经网络（CNN）、强化学习和蒙特卡洛树搜索（MCTS），成为首个战胜围棋人类冠军的AI系统。2016年AlphaGo以4:1击败李世石，2017年以3:0战胜柯洁。其强化学习版本AlphaGo Zero无需人类棋谱，从随机对弈中自学，经过数周训练便超越了原版AlphaGo。进一步的AlphaZero甚至能从零开始自学多种棋类（围棋、国际象棋、日本将棋等），展现出超强的策略学习能力。它证明了放弃人类经验、有条件的自我对弈（self-play）学习在某些领域能带来更优解。
 - **自然语言处理：Transformer与GPT**：Transformer模型由Google研究者在2017年提出（著名论文*Attention Is All You Need*），其核心是**自注意力机制**，允许模型并行处理序列并捕捉远距离依赖[4]。Transformer架构广泛应用于大规模自然语言处理和其它领域，催生了众多预训练模型如GPT系列和BERT[4]。GPT（Generative Pre-trained Transformer）是OpenAI推出的一类语言模型，采用巨大的Transformer解码器结构进行无监督预训练后再微调。GPT-3于2020年问世，拥有约1750亿参数[2]，能够生成连贯流畅的文本，支持零样本学习（zero-shot）和少样本学习（few-shot），在翻译、对话、写作等任务中表现优异。**GPT-4**（2023年发布）在GPT-3.5基础上进一步扩展规模和能力，是一个支持文本和图像输入的**多模态大模型**[5] [3]。GPT-4在包括模拟律师资格考试（bar exam）在内的多项专业测试中表现出类人水平（成绩在前10%）[3]。与前代模型相比，GPT-4更加可靠、富有创造力，能够处理更复杂、更长的指令[5]。GPT系列模型被广泛应用于对话机器人、内容生成、编程辅助、教育辅导等场景。
 
-**示例：使用预训练模型进行问答**。以Hugging Face Transformer为例，下述 `first_qa.py`代码载入本地中文预训练模型进行问答推理：
+
+
+## 3.1 示例 2048 游戏
+
+​	选择2048游戏作为教学案例。2048 游戏是 2014 年由 Gabriele Cirulli 推出的单人数字游戏。设计 2048 AI 的算法思路与技巧在游戏算法设计中很具有代表性，且 2048 游戏规则简单，在探索解法的过程中充满趣味性，是一个非常适合作为计算机科学方面相关教学的益智游戏 。本节以问题求解为导向，以流行的单人数字游戏 2048 的 AI 算法设计问题为主线，试图在剖析问题、提出思路、拓展延伸等完整的问题求解过程中激发学习者能动性，使学习者对游戏 AI 算法的设计思路和常见算法达到较高的认知水平。
+
+​	2048 游戏界面如图5-23所示，玩家需要在 $4\times4$ 的数字方格矩阵中做上、下、左、右四个方向之一的滑动操作。每次滑动操作会使得所有方块全部沿着某个方向滑动直至被边界或其他方块阻挡。当两个数字方格中的数字相同，且滑动后两方格相邻，则这两个数字方格会被合并为一个方格，其数字为原来两方块之和，如图5-24所示。执行上滑操作后，最左列的两个 2 合并为 4，并上移至第二行；左数第三列的上方两个相邻 8 合并为 16 并上移；最右一行的上下两对相邻的 2 均合并为 4，并上移至第1和第 2 行，这一列值得注意的是，该次操作合并过的两个方块 4 并不会继续合并。每次滑动操作后，系统随机在一个没有数字的方格中按照分别 90%、10% 的概率随机生成 2 或 4 两种之一的数字方格。游戏的初始局面为在空棋盘上按上述规则随机生成两个方块后的棋盘。游戏目标是产生数字尽可能大的方块。为便于之后测试算法效率，本书设计的 2048 游戏任务无方块数字的上限，达到 2048 后游戏仍然继续，当且仅当局面无法进行任何滑动操作时游戏结束。
+
+
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20230109211246988.png" alt="image-20230109211246988" style="zoom:50%;" />
+
+<center>图 2048 游戏初始界面</center>
+
+
+
+![image-20230109211322682](https://raw.githubusercontent.com/GMyhf/img/main/img/image-20230109211322682.png)
+
+<center>图 一次向上滑动示意图，右图左下侧的2为系统生成的新方块</center>
+
+
+
+​	2048 游戏规则的具体实现有一个易错之处：在同行或者同列中进行某方向的滑动时，这行或这列中的方块从前往后（记滑动方向的一侧为前）依次向前合并，且此次操作已经合并过的方块不能再次合并。与游戏相关的题目，包括2048的游戏规则模拟（http://cs101.openjudge.cn/practice/20052/），和一个需要深入挖掘2048规则性质的动态规划问题（http://codeforces.com/problemset/problem/413/D），帮助学生深入理解游戏规则。在线体验 2048 游戏的网页有： https://play2048.co/ ，https://2048game.com 。
+
+
+
+### 1. game_2048.py
+
+请帮我写一个python程序，就是在Mac terminal中可以运行的 2048 游戏，可以没有GUI。
+
+目标设为 2048，但在达到 2048 后不会自动结束，你可以继续游戏争取更高的数字：
+
+
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20250219221003001.png" alt="image-20250219221003001" style="zoom:50%;" />
+
+
+
+```python
+#!/usr/bin/env python3
+import random
+import os
+import sys
+
+BOARD_SIZE = 4
+TARGET = 2048
+
+def init_board():
+    board = [[0] * BOARD_SIZE for _ in range(BOARD_SIZE)]
+    add_random_tile(board)
+    add_random_tile(board)
+    return board
+
+def add_random_tile(board):
+    empty = [(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE) if board[i][j] == 0]
+    if not empty:
+        return
+    i, j = random.choice(empty)
+    board[i][j] = 4 if random.random() < 0.1 else 2
+
+def print_board(board):
+    os.system('clear')  # 清屏
+    print("-" * (BOARD_SIZE * 7 + 1))
+    for row in board:
+        print("|", end="")
+        for num in row:
+            if num == 0:
+                print("      |", end="")
+            else:
+                print(f"{num:^6}|", end="")
+        print()
+        print("-" * (BOARD_SIZE * 7 + 1))
+
+def slide_and_merge(line):
+    new_line = [num for num in line if num != 0]
+    merged_line = []
+    skip = False
+    for i in range(len(new_line)):
+        if skip:
+            skip = False
+            continue
+        if i + 1 < len(new_line) and new_line[i] == new_line[i + 1]:
+            merged_line.append(new_line[i] * 2)
+            skip = True
+        else:
+            merged_line.append(new_line[i])
+    merged_line += [0] * (BOARD_SIZE - len(merged_line))
+    return merged_line
+
+def move_left(board):
+    return [slide_and_merge(row) for row in board]
+
+def reverse(board):
+    return [list(reversed(row)) for row in board]
+
+def transpose(board):
+    return [list(row) for row in zip(*board)]
+
+def move_right(board):
+    return reverse(move_left(reverse(board)))
+
+def move_up(board):
+    transposed = transpose(board)
+    moved = move_left(transposed)
+    return transpose(moved)
+
+def move_down(board):
+    transposed = transpose(board)
+    moved = move_right(transposed)
+    return transpose(moved)
+
+def boards_equal(b1, b2):
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if b1[i][j] != b2[i][j]:
+                return False
+    return True
+
+def can_move(board):
+    for row in board:
+        if 0 in row:
+            return True
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if j + 1 < BOARD_SIZE and board[i][j] == board[i][j + 1]:
+                return True
+            if i + 1 < BOARD_SIZE and board[i][j] == board[i + 1][j]:
+                return True
+    return False
+
+def reached_target(board):
+    for row in board:
+        if any(num >= TARGET for num in row):
+            return True
+    return False
+
+def main():
+    board = init_board()
+    has_printed_win = False  # 避免重复打印获胜消息
+    print_board(board)
+    while True:
+        move = input("请输入移动方向 (w/a/s/d)，或 q 退出：").lower().strip()
+        if move not in ['w', 'a', 's', 'd', 'q']:
+            continue
+        if move == 'q':
+            print("退出游戏。")
+            sys.exit(0)
+
+        if move == 'w':
+            new_board = move_up(board)
+        elif move == 'a':
+            new_board = move_left(board)
+        elif move == 's':
+            new_board = move_down(board)
+        elif move == 'd':
+            new_board = move_right(board)
+
+        if not boards_equal(board, new_board):
+            board = new_board
+            add_random_tile(board)
+        else:
+            print("无效移动！")
+        print_board(board)
+
+        if reached_target(board) and not has_printed_win:
+            print("恭喜你达到了 2048！当然，如果能合成更大的数字就更好！")
+            has_printed_win = True
+
+        if not can_move(board):
+            print("游戏结束，无法移动！")
+            break
+
+if __name__ == "__main__":
+    main()
+```
+
+**使用说明**
+
+1. 将代码保存为文件（例如 `game_2048.py`）。
+2. 在终端中执行 `chmod +x game_2048.py` 给予执行权限。
+3. 运行 `./game_2048.py` 启动游戏。
+
+游戏中输入 `w/a/s/d` 分别控制上、左、下、右移动，输入 `q` 退出。达到 2048 后会显示提示，但你仍可继续游戏，挑战更高的分数。
+
+
+
+### 2. auto_2048.py
+
+帮我做一个升级版本，就是自动演示上下左右移动的2048游戏
+
+
+
+下面是一份自动演示版 2048 游戏的 Python 代码，运行时会自动随机选择上、下、左、右移动，并在终端中展示移动过程。你可以直接在 Mac Terminal 中运行该脚本：
+
+```python
+#!/usr/bin/env python3
+import random
+import os
+import sys
+import time
+
+BOARD_SIZE = 4
+TARGET = 2048
+
+def init_board():
+    board = [[0] * BOARD_SIZE for _ in range(BOARD_SIZE)]
+    add_random_tile(board)
+    add_random_tile(board)
+    return board
+
+def add_random_tile(board):
+    empty = [(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE) if board[i][j] == 0]
+    if not empty:
+        return
+    i, j = random.choice(empty)
+    # 以 10% 的概率生成 4，其余生成 2
+    board[i][j] = 4 if random.random() < 0.1 else 2
+
+def print_board(board):
+    os.system('clear')  # 清屏
+    print("-" * (BOARD_SIZE * 7 + 1))
+    for row in board:
+        print("|", end="")
+        for num in row:
+            if num == 0:
+                print("      |", end="")
+            else:
+                print(f"{num:^6}|", end="")
+        print()
+        print("-" * (BOARD_SIZE * 7 + 1))
+
+def slide_and_merge(line):
+    # 去除所有零值
+    new_line = [num for num in line if num != 0]
+    merged_line = []
+    skip = False
+    for i in range(len(new_line)):
+        if skip:
+            skip = False
+            continue
+        # 若相邻数字相等，则合并
+        if i + 1 < len(new_line) and new_line[i] == new_line[i + 1]:
+            merged_line.append(new_line[i] * 2)
+            skip = True
+        else:
+            merged_line.append(new_line[i])
+    # 补0使长度固定
+    merged_line += [0] * (BOARD_SIZE - len(merged_line))
+    return merged_line
+
+def move_left(board):
+    new_board = []
+    for row in board:
+        new_board.append(slide_and_merge(row))
+    return new_board
+
+def reverse(board):
+    return [list(reversed(row)) for row in board]
+
+def transpose(board):
+    return [list(row) for row in zip(*board)]
+
+def move_right(board):
+    return reverse(move_left(reverse(board)))
+
+def move_up(board):
+    transposed = transpose(board)
+    moved = move_left(transposed)
+    return transpose(moved)
+
+def move_down(board):
+    transposed = transpose(board)
+    moved = move_right(transposed)
+    return transpose(moved)
+
+def boards_equal(b1, b2):
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if b1[i][j] != b2[i][j]:
+                return False
+    return True
+
+def can_move(board):
+    # 若有空格则肯定能移动
+    for row in board:
+        if 0 in row:
+            return True
+    # 检查水平和垂直是否有可合并的数字
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if j + 1 < BOARD_SIZE and board[i][j] == board[i][j + 1]:
+                return True
+            if i + 1 < BOARD_SIZE and board[i][j] == board[i + 1][j]:
+                return True
+    return False
+
+def reached_target(board):
+    for row in board:
+        if any(num >= TARGET for num in row):
+            return True
+    return False
+
+def main():
+    board = init_board()
+    has_printed_win = False  # 避免重复打印获胜消息
+    print_board(board)
+    while True:
+        if not can_move(board):
+            print("游戏结束，无法移动！")
+            break
+
+        # 自动随机选择一个方向
+        move = random.choice(['w', 'a', 's', 'd'])
+        print(f"自动移动：{move}")
+        if move == 'w':
+            new_board = move_up(board)
+        elif move == 'a':
+            new_board = move_left(board)
+        elif move == 's':
+            new_board = move_down(board)
+        elif move == 'd':
+            new_board = move_right(board)
+
+        if not boards_equal(board, new_board):
+            board = new_board
+            add_random_tile(board)
+        else:
+            print("无效移动，尝试其他方向。")
+
+        print_board(board)
+        if reached_target(board) and not has_printed_win:
+            print("已达到 2048！继续自动移动以获得更高分数。")
+            has_printed_win = True
+
+        time.sleep(0.01)  # 延时0.5秒，便于观察演示效果
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+**使用说明**
+
+1. 将上述代码保存为文件（例如 `auto_2048.py`）。
+2. 在终端中运行命令 `chmod +x auto_2048.py` 赋予执行权限。
+3. 运行 `./auto_2048.py` 启动自动演示。
+
+程序将自动随机选择上、下、左、右方向进行移动，并以 0.5 秒的间隔更新显示。你可以通过修改 `time.sleep` 的延时参数来调整演示速度。
+
+
+
+
+
+### 3. auto_2048_intelligent.py
+
+能智能些吗？刚运行auto_2048，才累积到128，就游戏结束无法移动了。
+
+
+
+下面是一份升级版自动演示 2048 游戏代码，加入了简单的启发式策略。程序会对四个方向的移动进行模拟，<mark>选择能使空格最多的那一步，从而尽量延长游戏时间，避免早期卡死</mark>。你可以直接在 Mac Terminal 下运行该脚本：
+
+```python
+#!/usr/bin/env python3
+import random
+import os
+import sys
+import time
+
+BOARD_SIZE = 4
+TARGET = 2048
+
+def init_board():
+    board = [[0] * BOARD_SIZE for _ in range(BOARD_SIZE)]
+    add_random_tile(board)
+    add_random_tile(board)
+    return board
+
+def add_random_tile(board):
+    empty = [(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE) if board[i][j] == 0]
+    if not empty:
+        return
+    i, j = random.choice(empty)
+    board[i][j] = 4 if random.random() < 0.1 else 2
+
+def print_board(board):
+    os.system('clear')  # 清屏
+    print("-" * (BOARD_SIZE * 7 + 1))
+    for row in board:
+        print("|", end="")
+        for num in row:
+            if num == 0:
+                print("      |", end="")
+            else:
+                print(f"{num:^6}|", end="")
+        print()
+        print("-" * (BOARD_SIZE * 7 + 1))
+
+def slide_and_merge(line):
+    new_line = [num for num in line if num != 0]
+    merged_line = []
+    skip = False
+    for i in range(len(new_line)):
+        if skip:
+            skip = False
+            continue
+        if i + 1 < len(new_line) and new_line[i] == new_line[i + 1]:
+            merged_line.append(new_line[i] * 2)
+            skip = True
+        else:
+            merged_line.append(new_line[i])
+    merged_line += [0] * (BOARD_SIZE - len(merged_line))
+    return merged_line
+
+def move_left(board):
+    return [slide_and_merge(row) for row in board]
+
+def reverse(board):
+    return [list(reversed(row)) for row in board]
+
+def transpose(board):
+    return [list(row) for row in zip(*board)]
+
+def move_right(board):
+    return reverse(move_left(reverse(board)))
+
+def move_up(board):
+    transposed = transpose(board)
+    moved = move_left(transposed)
+    return transpose(moved)
+
+def move_down(board):
+    transposed = transpose(board)
+    moved = move_right(transposed)
+    return transpose(moved)
+
+def boards_equal(b1, b2):
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if b1[i][j] != b2[i][j]:
+                return False
+    return True
+
+def can_move(board):
+    for row in board:
+        if 0 in row:
+            return True
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if j + 1 < BOARD_SIZE and board[i][j] == board[i][j + 1]:
+                return True
+            if i + 1 < BOARD_SIZE and board[i][j] == board[i + 1][j]:
+                return True
+    return False
+
+def reached_target(board):
+    for row in board:
+        if any(num >= TARGET for num in row):
+            return True
+    return False
+
+def count_empty(board):
+    return sum(row.count(0) for row in board)
+
+def choose_best_move(board):
+    moves = {
+        'w': move_up,
+        'a': move_left,
+        's': move_down,
+        'd': move_right
+    }
+    best_move = None
+    best_score = -1
+    best_new_board = None
+    for move, func in moves.items():
+        new_board = func(board)
+        if boards_equal(board, new_board):
+            continue
+        score = count_empty(new_board)
+        if score > best_score:
+            best_score = score
+            best_move = move
+            best_new_board = new_board
+    return best_move, best_new_board
+
+def main():
+    board = init_board()
+    has_printed_win = False
+    print_board(board)
+    while True:
+        if not can_move(board):
+            print("游戏结束，无法移动！")
+            break
+
+        move, new_board = choose_best_move(board)
+        if move is None:
+            print("没有有效移动，游戏结束！")
+            break
+
+        print(f"自动移动：{move}")
+        board = new_board
+        add_random_tile(board)
+        print_board(board)
+
+        if reached_target(board) and not has_printed_win:
+            print("已达到 2048！继续自动移动以获得更高分数。")
+            has_printed_win = True
+
+        time.sleep(0.01)
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+使用说明
+
+1. 将上述代码保存为文件（例如 `auto_2048_intelligent.py`）。
+2. 在终端中执行 `chmod +x auto_2048_intelligent.py` 赋予执行权限。
+3. 运行 `./auto_2048_intelligent.py` 启动自动演示。
+
+程序会自动选择四个方向中使空格最多的移动方向，尽量保持棋盘宽松，帮助你累积到更高的分数。你也可以调整 `time.sleep` 延时参数来观察移动过程。
+
+
+
+### 4. auto_2048_ai.py
+
+还是不够智能，到128就结束了
+
+
+
+下面是一份升级版自动演示 2048 游戏代码，<mark>采用了简单的“1 层期望搜索（expectimax）”策略和启发式评估函数</mark>，从而尽可能选择对局面更有利的移动。该代码在模拟每个可能移动后，对随机新增块进行平均评估，然后选择评分最高的移动方向，从而延长游戏时间，争取更高分数：
+
+```python
+#!/usr/bin/env python3
+import random
+import os
+import sys
+import time
+import copy
+
+BOARD_SIZE = 4
+TARGET = 2048
+
+def init_board():
+    board = [[0] * BOARD_SIZE for _ in range(BOARD_SIZE)]
+    add_random_tile(board)
+    add_random_tile(board)
+    return board
+
+def add_random_tile(board):
+    empty = [(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE) if board[i][j] == 0]
+    if not empty:
+        return
+    i, j = random.choice(empty)
+    board[i][j] = 4 if random.random() < 0.1 else 2
+
+def print_board(board):
+    os.system('clear')  # Mac/Linux 下清屏
+    print("-" * (BOARD_SIZE * 7 + 1))
+    for row in board:
+        print("|", end="")
+        for num in row:
+            if num == 0:
+                print("      |", end="")
+            else:
+                print(f"{num:^6}|", end="")
+        print()
+        print("-" * (BOARD_SIZE * 7 + 1))
+
+def slide_and_merge(line):
+    # 去除0值
+    new_line = [num for num in line if num != 0]
+    merged_line = []
+    skip = False
+    for i in range(len(new_line)):
+        if skip:
+            skip = False
+            continue
+        if i + 1 < len(new_line) and new_line[i] == new_line[i+1]:
+            merged_line.append(new_line[i] * 2)
+            skip = True
+        else:
+            merged_line.append(new_line[i])
+    merged_line += [0] * (BOARD_SIZE - len(merged_line))
+    return merged_line
+
+def move_left(board):
+    return [slide_and_merge(row) for row in board]
+
+def reverse(board):
+    return [list(reversed(row)) for row in board]
+
+def transpose(board):
+    return [list(row) for row in zip(*board)]
+
+def move_right(board):
+    return reverse(move_left(reverse(board)))
+
+def move_up(board):
+    transposed = transpose(board)
+    moved = move_left(transposed)
+    return transpose(moved)
+
+def move_down(board):
+    transposed = transpose(board)
+    moved = move_right(transposed)
+    return transpose(moved)
+
+def boards_equal(b1, b2):
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if b1[i][j] != b2[i][j]:
+                return False
+    return True
+
+def can_move(board):
+    for row in board:
+        if 0 in row:
+            return True
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if j+1 < BOARD_SIZE and board[i][j] == board[i][j+1]:
+                return True
+            if i+1 < BOARD_SIZE and board[i][j] == board[i+1][j]:
+                return True
+    return False
+
+def reached_target(board):
+    for row in board:
+        if any(num >= TARGET for num in row):
+            return True
+    return False
+
+def count_empty(board):
+    return sum(row.count(0) for row in board)
+
+def evaluate_board(board):
+    """
+    一个简单的评估函数，综合考虑：
+    1. 空格数：空格越多越好（乘以较大权重）
+    2. 最大数字是否在角落：在角落奖励
+    3. 行列单调性：如果整行或整列是单调的，给予一定奖励
+    """
+    score = count_empty(board) * 100
+
+    max_tile = max(max(row) for row in board)
+    # 如果最大数字在角落，则奖励
+    corners = [board[0][0], board[0][BOARD_SIZE-1], board[BOARD_SIZE-1][0], board[BOARD_SIZE-1][BOARD_SIZE-1]]
+    if max_tile in corners:
+        score += max_tile * 10
+
+    # 行单调性奖励
+    for row in board:
+        if all(row[i] >= row[i+1] for i in range(len(row)-1)) or all(row[i] <= row[i+1] for i in range(len(row)-1)):
+            score += sum(row) * 0.1
+    # 列单调性奖励
+    for col in zip(*board):
+        if all(col[i] >= col[i+1] for i in range(len(col)-1)) or all(col[i] <= col[i+1] for i in range(len(col)-1)):
+            score += sum(col) * 0.1
+
+    return score
+
+def expectimax_value(board):
+    """
+    1层期望搜索：
+    对当前局面，模拟在每个空格上随机生成2（概率0.9）或4（概率0.1），
+    返回平均评估得分。
+    """
+    empty = [(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE) if board[i][j] == 0]
+    if not empty:
+        return evaluate_board(board)
+    total = 0
+    for (i, j) in empty:
+        board2 = copy.deepcopy(board)
+        board2[i][j] = 2
+        score2 = evaluate_board(board2)
+        board4 = copy.deepcopy(board)
+        board4[i][j] = 4
+        score4 = evaluate_board(board4)
+        total += 0.9 * score2 + 0.1 * score4
+    return total / len(empty)
+
+def choose_best_move(board):
+    moves = {
+        'w': move_up,
+        'a': move_left,
+        's': move_down,
+        'd': move_right
+    }
+    best_move = None
+    best_score = -float('inf')
+    best_new_board = None
+    for move, func in moves.items():
+        new_board = func(board)
+        if boards_equal(board, new_board):
+            continue
+        # 使用1层期望搜索的评估
+        score = expectimax_value(new_board)
+        if score > best_score:
+            best_score = score
+            best_move = move
+            best_new_board = new_board
+    return best_move, best_new_board
+
+def main():
+    board = init_board()
+    has_printed_win = False
+    print_board(board)
+    while True:
+        if not can_move(board):
+            print("游戏结束，无法移动！")
+            break
+
+        move, new_board = choose_best_move(board)
+        if move is None:
+            print("没有有效移动，游戏结束！")
+            break
+
+        print(f"自动移动：{move}")
+        board = new_board
+        add_random_tile(board)
+        print_board(board)
+
+        if reached_target(board) and not has_printed_win:
+            print("已达到 2048！继续自动移动以获得更高分数。")
+            has_printed_win = True
+
+        time.sleep(0.01)
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+**使用说明**
+
+1. 将上述代码保存为文件（例如 `auto_2048_ai.py`）。
+2. 在终端中执行 `chmod +x auto_2048_ai.py` 赋予执行权限。
+3. 运行 `./auto_2048_ai.py` 启动自动演示。
+
+此版本采用了简单的启发式评估和1层期望搜索：  
+• 每个可能的移动后，程序会模拟在所有空位上新增数字（2 和 4）后计算平均评估分数；  
+• 评估函数综合考虑了空格数量、最大数字是否处于角落以及行列的单调性。  
+
+这样有助于程序选择更加“智能”的移动方向，争取获得更高的分数而不是早早卡死。  
+请根据需要调整权重和延时（time.sleep）参数以获得最佳效果。
+
+
+
+
+
+### 5.auto_2048_expectimax.py
+
+还是不够智能，到256就结束了
+
+
+
+下面这份代码<mark>使用了多层（深度 3）期望搜索（expectimax），并在评估函数中加入了角落权重、空格奖励以及行列单调性奖励</mark>，以期使 AI 在选择移动时更“聪明”，尽量避免早期卡死。请注意，由于搜索深度增加，运行速度可能会变慢一些，但通常能在 4×4 棋盘上接受。
+
+```python
+#!/usr/bin/env python3
+import random
+import os
+import sys
+import time
+import copy
+
+BOARD_SIZE = 4
+TARGET = 2048
+SEARCH_DEPTH = 3  # 增加搜索深度
+
+def init_board():
+    board = [[0] * BOARD_SIZE for _ in range(BOARD_SIZE)]
+    add_random_tile(board)
+    add_random_tile(board)
+    return board
+
+def add_random_tile(board):
+    empty = [(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE) if board[i][j] == 0]
+    if not empty:
+        return
+    i, j = random.choice(empty)
+    board[i][j] = 4 if random.random() < 0.1 else 2
+
+def print_board(board):
+    os.system('clear')  # Mac/Linux 下清屏
+    print("-" * (BOARD_SIZE * 7 + 1))
+    for row in board:
+        print("|", end="")
+        for num in row:
+            if num == 0:
+                print("      |", end="")
+            else:
+                print(f"{num:^6}|", end="")
+        print()
+        print("-" * (BOARD_SIZE * 7 + 1))
+
+def slide_and_merge(line):
+    new_line = [num for num in line if num != 0]
+    merged_line = []
+    skip = False
+    for i in range(len(new_line)):
+        if skip:
+            skip = False
+            continue
+        if i + 1 < len(new_line) and new_line[i] == new_line[i + 1]:
+            merged_line.append(new_line[i] * 2)
+            skip = True
+        else:
+            merged_line.append(new_line[i])
+    merged_line += [0] * (BOARD_SIZE - len(merged_line))
+    return merged_line
+
+def move_left(board):
+    return [slide_and_merge(row) for row in board]
+
+def reverse(board):
+    return [list(reversed(row)) for row in board]
+
+def transpose(board):
+    return [list(row) for row in zip(*board)]
+
+def move_right(board):
+    return reverse(move_left(reverse(board)))
+
+def move_up(board):
+    return transpose(move_left(transpose(board)))
+
+def move_down(board):
+    return transpose(move_right(transpose(board)))
+
+def boards_equal(b1, b2):
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if b1[i][j] != b2[i][j]:
+                return False
+    return True
+
+def can_move(board):
+    for row in board:
+        if 0 in row:
+            return True
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if j + 1 < BOARD_SIZE and board[i][j] == board[i][j + 1]:
+                return True
+            if i + 1 < BOARD_SIZE and board[i][j] == board[i + 1][j]:
+                return True
+    return False
+
+def reached_target(board):
+    for row in board:
+        if any(num >= TARGET for num in row):
+            return True
+    return False
+
+def evaluate_board(board):
+    score = 0
+    # 奖励空格
+    empty = sum(row.count(0) for row in board)
+    score += empty * 100
+
+    # 使用一个预设的权重矩阵，鼓励最大值位于角落（这里采用蛇形布局）
+    weights = [
+        [65536, 32768, 16384, 8192],
+        [512,   1024,  2048,  4096],
+        [256,    512,  1024,  2048],
+        [128,    256,   512,  1024]
+    ]
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            score += board[i][j] * weights[i][j]
+
+    # 奖励行单调性
+    for row in board:
+        if all(row[i] >= row[i+1] for i in range(len(row)-1)) or all(row[i] <= row[i+1] for i in range(len(row)-1)):
+            score += sum(row)
+    # 奖励列单调性
+    for col in zip(*board):
+        if all(col[i] >= col[i+1] for i in range(len(col)-1)) or all(col[i] <= col[i+1] for i in range(len(col)-1)):
+            score += sum(col)
+
+    return score
+
+def expectimax(board, depth, is_player):
+    if depth == 0 or not can_move(board):
+        return evaluate_board(board)
+    if is_player:
+        best = -float('inf')
+        # 玩家节点：尝试所有四个方向
+        for move_func in [move_up, move_down, move_left, move_right]:
+            new_board = move_func(board)
+            if boards_equal(board, new_board):
+                continue
+            value = expectimax(new_board, depth, False)
+            best = max(best, value)
+        return best if best != -float('inf') else evaluate_board(board)
+    else:
+        # 概率节点：模拟在所有空格上随机出现 2 或 4
+        empty = [(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE) if board[i][j] == 0]
+        if not empty:
+            return evaluate_board(board)
+        total = 0.0
+        for (i, j) in empty:
+            for tile, prob in [(2, 0.9), (4, 0.1)]:
+                new_board = copy.deepcopy(board)
+                new_board[i][j] = tile
+                total += prob * expectimax(new_board, depth - 1, True)
+        return total / len(empty)
+
+def choose_best_move(board):
+    moves = {
+        'w': move_up,
+        'a': move_left,
+        's': move_down,
+        'd': move_right
+    }
+    best_move = None
+    best_score = -float('inf')
+    best_new_board = None
+    for move, func in moves.items():
+        new_board = func(board)
+        if boards_equal(board, new_board):
+            continue
+        # 此处使用多层期望搜索，后续节点为概率节点
+        score = expectimax(new_board, SEARCH_DEPTH, False)
+        if score > best_score:
+            best_score = score
+            best_move = move
+            best_new_board = new_board
+    return best_move, best_new_board
+
+def main():
+    board = init_board()
+    has_printed_win = False
+    print_board(board)
+    while True:
+        if not can_move(board):
+            print("游戏结束，无法移动！")
+            break
+
+        move, new_board = choose_best_move(board)
+        if move is None:
+            print("没有有效移动，游戏结束！")
+            break
+
+        print(f"自动移动：{move}")
+        board = new_board
+        add_random_tile(board)
+        print_board(board)
+
+        if reached_target(board) and not has_printed_win:
+            print("已达到 2048！继续自动移动以获得更高分数。")
+            has_printed_win = True
+
+        time.sleep(0.01)
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+**使用说明**
+
+1. 将上述代码保存为文件（例如 `auto_2048_expectimax.py`）。
+2. 在终端中运行命令 `chmod +x auto_2048_expectimax.py` 赋予执行权限。
+3. 运行 `./auto_2048_expectimax.py` 启动自动演示。
+
+此版本在玩家决策节点中采用了 3 层期望搜索，在概率节点上模拟所有可能的随机新增块，并结合改进的评估函数，以期延长游戏时间、尽量避免早期陷入死局。你可以根据需要调整 SEARCH_DEPTH、权重矩阵或延时参数（time.sleep）以获得更佳效果。
+
+
+
+
+
+
+
+### 6.auto_2048_optimized.py
+
+运行太慢了，能优化吗？并且能取得2048结果或者更高
+
+
+
+下面是经过优化后的版本，主要做了以下改进：
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20250219230024196.png" alt="image-20250219230024196" style="zoom:50%;" />
+
+
+
+• 用局部函数替换 copy.deepcopy，改用 [row[:] for row in board] 进行浅拷贝  
+• 增加了缓存（转置表）来保存 expectimax 计算结果，避免重复搜索，从而提升搜索速度  
+• 保持 SEARCH_DEPTH 为 3（可根据性能和效果调整）
+
+该版本<mark>在 4×4 棋盘上运行速度有较大提升，并能更智能地选择移动</mark>，从而有望达到 2048 甚至更高分数。
+
+```python
+#!/usr/bin/env python3
+import random
+import os
+import sys
+import time
+
+BOARD_SIZE = 4
+TARGET = 2048
+SEARCH_DEPTH = 3  # 搜索深度
+
+# 缓存 expectimax 计算结果
+cache = {}
+
+def board_to_key(board):
+    return tuple(tuple(row) for row in board)
+
+def init_board():
+    board = [[0] * BOARD_SIZE for _ in range(BOARD_SIZE)]
+    add_random_tile(board)
+    add_random_tile(board)
+    return board
+
+def add_random_tile(board):
+    empty = [(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE) if board[i][j] == 0]
+    if not empty:
+        return
+    i, j = random.choice(empty)
+    board[i][j] = 4 if random.random() < 0.1 else 2
+
+def print_board(board):
+    os.system('clear')
+    print("-" * (BOARD_SIZE * 7 + 1))
+    for row in board:
+        print("|", end="")
+        for num in row:
+            if num == 0:
+                print("      |", end="")
+            else:
+                print(f"{num:^6}|", end="")
+        print()
+        print("-" * (BOARD_SIZE * 7 + 1))
+
+def slide_and_merge(line):
+    new_line = [num for num in line if num != 0]
+    merged_line = []
+    skip = False
+    for i in range(len(new_line)):
+        if skip:
+            skip = False
+            continue
+        if i + 1 < len(new_line) and new_line[i] == new_line[i+1]:
+            merged_line.append(new_line[i] * 2)
+            skip = True
+        else:
+            merged_line.append(new_line[i])
+    merged_line += [0] * (BOARD_SIZE - len(merged_line))
+    return merged_line
+
+def move_left(board):
+    return [slide_and_merge(row) for row in board]
+
+def reverse(board):
+    return [list(reversed(row)) for row in board]
+
+def transpose(board):
+    return [list(row) for row in zip(*board)]
+
+def move_right(board):
+    return reverse(move_left(reverse(board)))
+
+def move_up(board):
+    return transpose(move_left(transpose(board)))
+
+def move_down(board):
+    return transpose(move_right(transpose(board)))
+
+def boards_equal(b1, b2):
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if b1[i][j] != b2[i][j]:
+                return False
+    return True
+
+def can_move(board):
+    for row in board:
+        if 0 in row:
+            return True
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if j + 1 < BOARD_SIZE and board[i][j] == board[i][j+1]:
+                return True
+            if i + 1 < BOARD_SIZE and board[i][j] == board[i+1][j]:
+                return True
+    return False
+
+def reached_target(board):
+    for row in board:
+        if any(num >= TARGET for num in row):
+            return True
+    return False
+
+def count_empty(board):
+    return sum(row.count(0) for row in board)
+
+def evaluate_board(board):
+    score = 0
+    # 奖励空格
+    empty = count_empty(board)
+    score += empty * 100
+
+    # 权重矩阵（蛇形布局），鼓励最大数字位于角落
+    weights = [
+        [65536, 32768, 16384, 8192],
+        [512,   1024,  2048,  4096],
+        [256,    512,  1024,  2048],
+        [128,    256,   512,  1024]
+    ]
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            score += board[i][j] * weights[i][j]
+
+    # 奖励行单调性
+    for row in board:
+        if all(row[i] >= row[i+1] for i in range(len(row)-1)) or all(row[i] <= row[i+1] for i in range(len(row)-1)):
+            score += sum(row)
+    # 奖励列单调性
+    for col in zip(*board):
+        if all(col[i] >= col[i+1] for i in range(len(col)-1)) or all(col[i] <= col[i+1] for i in range(len(col)-1)):
+            score += sum(col)
+    return score
+
+def expectimax(board, depth, is_player):
+    key = (board_to_key(board), depth, is_player)
+    if key in cache:
+        return cache[key]
+    if depth == 0 or not can_move(board):
+        val = evaluate_board(board)
+        cache[key] = val
+        return val
+    if is_player:
+        best = -float('inf')
+        for move_func in [move_up, move_down, move_left, move_right]:
+            new_board = move_func(board)
+            if boards_equal(board, new_board):
+                continue
+            val = expectimax(new_board, depth, False)
+            best = max(best, val)
+        result = best if best != -float('inf') else evaluate_board(board)
+    else:
+        empty = [(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE) if board[i][j] == 0]
+        if not empty:
+            result = evaluate_board(board)
+        else:
+            total = 0.0
+            for (i, j) in empty:
+                for tile, prob in [(2, 0.9), (4, 0.1)]:
+                    board_copy = [row[:] for row in board]
+                    board_copy[i][j] = tile
+                    total += prob * expectimax(board_copy, depth - 1, True)
+            result = total / len(empty)
+    cache[key] = result
+    return result
+
+def choose_best_move(board):
+    moves = {
+        'w': move_up,
+        'a': move_left,
+        's': move_down,
+        'd': move_right
+    }
+    best_move = None
+    best_score = -float('inf')
+    best_new_board = None
+    for move, func in moves.items():
+        new_board = func(board)
+        if boards_equal(board, new_board):
+            continue
+        score = expectimax(new_board, SEARCH_DEPTH, False)
+        if score > best_score:
+            best_score = score
+            best_move = move
+            best_new_board = new_board
+    return best_move, best_new_board
+
+def main():
+    board = init_board()
+    has_printed_win = False
+    print_board(board)
+    while True:
+        if not can_move(board):
+            print("游戏结束，无法移动！")
+            break
+
+        move, new_board = choose_best_move(board)
+        if move is None:
+            print("没有有效移动，游戏结束！")
+            break
+
+        print(f"自动移动：{move}")
+        board = new_board
+        add_random_tile(board)
+        print_board(board)
+
+        if reached_target(board) and not has_printed_win:
+            print("已达到 2048！继续自动移动以获得更高分数。")
+            has_printed_win = True
+
+        time.sleep(0.01)
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+使用说明
+
+1. 将上述代码保存为文件（例如 `auto_2048_optimized.py`）。  
+2. 在终端中运行 `chmod +x auto_2048_optimized.py` 赋予执行权限。  
+3. 运行 `./auto_2048_optimized.py` 启动自动演示。
+
+通过缓存和改进的拷贝方式，此版本在保证一定搜索深度的前提下速度有明显提升。希望这版能够更稳定地达到 2048 或更高分数，同时运行速度更快。
+
+
+
+
+
+### 7. auto_2048_optimized4.py
+
+并不能总是得到大于等于2048，还有优化方法吗?
+
+
+
+✅ **修正点解析：**
+
+1. LRU缓存机制：
+   - 用 `functools.lru_cache` 替代手动维护的字典缓存。
+   - 设定了最大缓存大小 `MAX_CACHE_SIZE`，控制缓存不会无限增长，避免内存无限膨胀导致的 Out of memory 问题。
+2. 哈希键和反序列化：
+   - `board_to_key()` 将棋盘转为不可变的 `tuple` 格式用于哈希。
+   - `key_to_board()` 则反序列化，用于从缓存提取结果后恢复棋盘状态。
+
+> 💡 **额外优化建议：**
+>
+> 1. 动态调整缓存大小：
+>
+>    可以基于机器的可用内存动态调整`MAX_CACHE_SIZE`：
+>
+>    ```python
+>    import psutil
+>    
+>    mem = psutil.virtual_memory()
+>    MAX_CACHE_SIZE = min(100000, mem.available // (1024 * 1024 * 10))  # 10MB per cache entry
+>    ```
+>
+> 2. 监控缓存命中率：
+>
+>    如果想要调试缓存效果，可以加入缓存命中率监控：
+>
+>    ```python
+>    print(f"Cache info: {expectimax_cached.cache_info()}")
+>    ```
+>
+>
+>    ```
+> Cache info: CacheInfo(hits=2732535, misses=5037289, maxsize=40960000, currsize=5037284)
+> Cache info: CacheInfo(hits=2732535, misses=5037290, maxsize=40960000, currsize=5037285)
+> Cache info: CacheInfo(hits=2732535, misses=5037291, maxsize=40960000, currsize=5037286)
+> Cache info: CacheInfo(hits=2732535, misses=5037292, maxsize=40960000, currsize=5037287)
+> Cache info: CacheInfo(hits=2732535, misses=5037293, maxsize=40960000, currsize=5037288)
+> Cache info: CacheInfo(hits=2732535, misses=5037294, maxsize=40960000, currsize=5037289)
+> Cache info: CacheInfo(hits=2732535, misses=5037295, maxsize=40960000, currsize=5037291)
+> Cache info: CacheInfo(hits=2732535, misses=5037296, maxsize=40960000, currsize=5037291)
+> Cache info: CacheInfo(hits=2732535, misses=5037297, maxsize=40960000, currsize=5037292)
+> Cache info: CacheInfo(hits=2732535, misses=5037298, maxsize=40960000, currsize=5037293)
+> Cache info: CacheInfo(hits=2732535, misses=5037299, maxsize=40960000, currsize=5037294)
+> Cache info: CacheInfo(hits=2732535, misses=5037300, maxsize=40960000, currsize=5037295)
+> Cache info: CacheInfo(hits=2732535, misses=5037301, maxsize=40960000, currsize=5037296)
+> Cache info: CacheInfo(hits=2732535, misses=5037302, maxsize=40960000, currsize=5037297)
+> Cache info: CacheInfo(hits=2732535, misses=5037303, maxsize=40960000, currsize=5037298)
+> Cache info: CacheInfo(hits=2732535, misses=5037304, maxsize=40960000, currsize=5037299)
+>    ```
+>
+> 
+
+
+
+`auto_2048_optimized.py`代码实现了**Expectimax** 搜索，并使用了 **启发式评估函数** 进行决策。然而，**2048 不能保证每次都成功达成**，主要受以下几个因素影响：
+
+1. **搜索深度不够（SEARCH_DEPTH = 3）**
+   - 搜索深度越深，决策越准确，但计算量也随之增长。
+   - 目前 `SEARCH_DEPTH = 3`，可能不足以找到最佳策略，导致游戏中期无法维持局势。
+2. **启发式函数改进空间**
+   - 现有 **权重矩阵** (snake pattern) 过于固定，可能无法适应不同局势。
+   - 需要额外考虑“平滑度 (smoothness)” 和“空格数 (emptiness)”，防止早期失控。
+3. **未使用 **Pruning（剪枝）
+   - 目前代码会尝试所有可能情况，而一些显然较差的决策应该提前剪枝，以提高搜索效率，允许更深的搜索深度。
+
+
+
+**优化方案**
+
+以下改进可以显著提高胜率，使模型更稳定地达到 2048，甚至 4096：
+
+**1️⃣ 提高搜索深度**
+
+- 增加搜索深度 `SEARCH_DEPTH = 5` 或 `SEARCH_DEPTH = 6`
+- **动态搜索深度**（前期较浅，后期较深）
+
+```
+python
+
+
+CopyEdit
+def get_dynamic_depth(board):
+    """根据局势动态调整搜索深度"""
+    empty_cells = count_empty(board)
+    if empty_cells >= 6:
+        return 3
+    elif empty_cells >= 3:
+        return 4
+    else:
+        return 5  # 终局时加深搜索深度
+```
+
+修改 `choose_best_move` 调用：
+
+```
+python
+
+
+CopyEdit
+score = expectimax(new_board, get_dynamic_depth(board), False)
+```
+
+------
+
+**2️⃣ 改进启发式函数**
+
+**✅ 增加 "平滑度" (smoothness)**
+
+- <mark>保持相邻数字的大小尽量接近，避免大数被困住</mark>
+- 计算相邻格子的 **差值总和**，越小越好
+
+```
+python
+
+
+CopyEdit
+def calculate_smoothness(board):
+    smoothness = 0
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE - 1):
+            smoothness -= abs(board[i][j] - board[i][j+1])  # 行
+            smoothness -= abs(board[j][i] - board[j+1][i])  # 列
+    return smoothness
+```
+
+**✅ 增加 "单调性" (monotonicity)**
+
+- <mark>检查是否从左到右递减，从上到下递减</mark>
+
+```
+python
+
+
+CopyEdit
+def calculate_monotonicity(board):
+    mono_rows = sum(board[i][j] >= board[i][j+1] for i in range(BOARD_SIZE) for j in range(BOARD_SIZE - 1))
+    mono_cols = sum(board[j][i] >= board[j+1][i] for i in range(BOARD_SIZE) for j in range(BOARD_SIZE - 1))
+    return mono_rows + mono_cols
+```
+
+**改进 `evaluate_board`：**
+
+```python
+def evaluate_board(board):
+    empty = count_empty(board)
+    smoothness = calculate_smoothness(board)
+    monotonicity = calculate_monotonicity(board)
+
+    weights = [
+        [65536, 32768, 16384, 8192],
+        [512,   1024,  2048,  4096],
+        [256,    512,  1024,  2048],
+        [128,    256,   512,  1024]
+    ]
+    weight_score = sum(board[i][j] * weights[i][j] for i in range(BOARD_SIZE) for j in range(BOARD_SIZE))
+
+    return weight_score + empty * 500 + smoothness * 5 + monotonicity * 100
+```
+
+------
+
+
+
+完整代码 `auto_2048_optimized4.py`
+
+```python
+#!/usr/bin/env python3
+import random
+import os
+import time
+from functools import lru_cache
+
+BOARD_SIZE = 4
+TARGET = 2048
+
+# 设置最大缓存大小，防止无限占用内存
+MAX_CACHE_SIZE = 10000*4096
+
+def board_to_key(board):
+    """将棋盘转化为不可变哈希键"""
+    return tuple(tuple(row) for row in board)
+
+def key_to_board(key):
+    """将哈希键转回棋盘"""
+    return [list(row) for row in key]
+
+@lru_cache(maxsize=MAX_CACHE_SIZE)
+def expectimax_cached(board_key, depth, is_player):
+    board = key_to_board(board_key)
+    #print(f"Cache info: {expectimax_cached.cache_info()}")
+    return expectimax(board, depth, is_player)
+
+def init_board():
+    board = [[0] * BOARD_SIZE for _ in range(BOARD_SIZE)]
+    add_random_tile(board)
+    add_random_tile(board)
+    return board
+
+def add_random_tile(board):
+    empty = [(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE) if board[i][j] == 0]
+    if not empty:
+        return
+    i, j = random.choice(empty)
+    board[i][j] = 4 if random.random() < 0.1 else 2
+
+def print_board(board):
+    # 使用 ANSI 转义码清屏，避免依赖外部命令
+    print('\033[H\033[J', end='')
+    print("-" * (BOARD_SIZE * 7 + 1))
+    for row in board:
+        print("|", end="")
+        for num in row:
+            if num == 0:
+                print("      |", end="")
+            else:
+                print(f"{num:^6}|", end="")
+        print()
+        print("-" * (BOARD_SIZE * 7 + 1))
+
+def slide_and_merge(line):
+    new_line = [num for num in line if num != 0]
+    merged_line = []
+    skip = False
+    for i in range(len(new_line)):
+        if skip:
+            skip = False
+            continue
+        if i + 1 < len(new_line) and new_line[i] == new_line[i+1]:
+            merged_line.append(new_line[i] * 2)
+            skip = True
+        else:
+            merged_line.append(new_line[i])
+    merged_line += [0] * (BOARD_SIZE - len(merged_line))
+    return merged_line
+
+def move_left(board):
+    return [slide_and_merge(row) for row in board]
+
+def reverse(board):
+    return [list(reversed(row)) for row in board]
+
+def transpose(board):
+    return [list(row) for row in zip(*board)]
+
+def move_right(board):
+    return reverse(move_left(reverse(board)))
+
+def move_up(board):
+    return transpose(move_left(transpose(board)))
+
+def move_down(board):
+    return transpose(move_right(transpose(board)))
+
+def boards_equal(b1, b2):
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if b1[i][j] != b2[i][j]:
+                return False
+    return True
+
+def can_move(board):
+    for row in board:
+        if 0 in row:
+            return True
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if j + 1 < BOARD_SIZE and board[i][j] == board[i][j+1]:
+                return True
+            if i + 1 < BOARD_SIZE and board[i][j] == board[i+1][j]:
+                return True
+    return False
+
+def reached_target(board):
+    for row in board:
+        if any(num >= TARGET for num in row):
+            return True
+    return False
+
+def count_empty(board):
+    return sum(row.count(0) for row in board)
+
+def calculate_smoothness(board):
+    """计算平滑度：相邻单元格差值的总和（差值越小越好）"""
+    smooth = 0
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE - 1):
+            smooth -= abs(board[i][j] - board[i][j+1])
+    for j in range(BOARD_SIZE):
+        for i in range(BOARD_SIZE - 1):
+            smooth -= abs(board[i][j] - board[i+1][j])
+    return smooth
+
+def calculate_monotonicity(board):
+    """计算单调性：如果行或列单调性好则奖励"""
+    mono_rows = 0
+    mono_cols = 0
+    for row in board:
+        if all(row[i] >= row[i+1] for i in range(BOARD_SIZE - 1)) or all(row[i] <= row[i+1] for i in range(BOARD_SIZE - 1)):
+            mono_rows += 1
+    for col in zip(*board):
+        if all(col[i] >= col[i+1] for i in range(BOARD_SIZE - 1)) or all(col[i] <= col[i+1] for i in range(BOARD_SIZE - 1)):
+            mono_cols += 1
+    return mono_rows + mono_cols
+
+def evaluate_board(board):
+    empty = count_empty(board)
+    smoothness = calculate_smoothness(board)
+    monotonicity = calculate_monotonicity(board)
+    # 原始权重矩阵（蛇形布局），鼓励大数集中在角落
+    weights = [
+        [65536, 32768, 16384, 8192],
+        [512,   1024,  2048,  4096],
+        [256,    512,  1024,  2048],
+        [128,    256,   512,  1024]
+    ]
+    weight_score = sum(board[i][j] * weights[i][j] for i in range(BOARD_SIZE) for j in range(BOARD_SIZE))
+    # 增加空格、平滑度和单调性的奖励
+    return weight_score + empty * 500 + smoothness * 5 + monotonicity * 100
+
+def expectimax(board, depth, is_player):
+    if depth == 0 or not can_move(board):
+        return evaluate_board(board)
+    if is_player:
+        best = -float('inf')
+        for move_func in [move_up, move_down, move_left, move_right]:
+            new_board = move_func(board)
+            if boards_equal(board, new_board):
+                continue
+            val = expectimax_cached(board_to_key(new_board), depth - 1, False)
+            best = max(best, val)
+        return best if best != -float('inf') else evaluate_board(board)
+    else:
+        empty = [(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE) if board[i][j] == 0]
+        if not empty:
+            return evaluate_board(board)
+        total = 0.0
+        for (i, j) in empty:
+            for tile, prob in [(2, 0.9), (4, 0.1)]:
+                board_copy = [row[:] for row in board]
+                board_copy[i][j] = tile
+                total += prob * expectimax_cached(board_to_key(board_copy), depth - 1, True)
+        return total / len(empty)
+
+def get_dynamic_depth(board):
+    """根据当前空格数量动态调整搜索深度：空格越少搜索深度越深"""
+    empty_cells = count_empty(board)
+    if empty_cells >= 6:
+        return 4
+    elif empty_cells >= 3:
+        return 5
+    else:
+        return 6
+
+def choose_best_move(board):
+    moves = {
+        'w': move_up,
+        'a': move_left,
+        's': move_down,
+        'd': move_right
+    }
+    best_move = None
+    best_score = -float('inf')
+    best_new_board = None
+    depth = get_dynamic_depth(board)
+    for move, func in moves.items():
+        new_board = func(board)
+        if boards_equal(board, new_board):
+            continue
+        score = expectimax(new_board, depth, False)
+        if score > best_score:
+            best_score = score
+            best_move = move
+            best_new_board = new_board
+    return best_move, best_new_board
+
+def main():
+    board = init_board()
+    has_printed_win = False
+    print_board(board)
+    while True:
+        if not can_move(board):
+            print("游戏结束，无法移动！")
+            break
+        move, new_board = choose_best_move(board)
+        if move is None:
+            print("没有有效移动，游戏结束！")
+            break
+        print(f"自动移动：{move}")
+        board = new_board
+        add_random_tile(board)
+        print_board(board)
+        if reached_target(board) and not has_printed_win:
+            print("已达到 2048！继续自动移动以获得更高分数。")
+            has_printed_win = True
+        time.sleep(0.0001)
+
+if __name__ == "__main__":
+    main()
+
+
+```
+
+Q. `print('\033[H\033[J', end='')` 是什么意思？
+
+这是一个在Python中使用的ANSI转义序列，用于控制终端（命令行界面）中的光标位置和清除屏幕内容
+
+`\033` 是八进制表示的ESC (Escape) 字符的ASCII码，用于表示转义序列的开始。
+`[` 是左方括号，与ESC字符一起组成转义序列的开始。
+`H` 表示将光标移动到行首（home position）。
+`J` 表示清除从光标位置到屏幕末尾的内容。
+
+因此，`\033[H\033[J` 的意思是：将光标移动到终端的左上角（行首），然后清除从光标所在位置到屏幕末尾的所有内容。在Python字符串中，`end=''` 参数表示在打印结束后不要换行。
+
+**结论**
+
+- 2048 游戏**本质上是概率问题**，但通过 **更好的启发式评分 +  动态搜索深度**，胜率可以大幅提升。
+- 经过优化，通常能稳定达到 2048 或 4096。
+
+
+
+
+
+### 8. auto_2048_expectimax_ab.py
+
+**Alpha-Beta剪枝剪枝的基本原理**
+
+Alpha-Beta剪枝是一种用于减少搜索空间的技术，主要应用于Minimax算法及其变种（如Expectimax）。其核心思想是通过维护两个值：
+
+- **Alpha（α）**: 当前路径上Max节点的最佳选择（即最小化对手得分的最大值）。
+- **Beta（β）**: 当前路径上Min节点的最佳选择（即最大化玩家得分的最小值）。
+
+当某个节点的值不可能影响最终决策时，可以提前剪去该节点及其子树，从而减少计算量。
+
+**说明：**
+
+- **仅在玩家（max）节点使用 alpha‑beta 剪枝**  
+  在 chance（非玩家）节点，由于期望值计算的性质，不再使用 beta 更新和剪枝。这样可以避免过早剪枝导致决策失误。
+
+- 其它部分保持原有改进（动态搜索深度、改进评估函数、LRU 缓存等）。
+
+完整代码 `auto_2048_expectimax_ab.py`
+
+```python
+#!/usr/bin/env python3
+import random
+import os
+import time
+from functools import lru_cache
+
+BOARD_SIZE = 4
+TARGET = 2048
+MAX_CACHE_SIZE = 10000
+
+def board_to_key(board):
+    """将棋盘转化为不可变的哈希键"""
+    return tuple(tuple(row) for row in board)
+
+def key_to_board(key):
+    """将哈希键转回棋盘"""
+    return [list(row) for row in key]
+
+@lru_cache(maxsize=MAX_CACHE_SIZE)
+def expectimax_ab(board_key, depth, is_player, alpha, beta):
+    """
+    使用 alpha-beta 剪枝的 Expectimax 搜索。
+    注意：仅在玩家（max）节点使用剪枝，
+    在 chance 节点不做剪枝，直接计算期望值。
+    """
+    board = key_to_board(board_key)
+    if depth == 0 or not can_move(board):
+        return evaluate_board(board)
+    
+    if is_player:
+        best = -float('inf')
+        a = alpha
+        for move_func in [move_up, move_down, move_left, move_right]:
+            new_board = move_func(board)
+            if boards_equal(board, new_board):
+                continue
+            val = expectimax_ab(board_to_key(new_board), depth - 1, False, a, beta)
+            best = max(best, val)
+            a = max(a, best)
+            if a >= beta:
+                break  # 剪枝：当前分支已经足够好
+        return best
+    else:
+        # 在 chance 节点直接计算所有可能情况的期望值，不进行剪枝
+        empty = [(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE) if board[i][j] == 0]
+        if not empty:
+            return evaluate_board(board)
+        total = 0.0
+        for (i, j) in empty:
+            for tile, prob in [(2, 0.9), (4, 0.1)]:
+                board_copy = [row[:] for row in board]
+                board_copy[i][j] = tile
+                val = expectimax_ab(board_to_key(board_copy), depth - 1, True, alpha, beta)
+                total += prob * val
+        return total / len(empty)
+
+def init_board():
+    board = [[0] * BOARD_SIZE for _ in range(BOARD_SIZE)]
+    add_random_tile(board)
+    add_random_tile(board)
+    return board
+
+def add_random_tile(board):
+    empty = [(i, j) for i in range(BOARD_SIZE) for j in range(BOARD_SIZE) if board[i][j] == 0]
+    if not empty:
+        return
+    i, j = random.choice(empty)
+    board[i][j] = 4 if random.random() < 0.1 else 2
+
+def print_board(board):
+    # 使用 ANSI 转义码清屏
+    print('\033[H\033[J', end='')
+    print("-" * (BOARD_SIZE * 7 + 1))
+    for row in board:
+        print("|", end="")
+        for num in row:
+            if num == 0:
+                print("      |", end="")
+            else:
+                print(f"{num:^6}|", end="")
+        print()
+        print("-" * (BOARD_SIZE * 7 + 1))
+
+def slide_and_merge(line):
+    new_line = [num for num in line if num != 0]
+    merged_line = []
+    skip = False
+    for i in range(len(new_line)):
+        if skip:
+            skip = False
+            continue
+        if i + 1 < len(new_line) and new_line[i] == new_line[i+1]:
+            merged_line.append(new_line[i] * 2)
+            skip = True
+        else:
+            merged_line.append(new_line[i])
+    merged_line += [0] * (BOARD_SIZE - len(merged_line))
+    return merged_line
+
+def move_left(board):
+    return [slide_and_merge(row) for row in board]
+
+def reverse(board):
+    return [list(reversed(row)) for row in board]
+
+def transpose(board):
+    return [list(row) for row in zip(*board)]
+
+def move_right(board):
+    return reverse(move_left(reverse(board)))
+
+def move_up(board):
+    return transpose(move_left(transpose(board)))
+
+def move_down(board):
+    return transpose(move_right(transpose(board)))
+
+def boards_equal(b1, b2):
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if b1[i][j] != b2[i][j]:
+                return False
+    return True
+
+def can_move(board):
+    for row in board:
+        if 0 in row:
+            return True
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE):
+            if j + 1 < BOARD_SIZE and board[i][j] == board[i][j+1]:
+                return True
+            if i + 1 < BOARD_SIZE and board[i][j] == board[i+1][j]:
+                return True
+    return False
+
+def reached_target(board):
+    for row in board:
+        if any(num >= TARGET for num in row):
+            return True
+    return False
+
+def count_empty(board):
+    return sum(row.count(0) for row in board)
+
+def calculate_smoothness(board):
+    """计算平滑度：相邻单元格差值的总和（差值越小越好）"""
+    smooth = 0
+    for i in range(BOARD_SIZE):
+        for j in range(BOARD_SIZE - 1):
+            smooth -= abs(board[i][j] - board[i][j+1])
+    for j in range(BOARD_SIZE):
+        for i in range(BOARD_SIZE - 1):
+            smooth -= abs(board[i][j] - board[i+1][j])
+    return smooth
+
+def calculate_monotonicity(board):
+    """计算单调性：如果行或列单调性好则奖励"""
+    mono_rows = 0
+    mono_cols = 0
+    for row in board:
+        if all(row[i] >= row[i+1] for i in range(BOARD_SIZE-1)) or all(row[i] <= row[i+1] for i in range(BOARD_SIZE-1)):
+            mono_rows += 1
+    for col in zip(*board):
+        if all(col[i] >= col[i+1] for i in range(BOARD_SIZE-1)) or all(col[i] <= col[i+1] for i in range(BOARD_SIZE-1)):
+            mono_cols += 1
+    return mono_rows + mono_cols
+
+def evaluate_board(board):
+    empty = count_empty(board)
+    smoothness = calculate_smoothness(board)
+    monotonicity = calculate_monotonicity(board)
+    # 权重矩阵（蛇形布局），鼓励大数集中在角落
+    weights = [
+        [65536, 32768, 16384, 8192],
+        [512,   1024,  2048,  4096],
+        [256,    512,  1024,  2048],
+        [128,    256,   512,  1024]
+    ]
+    weight_score = sum(board[i][j] * weights[i][j] for i in range(BOARD_SIZE) for j in range(BOARD_SIZE))
+    return weight_score + empty * 500 + smoothness * 5 + monotonicity * 100
+
+def get_dynamic_depth(board):
+    """根据当前空格数量动态调整搜索深度：空格越少，局势越紧张，搜索深度加深"""
+    empty_cells = count_empty(board)
+    if empty_cells >= 6:
+        return 4
+    elif empty_cells >= 3:
+        return 5
+    else:
+        return 6
+
+def choose_best_move(board):
+    moves = {
+        'w': move_up,
+        'a': move_left,
+        's': move_down,
+        'd': move_right
+    }
+    best_move = None
+    best_score = -float('inf')
+    best_new_board = None
+    depth = get_dynamic_depth(board)
+    for move, func in moves.items():
+        new_board = func(board)
+        if boards_equal(board, new_board):
+            continue
+        score = expectimax_ab(board_to_key(new_board), depth, False, -float('inf'), float('inf'))
+        if score > best_score:
+            best_score = score
+            best_move = move
+            best_new_board = new_board
+    return best_move, best_new_board
+
+def main():
+    board = init_board()
+    has_printed_win = False
+    print_board(board)
+    while True:
+        if not can_move(board):
+            print("游戏结束，无法移动！")
+            break
+        move, new_board = choose_best_move(board)
+        if move is None:
+            print("没有有效移动，游戏结束！")
+            break
+        print(f"自动移动：{move}")
+        board = new_board
+        add_random_tile(board)
+        print_board(board)
+        if reached_target(board) and not has_printed_win:
+            print("已达到 2048！继续自动移动以获得更高分数。")
+            has_printed_win = True
+        time.sleep(0.0001)
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+说明
+
+1. **剪枝修正：**  
+   - 在玩家节点中更新 alpha 并进行剪枝；  
+   - 在 chance 节点中不更新 beta，也不进行剪枝，而是计算所有可能结果的平均值。
+
+2. **动态搜索深度：**  
+   - 根据空格数返回搜索深度 4、5 或 6。
+
+3. **其它优化：**  
+   - 评估函数结合了权重矩阵、空格奖励、平滑度和单调性。  
+   - 使用 LRU 缓存防止内存无限增长。
+
+
+
+效果一样，C8运行时间应该更短。
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20250227232724861.png" alt="image-20250227232724861" style="zoom:50%;" />
+
+
+
+
+
+### Q. vi 里面如何拷贝整个文件?
+
+在Vi或Vim编辑器中，拷贝整个文件的内容可以通过以下步骤实现：
+
+#### 方法一：使用Vim命令
+
+1. 打开你的文件：
+
+   ```bash
+   vim yourfile.txt
+   ```
+
+2. 进入命令模式（按 `Esc` 键确保你在命令模式下）。
+
+3. 输入以下命令以选中整个文件的文本：
+
+   ```
+   ggVG
+   ```
+
+   - `gg` 将光标移动到文件的第一行。
+   - `V` 进入可视行选择模式。
+   - `G` 选择从当前行到文件末尾的所有行，组合起来就是全选整个文件。
+
+4. 复制选中的内容（在命令模式下）：
+
+   ```
+   y
+   ```
+
+   这里的 `y` 是 yank 的缩写，用于复制选中的文本。
+
+5. 现在，文件的所有内容已经被复制到了Vim的寄存器中。你可以通过打开另一个文件或者在同一文件中不同的位置粘贴这些内容：
+
+   - 打开新文件进行粘贴：
+
+     ```bash
+     :e newfile.txt
+     ```
+
+     在新文件中，进入插入模式前按 `p` 键粘贴内容。
+
+#### 方法二：直接使用系统剪贴板（如果支持）
+
+如果你的Vim版本支持与系统剪贴板交互，并且你正在使用图形界面版本的Vim（如gvim），可以直接将文件内容发送到系统剪贴板：
+
+1. 在正常模式下输入以下命令来选择并复制整个文件至系统剪贴板：
+
+   ```
+   :%y+
+   ```
+
+   这里的 `%` 表示整个文件范围，`y+` 表示将选中的内容复制到系统剪贴板。
+
+2. 然后你可以切换到其他应用程序中粘贴这个内容。
+
+请注意，对于方法二，需要确保你的Vim安装了对系统剪贴板的支持（通常需要`+clipboard`特性）。可以通过运行 `vim --version | grep clipboard` 来检查是否支持。如果输出中有 `+clipboard` 则表示支持，如果有 `-clipboard` 则不支持，这种情况下可能需要安装额外的包或使用另一种方法。
+
+
+
+### Q.Alpha-Beta剪枝的基本原理
+
+Alpha-Beta剪枝是一种用于博弈树搜索的优化技术，目的是减少评估节点的数量，从而提高Minimax算法的效率。它通过忽略那些不会影响最终决策的部分搜索树来实现这一点。下面是Alpha-Beta剪枝的基本原理的简要说明。
+
+#### 1. 核心概念
+
+不要死记硬背 Alpha 和 Beta，请这样理解：
+
+*   **Max（你）**：想要分数越高越好。
+*   **Min（对手）**：想要分数越低越好。
+*   **Alpha（$\alpha$）**：**你的底线**。意思是“我现在手里已经稳拿 X 分了，更烂的我不要”。
+*   **Beta（$\beta$）**：**对手的底线**（也是你的天花板）。意思是“对手已经能把分压到 Y 分了，如果我这边算出个比 Y 更高的分，对手绝不会让我走这条路”。
+
+#### 2. 树形图表示
+
+假设我们有这样一棵树。
+
+*   **第一层（Max）**：轮到你走。
+*   **第二层（Min）**：轮到对手走。
+*   **第三层（数字）**：最终的得分。
+
+我们按照**从左到右**的顺序计算。
+
+```text
+             [Max: 根节点]
+           /       |       \
+        (A)       (B)      (C)    <-- 对手(Min)层
+       /   \     /   \    /   \
+      3     5   2    ?   9    ?
+```
+
+#### 3. 剪枝过程详解（一步步看）
+
+**第一步：探索左边分支 (A)**
+
+1.  电脑先看左边。对手(Min)在 A 节点面临两个选择：3 和 5。
+2.  对手很聪明，肯定选小的。所以 **A 节点的价值是 3**。
+3.  **更新 Alpha（你的底线）**：这时候你（Max）知道了，走左边这一路，**最差也能得 3 分**。
+    *   当前 **$\alpha = 3$**。
+
+**第二步：探索中间分支 (B) —— 【剪枝发生时刻！】**
+
+1.  电脑开始计算 B 节点。
+2.  先看了 B 的第一个子节点：**是 2**。
+3.  **停！思考一下：**
+    *   对手(Min)在 B 节点，发现了一个 2。因为对手想要分越低越好，所以不管 B 后面那个问号（?）是多少（哪怕是 0 或 -100），对手在 B 这一路的选择**绝对不会超过 2**。
+    *   也就是：**B 节点的最终价值 $\le$ 2**。
+4.  **与你的底线对比**：
+    *   你（Max）手里已经握着左边的 **3分**（Alpha=3）。
+    *   而中间这条路（B），对手最仁慈也只会让你得 **2分**。
+5.  **结论**：你是个正常人，既然左边能得3分，你绝不会选只能得2分的中间这条路。
+6.  **剪枝**：B 节点后面剩下的那个问号（?），**根本不用算了！** 直接砍掉。
+
+**第三步：探索右边分支 (C)**
+
+1.  电脑开始计算 C 节点。
+2.  先看了 C 的第一个子节点：**是 9**。
+3.  **思考**：
+    *   对手(Min)在 C 节点看到 9。对手还在找有没有比 9 更小的数。
+    *   目前 C 的价值 $\le$ 9。
+4.  **与你的底线对比**：
+    *   你的底线 Alpha 是 3。
+    *   目前 C 这条路有可能给你 9 分（如果对手后面没别的招）。
+    *   $9 > 3$，这比你现在的底线好！所以**不能剪枝**，必须继续看 C 后面的问号（?），万一后面是个 1 呢？那对手肯定选 1，你就得不到 9 了。
+5.  所以 C 分支必须算完。
+
+
+
+#### 总结原理
+
+上面的过程翻译成“剪枝原理”就是：
+
+1.  **Alpha 剪枝（发生在 Min 节点，如 B）**：
+    *   当**对手(Min)** 发现这一步如果走下去，分数比 **你(Max)** 已经拥有的底线（Alpha）还要低。
+    *   **Max 心里话**：“这路太烂了，比我刚才找的路还烂，我不可能走这儿，别算了。” -> **剪掉！**
+
+2.  **Beta 剪枝（发生在 Max 节点，反过来）**：
+    *   当 **你(Max)** 发现这一步如果走下去，分数比 **对手(Min)** 已经设下的限制（Beta）还要高。
+    *   **Min 心里话**：“你想得美！刚才我已经找到让你只能得5分的办法，现在你想走这条得100分的路？我绝不会让你走到这个节点的。” -> **剪掉！**
+
+
+
+**记住一句话：**
+**剪枝就是因为“已经有一条更好的退路（对 Max 来说）”或者“对手已经抓住了你的把柄（对 Min 来说）”，导致当前的探索变得毫无意义。**
+
+通过这种方式，Alpha-Beta剪枝能够在不改变最终结果的情况下显著减少需要评估的节点数，特别是在理想情况下（比如对手的最佳移动总是最先被考察），它可以将搜索效率提高一倍。
+
+
+
+## 3.2 示例：使用预训练模型进行问答。
+
+以Hugging Face Transformer为例，下述 `first_qa.py`代码载入本地中文预训练模型进行问答推理：
 
 
 

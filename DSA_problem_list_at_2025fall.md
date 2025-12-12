@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-12-11 12:56 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-12-13 00:00 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,6 +19,7 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1214 |01088:滑雪 | dp      | Medium       | http://cs101.openjudge.cn/pctbook/M01088/ |
 | 1213 | 09202: 舰队、海域出击！   | topological order    | Medium    | http://cs101.openjudge.cn/practice/09202/      |
 | 1212 | 01258: Agri-Net   | prim    | Medium    | http://cs101.openjudge.cn/practice/01258/      |
 | 1211 | 01860: Currency Exchange| Bellman Ford   | Medium | http://cs101.openjudge.cn/practice/01860/      |

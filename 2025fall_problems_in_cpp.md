@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2025-11-24 10:32 GMT+8*
+*Updated 2025-12-13 13:40 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                  
+>                                                                                                                                     
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                  
+>                                                                                                                                     
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                  
+>                                                                                                                                     
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                  
+>                                                                                                                                     
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                  
+>                                                                                                                                     
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -423,6 +423,34 @@ int main()
     }
     else
         printf("N");
+}
+```
+
+
+
+## E02734:十进制到八进制 
+
+http://cs101.openjudge.cn/practice/02734
+
+思路：直接除8取余，个人感觉最快捷
+
+```c++
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    int a;
+    cin >> a;  
+    string octal;  
+    while (a > 0) {
+        int remainder = a % 8;  
+        octal = to_string(remainder) + octal; 
+        a = a / 8;  
+    }
+
+    cout << octal << endl;  
+    return 0;
 }
 ```
 
@@ -1095,7 +1123,11 @@ int main()
 
 
 
-## E19943
+## E19943:图的拉普拉斯矩阵
+
+http://cs101.openjudge.cn/practice/19943/
+
+
 
 ```cpp
 #include <iostream>
@@ -1483,6 +1515,8 @@ int main()
 }
 
 ```
+
+
 
 
 
@@ -2541,7 +2575,9 @@ int main()
 
 
 
-## M02692
+## M02692: 假币问题
+
+http://cs101.openjudge.cn/practice/02692
 
 ```cpp
 #include <iostream>
@@ -3284,7 +3320,9 @@ int main(){
 
 
 
-## M04100
+## M04100:进程检测
+
+http://cs101.openjudge.cn/practice/04100
 
 ```cpp
 #include <iostream>
@@ -4459,6 +4497,54 @@ int main(){
 
 
 
+## M21509:序列的中位数
+
+heap, http://cs101.openjudge.cn/practice/21509
+
+思路：大顶堆＋小顶堆
+
+```c++
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int num_count;  
+    cin >> num_count;
+    priority_queue<long long> lower_half;
+    priority_queue<long long, vector<long long>, greater<long long>> upper_half;
+    for (int i = 1; i <= num_count; ++i) {
+        long long current_num; 
+        cin >> current_num;
+        lower_half.push(current_num);
+        if (!upper_half.empty() && lower_half.top() > upper_half.top()) {
+            long long temp = lower_half.top();
+            lower_half.pop();
+            upper_half.push(temp);
+
+            temp = upper_half.top();
+            upper_half.pop();
+            lower_half.push(temp);
+        }
+        if (lower_half.size() > upper_half.size() + 1) {
+            upper_half.push(lower_half.top());
+            lower_half.pop();
+        } else if (upper_half.size() > lower_half.size()) {
+            lower_half.push(upper_half.top());
+            upper_half.pop();
+        }
+        if (i % 2 == 1) {
+            cout << lower_half.top() << endl;  
+        }
+    }
+
+    return 0;
+}
+```
+
 
 
 ## M21554: 排队做实验
@@ -5339,6 +5425,61 @@ int main()
     return 0;
 }
 
+```
+
+
+
+## M27306: 植物观察
+
+disjoint set, bfs, http://cs101.openjudge.cn/practice/27306/
+
+思路：典型二分图判断
+
+```c++
+#include <iostream>
+#include <vector>
+using namespace std;
+
+const int MAX_N = 105;  
+int parent[MAX_N];     
+int relation[MAX_N];    
+void init(int n) {
+    for (int i = 0; i < n; ++i) {
+        parent[i] = i;  
+        relation[i] = 0; 
+    }
+}
+int find(int x) {
+    if (parent[x] != x) {
+        int origin_parent = parent[x];
+        parent[x] = find(parent[x]); 
+        relation[x] ^= relation[origin_parent];
+    }
+    return parent[x];
+}
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+    init(n);
+    bool possible = true;  
+    for (int i = 0; i < m; ++i) {
+        int a, b, op;
+        cin >> a >> b >> op;
+        int root_a = find(a);
+        int root_b = find(b);
+        if (root_a == root_b) {
+            if ((relation[a] ^ relation[b]) != op) {
+                possible = false;
+            }
+        } else {
+            parent[root_b] = root_a;
+            relation[root_b] = relation[a] ^ relation[b] ^ op;
+        }
+    }
+    cout << (possible ? "YES" : "NO") << endl;
+    return 0;
+}
 ```
 
 
@@ -7122,44 +7263,71 @@ int main() {
 
 
 
+## T27351:01最小生成树 
 
+mst, http://cs101.openjudge.cn/practice/27351/
 
-## T29947: 校门外的树又来了
+思路：优先选权值为 0 的边，再用权值为 1 的边补全连通性
 
-http://cs101.openjudge.cn/practice/29947/
-
-
-
-```cpp
-#include<bits/stdc++.h>
+```c++
+#include <iostream>
+#include <vector>
+#include <unordered_set>
+#include <queue>
 using namespace std;
-#define pii pair<int,int>
-int L,n,r=-1,sum;
-pii d[105];
-bool cmp(pii &x,pii &y){
-    if(x.first==y.first)
-        return x.second>y.second;
-    return x.first<y.first;
-}
-int main(){
-    scanf("%d %d",&L,&n);
-    for(int i=1;i<=n;i++)
-        scanf("%d %d",&d[i].first,&d[i].second);
-    sort(d+1,d+1+n,cmp);
-    d[0].first=-1;
-    for(int i=1;i<=n;i++){
-        if(d[i].first==d[i-1].first || d[i].second<=r)
-            continue;
-        if(r>=d[i].first)
-            sum+=d[i].second-r;
-        else
-            sum+=d[i].second-d[i].first+1;
-        r=d[i].second;
+
+const int MAX_N = 200005;
+unordered_set<int> adj[MAX_N];  
+unordered_set<int> unvisited; 
+queue<int> q;             
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    int n, m;
+    cin >> n >> m;
+    for (int i = 1; i <= n; ++i) {
+        unvisited.insert(i);
     }
-    printf("%d",L+1-sum);
+    for (int i = 0; i < m; ++i) {
+        int a, b;
+        cin >> a >> b;
+        adj[a].insert(b);
+        adj[b].insert(a);
+    }
+    int component_count = 0;
+    for (int i = 1; i <= n; ++i) {
+        if (unvisited.count(i)) { 
+            component_count++;
+            q.push(i);
+            unvisited.erase(i); 
+            while (!q.empty()) {
+                int u = q.front();
+                q.pop();
+                vector<int> neighbors;
+                for (auto it = unvisited.begin(); it != unvisited.end();) {
+                    int v = *it;
+                    if (adj[u].count(v) == 0) {
+                        neighbors.push_back(v);
+                        it = unvisited.erase(it);  
+                    } else {
+                        it++;
+                    }
+                }
+                for (int v : neighbors) {
+                    q.push(v);
+                }
+            }
+        }
+    }
+    cout << component_count - 1 << endl;
+
     return 0;
 }
 ```
+
+
 
 
 
@@ -7306,6 +7474,43 @@ int main(){
 ```
 
 
+
+## T29947: 校门外的树又来了
+
+http://cs101.openjudge.cn/practice/29947/
+
+
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+#define pii pair<int,int>
+int L,n,r=-1,sum;
+pii d[105];
+bool cmp(pii &x,pii &y){
+    if(x.first==y.first)
+        return x.second>y.second;
+    return x.first<y.first;
+}
+int main(){
+    scanf("%d %d",&L,&n);
+    for(int i=1;i<=n;i++)
+        scanf("%d %d",&d[i].first,&d[i].second);
+    sort(d+1,d+1+n,cmp);
+    d[0].first=-1;
+    for(int i=1;i<=n;i++){
+        if(d[i].first==d[i-1].first || d[i].second<=r)
+            continue;
+        if(r>=d[i].first)
+            sum+=d[i].second-r;
+        else
+            sum+=d[i].second-d[i].first+1;
+        r=d[i].second;
+    }
+    printf("%d",L+1-sum);
+    return 0;
+}
+```
 
 
 
@@ -7968,7 +8173,9 @@ int main()
 
 
 
-## 1520D
+## 1520D. Same Differences
+
+Data structures, hashing, math, 1200, https://codeforces.com/problemset/problem/1520/D
 
 ```cpp
 #include <iostream>

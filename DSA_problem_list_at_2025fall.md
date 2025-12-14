@@ -26,7 +26,7 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 | 1211 | 01860: Currency Exchange| Bellman Ford   | Medium | http://cs101.openjudge.cn/practice/01860/      |
 | 1210 | 02802: 小游戏      | bfs similar, Dijkstra      | Tough |  http://cs101.openjudge.cn/practice/02802/        |
 | 1209 | 27384: 候选人追踪  | 懒更新   | Tough | http://cs101.openjudge.cn/practice/27384/         |
-| 1208 | 7206: 我是最快的马 | bfs      | Tough | http://cs101.openjudge.cn/pctbook/T07206/         |
+| 1208 | 542.01矩阵 | dp, bfs      | Medium | https://leetcode.cn/problems/01-matrix/         |
 | 1207 | 32.最长有效括号  | stack       | Tough | https://leetcode.cn/problems/longest-valid-parentheses/          |
 | 1206 | 2502: Subway   | dijkstra | Tough | http://cs101.openjudge.cn/practice/02502/          |
 | 1205 | 05442: 兔子与星空 | MST   | Medium    | http://cs101.openjudge.cn/practice/05442/      |
@@ -45,7 +45,7 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 | 1122 | 28749:Top2招生工作      | graph      | Tough | http://cs101.openjudge.cn/practice/28749/          |
 | 1121 | 28972:海拔      | bfs     | Tough | http://cs101.openjudge.cn/practice/28972          |
 | 1120 | 1843D. Apple Tree     | Combinatorics, dfs and similar, dp, math, trees     | 1200 | https://codeforces.com/problemset/problem/1843/D          |
-| 1119 | 07206: 我是最快的马      | bfs      | Tough | http://cs101.openjudge.cn/pctbook/T07206/          |
+| 1119 | 3561.移除相邻字符     | stack    | Medium    | https://leetcode.cn/problems/resulting-string-after-adjacent-removals/      |
 | 1118 | 208.实现Trie(前缀树)     | design, trie, hash table, string    | Medium    | https://leetcode.cn/problems/implement-trie-prefix-tree/      |
 | 1117 | 19943:图的拉普拉斯矩阵 | implementation,gragh,OOP    | E/Medium    | http://cs101.openjudge.cn/pctbook/E19943/      |
 |      |      | -    | -    | graph and all kinds of tags begin  |

@@ -1,6 +1,6 @@
 # Hash Table & KMP
 
-*Updated 2025-12-15 00:25 GMT+8*  
+*Updated 2025-12-15 18:16 GMT+8*  
 *Compiled by Hongfei Yan (2025 Spring)*    
 
 
@@ -1051,7 +1051,7 @@ Knuth-Morris-Pratt（KMP）算法是**一种用于在文本字符串中查找单
 
 - KMP algorithm preprocesses pat[] and constructs an auxiliary **lps[]** of size **m** (same as the size of the pattern) which is used to skip characters while matching.
 
-- Name **lps** indicates the <mark>longest proper prefix</mark> which is also a suffix. A proper prefix is a prefix with a whole string not allowed. For example, prefixes of “ABC” are “”, “A”, “AB” and “ABC”. Proper prefixes are “”, “A” and “AB”. Suffixes of the string are “”, “C”, “BC”, and “ABC”. 真前缀（proper prefix）是一个串除该串自身外的其他前缀。
+- Name **lps** indicates the <mark>longest proper prefix which is also a suffix</mark>. A proper prefix is a prefix with a whole string not allowed. For example, prefixes of “ABC” are “”, “A”, “AB” and “ABC”. Proper prefixes are “”, “A” and “AB”. Suffixes of the string are “”, “C”, “BC”, and “ABC”. <mark>真前缀（proper prefix）是一个串除该串自身外的其他前缀</mark>。
 
 - We search for lps in subpatterns. More clearly we ==focus on sub-strings of patterns that are both prefix and suffix==.
 
@@ -1064,7 +1064,7 @@ Knuth-Morris-Pratt（KMP）算法是**一种用于在文本字符串中查找单
 >   <mark>核心概念：最长前缀后缀（LPS 表）</mark>
 >
 >   - **LPS（Longest Prefix which is also Suffix）表**：对模式串 `pattern` 的每个前缀子串，记录它的“最长相等前后缀”的长度。
->   - 它的作用是：<mark>**当匹配失败时，指针无需回退主串的位置，只需调整模式串的位置即可继续匹配**</。
+>   - 它的作用是：<mark>当匹配失败时，指针无需回退主串的位置，只需调整模式串的位置即可继续匹配</mark>。
 
 **Note:** lps[i] could also be defined as the longest prefix which is also a proper suffix. We need to use it properly in one place to make sure that <mark>the whole substring is not considered</mark>.
 
@@ -1144,7 +1144,7 @@ print("pos matched：", index)
 KMP 是一种利用双指针和动态规划的字符串匹配算法。
 
 - **双指针**：确实存在，一个指针在主串 `text` 上（`i`），另一个在模式串 `pattern` 上（`j`）。
-- **动态规划**：广义上讲，LPS 的构造有递推性质，有人将其类比为动态规划的表构建过程（类似于状态转移），但它并不是真正的 DP 算法，只是一个预处理表。
+- **动态规划**：广义上讲，LPS 的构造有递推性质，有人将其类比为动态规划的表构建过程（类似于状态转移），但<mark>它并不是真正的 DP 算法，只是一个预处理表</mark>。
 
 ------
 

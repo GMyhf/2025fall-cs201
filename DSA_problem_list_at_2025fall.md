@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-12-14 20:30 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-12-15 14:20 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,7 +19,8 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
-| 1218 | 02431: Expedition      | heap       | Medium | http://cs101.openjudge.cn/practice/02431          |
+| 1219 | 1642.可以到达的最远建筑   | greedy, heap       | Medium | https://leetcode.cn/problems/furthest-building-you-can-reach/          |
+| 1218 | 02431: Expedition      | greedy, heap       | Medium | http://cs101.openjudge.cn/practice/02431          |
 | 1217 | 1202.交换字符串中的元素   | dsu      | Medium | https://leetcode.cn/problems/smallest-string-with-swaps/    |
 | 1216 | 30201:旅行售货商问题 | dp      | Tough | http://cs101.openjudge.cn/practice/30201/            |
 | 1215 | sy403: 先导课程      | topological order      | Medium | https://sunnywhy.com/sfbj/10/6/403          |

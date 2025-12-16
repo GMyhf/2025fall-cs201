@@ -19,6 +19,7 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1220 | 27205:护林员盖房子又来了  | monotonic stack    | Tough | http://cs101.openjudge.cn/pctbook/T27205/          |
 | 1219 | 1642.可以到达的最远建筑   | greedy, heap       | Medium | https://leetcode.cn/problems/furthest-building-you-can-reach/          |
 | 1218 | 02431: Expedition      | greedy, heap       | Medium | http://cs101.openjudge.cn/practice/02431          |
 | 1217 | 1202.交换字符串中的元素   | dsu      | Medium | https://leetcode.cn/problems/smallest-string-with-swaps/    |

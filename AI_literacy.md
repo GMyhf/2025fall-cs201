@@ -77,13 +77,13 @@ https://github.com/GMyhf/2025fall-cs201/blob/main/AI_literacy.md
 
 
 
-<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20230109211246988.png" alt="image-20230109211246988" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20230109211246988.png" alt="image-20230109211246988" style="zoom: 33%;" />
 
 <center>图 2048 游戏初始界面</center>
 
 
 
-![image-20230109211322682](https://raw.githubusercontent.com/GMyhf/img/main/img/image-20230109211322682.png)
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20230109211322682.png" alt="image-20230109211322682" style="zoom:33%;" />
 
 <center>图 一次向上滑动示意图，右图左下侧的2为系统生成的新方块</center>
 

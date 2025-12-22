@@ -1,5 +1,5 @@
 ## 2025fall 数算（DS Algo）每日选作
-*Updated 2025-12-22 00:33 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
+*Updated 2025-12-22 15:27 GMT+8*  *Compiled by Hongfei Yan (2025 Fall)*  
 https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.md
 
 题解在
@@ -19,6 +19,8 @@ https://github.com/GMyhf/2025fall-cs101/blob/main/ADS_problem_list_at_2025fall.m
 
 | 日期       | 问题编号与名称                 | 标签                                 | 难度 | 链接                                             |
 | ---------- | ------------------------------ | ------------------------------------ | ---- | ------------------------------------------------ |
+| 1225 | 1857.有向图中最大颜色值 | topological sort, dp | Tough  | https://leetcode.cn/problems/largest-color-value-in-a-directed-graph/   |
+| 1224 | 01094: Sorting It All Out     | topological sort    | Tough    | http://cs101.openjudge.cn/practice/01094/      |
 | 1223 | 22508:最小奖金方案 | topological sort    | Medium    | http://cs101.openjudge.cn/practice/22508/      |
 | 1222 | 03424: Candies    | Dijkstra    | Medium    | http://cs101.openjudge.cn/practice/03424/      |
 | 1221 | 30339:愉悦的假期      | bfs        | Tough | http://cs101.openjudge.cn/practice/30339/          |

@@ -1,6 +1,6 @@
 # 人工智能
 
-*Updated 2025-12-10 09:30 GMT+8*  
+*Updated 2025-12-27 00:42 GMT+8*  
 *Compiled by Hongfei Yan (2025 Summer)*    
 
 https://github.com/GMyhf/2025fall-cs201/blob/main/AI_literacy.md
@@ -7520,13 +7520,13 @@ Test Yourself on Build a Large Language Model
 
 无论你当前的知识水平如何，本指南都能以不同方式助你一臂之力：在阅读完某一章后使用它，可巩固所学内容；而在阅读前先浏览它，同样大有裨益——通过预先测试核心概念及其相互关系，你能更轻松地理解章节内容，并为吸收新知识做好准备。
 
-我们建议你在阅读前后都使用本指南，并在日后开始遗忘相关内容时再次回顾。重复学习有助于强化记忆，并将新知识与长期记忆中已有的相关知识有机整合。
+建议在阅读前后都使用本指南，并在日后开始遗忘相关内容时再次回顾。重复学习有助于强化记忆，并将新知识与长期记忆中已有的相关知识有机整合。
 
 
 
 ## 1 理解大语言模型
 
-第1章对大语言模型（LLM）进行了高层次的概述，探讨了其应用场景、构建阶段以及底层的Transformer架构。本章讨论了预训练（pretraining）和微调（fine-tuning）这两个开发高效LLM的关键步骤，并介绍了Transformer架构及其核心组件，包括编码器（encoder）和解码器（decoder）模块，以及自注意力（self-attention）机制。此外，本章还提出了一个从零开始构建LLM的实施计划，概述了三个主要阶段：数据准备与采样、注意力机制的实现，以及在无标签数据上进行预训练，从而获得一个基础模型，用于后续的微调。
+第1章对大语言模型（LLM）进行了高层次的概述，探讨了其应用场景、构建阶段以及底层的Transformer架构。本章讨论了预训练（pretraining）和微调（fine-tuning）这两个开发高效LLM的关键步骤，并介绍了Transformer架构及其核心组件，包括编码器（encoder）和解码器（decoder）模块，以及自注意力（self-attention）机制。此外，本章还提出了一个从零开始构建LLM的实施计划，概述了三个主要阶段：<mark>数据准备与采样、注意力机制的实现，以及在无标签数据上进行预训练</mark>，从而获得一个基础模型，用于后续的微调。
 
 <img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20251207202936020.png" alt="image-20251207202936020" style="zoom:33%;" />
 
@@ -7563,21 +7563,22 @@ Test Yourself on Build a Large Language Model
    **D. 通过在大规模、多样化的数据集上训练，使模型获得对语言的广泛理解。**
 
 **按章节小节划分的问题**
-接下来，我们将更详细地逐节回顾本章内容。
+接下来，将更详细地逐节回顾本章内容。
 
 ### 1.1 什么是大语言模型？
 
 1. 什么是大语言模型（LLM）？它是如何工作的？ 
 
-   
+   An LLM is a deep neural network trained on massive amounts of text data to understand, generate, and respond to human-like text. It uses a transformer architecture to pay attention to different parts of the input, making it adept at handling language nuances. LLMs are trained on the task of predicting the next word in a sequence, which allows them to
+   learn context, structure, and relationships within text.
 
 2. “大语言模型”中的“大”有何重要意义？
 
-   
+   The 'large' refers to both the model's size in terms of parameters (adjustable weights) and the immense dataset it's trained on. LLMs often have tens or hundreds of billions of parameters, which are optimized during training to predict the next word in a sequence.
 
 3. How do LLMs relate to generative AI?
 
-   
+   LLMs are often considered a form of generative AI because they can generate text. Generative AI is a broader term encompassing AI systems that create new content, such as text, images, or music.
 
 4. Label this diagram 
 
@@ -7585,7 +7586,7 @@ Test Yourself on Build a Large Language Model
 
 5. What is the difference between traditional machine learning and deep learning in terms of feature extraction?
 
-   
+   AI is the broader field of creating machines that can perform tasks requiring human-like intelligence. Machine learning is a subset of AI that focuses on algorithms that learn from data. Deep learning is a subset of machine learning that uses deep neural networks with multiple layers to model complex patterns in data
 
 6. Match the terms to its description on the right:
 
@@ -7604,6 +7605,22 @@ Fill the table with the column mappings:
 
 
 ### 1.2 大语言模型的应用
+
+1. What are some of the key applications of LLMs in various domains?
+
+LLMs are used in machine translation, text generation, sentiment analysis, text summarization, content creation, powering chatbots and virtual assistants, and knowledge retrieval from specialized areas like medicine and law.
+
+2. How do LLMs contribute to the development of chatbots and virtual assistants?
+
+LLMs enable chatbots and virtual assistants like ChatGPT and Gemini to understand and respond to user queries in a natural language, enhancing their ability to provide information and complete tasks.
+
+3. Explain the role of LLMs in knowledge retrieval from specialized fields.
+
+LLMs can analyze vast amounts of text in fields like medicine or law, summarizing lengthy passages, answering technical questions, and facilitating efficient knowledge retrieval.
+
+4. What is the potential impact of LLMs on our relationship with technology?
+
+LLMs have the potential to make technology more conversational, intuitive, and accessible by automating text-based tasks and enabling natural language interactions with AI systems.
 
 
 
@@ -7627,7 +7644,25 @@ Fill the table with the column mappings:
 
 ### 1.3 构建和使用大语言模型的各个阶段
 
+1. What are the main advantages of building custom LLMs compared to using general-purpose LLMs like ChatGPT?
 
+Custom LLMs offer advantages like improved performance for specific tasks or domains, enhanced data privacy by avoiding reliance on thirdparty providers, and the ability to deploy models locally on devices for reduced latency and costs.
+
+2. Describe the two-stage training process involved in creating an LLM.
+
+The process begins with pretraining, where the model learns a broad understanding of language from a large, diverse dataset. This pretrained model is then fine-tuned on a smaller, more specific dataset to adapt it to particular tasks or domains.
+
+3. What is the purpose of pretraining an LLM, and what type of data is used in this stage?
+
+Pretraining aims to develop a foundational model with a general understanding of language. It uses large amounts of unlabeled text data, often referred to as 'raw' text, to train the model to predict the next word in a sequence.
+
+4. Explain the concept of self-supervised learning in the context of pretraining LLMs.
+
+Self-supervised learning allows LLMs to generate their own labels from the input data during pretraining. This eliminates the need for manually labeled data, which is a common requirement in traditional supervised learning.
+
+5. What are the two main categories of fine-tuning LLMs, and how do they differ in terms of the labeled data used?
+
+Instruction fine-tuning uses labeled data consisting of instruction-answer pairs, while classification fine-tuning uses labeled data with texts and associated class labels.
 
 6. Match the terms to its description on the right:
 
@@ -7645,15 +7680,69 @@ Fill the table with the column mappings:
 
 
 
-1.4 Transformer架构介绍
+### 1.4 Transformer架构介绍
+
+1. What is the transformer architecture and what is its significance in the development of LLMs?
+
+The transformer architecture is a deep neural network architecture that revolutionized natural language processing. It's the foundation for most modern LLMs, enabling them to process and understand language effectively.
+
+
+
+2. Which label in the diagram does the output of the Embeddings stage go to?
+
+The output of the Embeddings stage goes to the Decoder, label 2.
+
+大部分的现代大语言模型基于Transformer架构，这是一种深度神经网络架构，该架构是在谷歌于2017年发表的论文“Attention Is All You Need”中首次提出的。为了理解大语言模型，我们需要简单回顾一下最初的Transformer。Transformer最初是为机器翻译任务（比如将英文翻译成德语和法语）开发的。Transformer架构的一个简化版本如图1-4所示。
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/202512262332497.png" alt="image-20251226233223052" style="zoom: 33%;" />
+
+图1-4　原始Transformer架构的简化描述，这是一种用于机器翻译的深度学习模型。Transformer由两部分组成：一个是编码器，用于处理输入文本并生成文本嵌入（一种能够在不同维度中捕获许多不同因素的数值表示）；另一个是解码器，用于使用这些文本嵌入逐词生成翻译后的文本。请注意，图中展示的是翻译过程的最后阶段，此时解码器根据原始输入文本(“This is an example”)和部分翻译的句子(“Das ist ein”)，生成最后一个单词(“Beispiel”)以完成翻译。
+
+
+
+3. Describe the two main components of the transformer architecture and their roles in language processing.
+
+  The transformer architecture consists of an encoder and a decoder. The encoder processes the input text and converts it into numerical representations, while the decoder uses these representations to generate the output text.
+
+4. What is the self-attention mechanism and how does it contribute to the transformer's effectiveness?
+
+  The self-attention mechanism allows the transformer to weigh the importance of different words in a sequence relative to each other. This helps the model capture long-range dependencies and contextual relationships, leading to more coherent and relevant output.
+
+5. Explain the key differences between BERT and GPT models in terms of their training approaches and primary applications.
+
+BERT focuses on masked word prediction and excels in tasks like text classification, while GPT is designed for generative tasks like text completion, translation, and summarization
+
+
+
+6. What are zero-shot and few-shot learning, and how do they relate to GPT models?
+
+Zero-shot learning allows GPT models to perform tasks without prior training on specific examples, while few-shot learning enables them to learn from a minimal number of examples. These capabilities demonstrate GPT's versatility and adaptability.
 
 
 
 ### 1.5 利用大型数据集
 
+1. What are the key characteristics of the training datasets used for large language models like GPT-3 and BERT?
 
+  These datasets are vast, encompassing billions of words and covering a wide range of topics and languages. They are designed to expose the models to diverse text, enabling them to learn language syntax, semantics, and context.
 
-8. Match the terms to its description on the right:
+2. Explain the significance of the size and diversity of the training dataset for the performance of large language models.
+
+  The scale and diversity of the training data allow these models to perform well on various tasks, including those requiring general knowledge. The models learn to understand and generate text that reflects the real-world complexities of language.
+
+3. What is the concept of 'tokenization' in the context of large language models?
+
+  Tokenization is the process of converting text into individual units called tokens, which are the basic building blocks that the model reads and processes. These tokens can be words, punctuation marks, or other meaningful units of text.
+
+4. Describe the concept of 'pretraining' in the context of large language models and its significance.
+
+  Pretraining involves training a large language model on a massive dataset to learn general language patterns and knowledge. This pre-trained model serves as a foundation, making it adaptable for various downstream tasks through fine-tuning, which involves further training on specific datasets for specific applications.
+
+5. Explain the concept of 'fine-tuning' in the context of large language models and its advantages.
+
+Fine-tuning involves further training a pre-trained large language model on a smaller, task-specific dataset. This process adapts the model to perform well on specific tasks, such as text summarization or question answering, while leveraging the general knowledge learned during pretraining.
+
+6. Match the terms to its description on the right:
 
 | Encoder                  |      | The ability of a model to generalize to completely unseen tasks without any prior specific examples. |
 | ------------------------ | ---- | ------------------------------------------------------------ |
@@ -7673,7 +7762,36 @@ Fill the table with the column mappings:
 
 ### 1.6 深入剖析GPT架构
 
+1. What is the primary task that GPT models are trained on, and how does this relate to their ability to perform other tasks like translation?
 
+  GPT models are primarily trained on a next-word prediction task, which involves predicting the next word in a sequence. This seemingly simple task allows the models to learn the relationships between words and phrases, enabling them to perform other tasks like translation, even though they were not explicitly trained for it.
+
+2. Explain the concept of self-supervised learning in the context of GPT models.
+
+  GPT models utilize self-supervised learning, where the model learns from the data itself without requiring explicit labels. In the case of GPT, <mark>the next word in a sentence serves as the label for the model to predict</mark>, allowing for training on massive unlabeled text datasets.
+
+3. How does the GPT architecture differ from the original transformer architecture, and what are the implications of this difference?
+
+  The GPT architecture uses only the decoder portion of the transformer, making it a decoder-only model. This design makes it suitable for text generation and next-word prediction tasks, as it generates text one word at a time in a unidirectional, left-to-right manner.
+
+4. What is happening at the labels 1 and 2 in the diagram?
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/202512270002412.png" alt="image-20251227000239924" style="zoom:33%;" />
+
+图1-8　GPT架构仅使用原始的Transformer解码器部分。它被设计为单向的从左到右处理，这使得它非常适合文本生成和下一单词预测任务，可以逐个词地迭代生成文本
+
+| Label | Description                                                  |
+| ----- | ------------------------------------------------------------ |
+| 1     | The next word is created based on the input text             |
+| 2     | The output of the previous round becomes the input to the next round |
+
+5. What is the significance of GPT models being considered autoregressive models?
+
+  Autoregressive models, like GPT, incorporate their previous outputs as inputs for future predictions. This means that each new word generated by GPT is based on the preceding sequence, ensuring coherence and fluency in the generated text.
+
+6. Describe the relationship between the size and complexity of GPT models and their capabilities.
+
+GPT models, particularly GPT-3, are significantly larger than the original transformer model, with a greater number of layers and parameters. This increased size and complexity contribute to their ability to perform a wider range of tasks and achieve higher accuracy.
 
 7. Match the terms to its description on the right:
 
@@ -7696,7 +7814,25 @@ Fill the table with the column mappings:
 
 ### 1.7 构建大语言模型
 
+1. What are the three main stages involved in building a large language model from scratch?
 
+  The three stages are implementing the LLM architecture and data preparation process, pretraining an LLM to create a foundation model, and fine-tuning the foundation model for specific tasks
+
+2. What is the key idea behind the transformer architecture used in LLMs?
+
+   The transformer architecture utilizes an attention mechanism that allows the LLM to selectively access the entire input sequence when generating output, word by word.
+
+3. What is the primary task used for pretraining LLMs like GPT-3?
+
+   LLMs like GPT-3 are pretrained on a massive corpus of text by predicting the next word in a sentence, using this prediction as a label.
+
+4. Explain the concept of emergent properties in LLMs.
+
+   While the primary pretraining task for GPT-like models is next-word prediction, they exhibit emergent properties, meaning they can perform tasks like classification, translation, and summarization without explicit training for those tasks.
+
+5. Why is fine-tuning a pretrained LLM beneficial for specific tasks?
+
+   Fine-tuning a pretrained LLM on a custom dataset allows it to specialize in specific tasks and potentially outperform general LLMs on those tasks.
 
 6. Put these stages of creating a pretrained LLM (base model) in order:
 
@@ -7781,13 +7917,53 @@ Fill the table with the column mappings:
 
 
 
-2.1 理解词嵌入
+### 2.1 理解词嵌入
+
+1. Why are word embeddings necessary for processing text data in deep learning models?
+
+  
+
+2. What is the main idea behind the Word2Vec approach to generating word embeddings?
+
+  
+
+3. Explain the trade-off involved in choosing the dimensionality of word embeddings.
+
+  
+
+4. How do LLMs typically handle word embeddings compared to using pretrained models like Word2Vec?
+
+  
+
+5. What is the primary challenge associated with visualizing highdimensional word embeddings?
+
+
 
 ### 2.2 文本分词
 
+1. What is the purpose of tokenizing text in the context of building a large language model?
+
+  
+
+2. Describe the process of tokenizing text using Python's regular expression library 're'.
+
+  
+
+3. Why is it important to consider capitalization when tokenizing text for LLM training?
+
+  
+
+4. Explain the trade-off between removing whitespaces during tokenization and keeping them.
+
+
+
 5. Match the terms to its description on the right:
 
-
+| Word Embeddings |      | The process of converting various data types, such as text, audio, or video, into a dense vector representation that deep learning models can understand. |
+| --------------- | ---- | ------------------------------------------------------------ |
+| Embedding       |      | The dimensionality of a word embedding, which determines the number of dimensions used to represent each word, influencing the complexity and computational efficiency of the model. |
+| Word2Vec        |      | An algorithm that generates word embeddings by predicting the context of a word given the target word or vice versa, based on the idea that words appearing in similar contexts tend to have similar meanings. |
+| Embedding Size  |      | A method of representing words as continuous-valued vectors, allowing deep learning models to process text data. |
 
 Fill the table with the column mappings:
 
@@ -7800,6 +7976,24 @@ Fill the table with the column mappings:
 
 
 ### 2.3 将词元转换为词元ID
+
+1. What is the purpose of converting tokens into token IDs?
+
+   
+
+2. How is a vocabulary created for tokenization?
+
+   
+
+3. What is the purpose of the encode method in the SimpleTokenizerV1 class?
+
+  
+
+4. What is the purpose of the decode method in the SimpleTokenizerV1 class?
+
+  
+
+5. What is the limitation of using a vocabulary built from a small training set?
 
 
 
@@ -7819,9 +8013,54 @@ Fill the table with the column mappings:
 
 ### 2.4 引入特殊上下文词元
 
+1. What are the two special tokens added to the vocabulary and what are their purposes?
+
+  
+
+2. How does the modified SimpleTokenizerV2 handle unknown words?
+
+   
+
+3. Explain the purpose of the <|endoftext|> token when training on multiple independent documents.
+
+  
+
+4. A piece of the code has been removed from this listing. Which of these terms has been removed and where should it go?
+
+```
+A unk B \n C <|unk|> D |unk|
+```
 
 
-6. 3 1 4 2Match the terms to its description on the right:
+
+```python
+def encode(self, text):
+    preprocessed = re.split(r'([,.:;?_!"()\']|--|\s)', text)
+    preprocessed = [
+        item.strip() for item in preprocessed if item.strip()
+    ]
+    preprocessed = [item if item in self.str_to_int
+                    else "__1__" for item in preprocessed]
+    
+    ids = [self.str_to_int[s] for s in preprocessed]
+    return ids
+```
+
+
+
+Fill out the table with your answer
+
+| Position | 1    |
+| -------- | ---- |
+| Term     |      |
+
+
+
+5. What are the additional special tokens commonly used in LLMs, and what are their functions?
+
+
+
+6. Match the terms to its description on the right:
 
 
 
@@ -7833,17 +8072,102 @@ Fill the table with the column mappings:
 
 
 
-2.5 BPE
+### 2.5 BPE
+
+1. What are the two stages in this diagram?
+
+
+
+| Stage | Description |
+| ----- | ----------- |
+| 1     |             |
+| 2     |             |
+
+2. What is the primary advantage of using Byte Pair Encoding (BPE) for tokenization, especially when dealing with unknown words?
+
+  
+
+3. What is the total vocabulary size of the BPE tokenizer used in models like GPT-2, GPT-3, and the original ChatGPT?
+
+  
+
+4. How does the BPE tokenizer handle unknown words, such as someunknownPlace, without using <|unk|> tokens?
+
+  
+
+5. What Python library is used to implement the BPE tokenizer in the provided code example?
 
 
 
 ### 2.6 使用滑动窗口进行数据采样
 
-3. C D D
+1. Explain the purpose of creating input-target pairs in the context of training a large language model (LLM).
+
+  
+
+2. Describe the sliding window approach used for generating input-target pairs and how it works.
+
+  
+
+3. Pieces of the code have been removed from three places in this listing. Which of these terms have been removed and where should they go?
+
+```
+A torch.vector B tiktoken C tokenizer D torch.tensor
+```
 
 
 
-6. B C
+| Position | 1    | 2    | 3    |
+| -------- | ---- | ---- | ---- |
+| Term     | C    | D    | D    |
+
+
+
+4. What is the role of the stride parameter in the GPTDatasetV1 class, and how does it affect the generation of input-target pairs?
+
+  
+
+5. Explain the purpose of the max_length parameter in the GPTDatasetV1 class and its impact on the input-target pairs.
+
+  
+
+6. Pieces of the code have been removed from two places in this listing. Which of these terms have been removed and where should they go?
+
+```
+A tokenizer B tiktoken C dataset D dataloader
+```
+
+
+
+```python
+def create_dataloader_v1(txt, batch_size=4, max_length=256,
+                         stride=128, shuffle=True, drop_last=True,
+                         num_workers=0):
+    tokenizer = __1__.get_encoding("gpt2")
+    dataset = GPTDatasetV1(txt, tokenizer, max_length, stride)
+    dataloader = DataLoader(
+        __2__,
+        batch_size=batch_size,
+        shuffle=shuffle,
+        drop_last=drop_last,
+        num_workers=num_workers
+    )
+    return dataloader
+```
+
+
+
+Fill out the table with your answers
+
+| Position | 1    | 2    |
+| -------- | ---- | ---- |
+| Term     | B    | C    |
+
+
+
+
+
+7. What is the significance of using PyTorch's Dataset and DataLoader classes for creating a data loader for LLM training?
 
 
 
@@ -7861,6 +8185,28 @@ Fill the table with the column mappings:
 
 ### 2.7 创建词元嵌入
 
+1. Why are embedding vectors necessary for training GPT-like LLMs?
+
+   
+
+2. How are embedding weights initialized in the beginning of LLM training?
+
+   
+
+3. What is the missing stage from this diagram?
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/202512270039347.png" alt="image-20251227003848539" style="zoom:33%;" />
+
+
+
+| Context Size       |      | number of positions the input window is shifted when creating the next batch of input-target pairs. |
+| ------------------ | ---- | ------------------------------------------------------------ |
+| Input-Target Pairs |      | a technique used to create input-target pairs from a text dataset by moving a window of tokens across the text. |
+| Sliding Window     |      | number of tokens that the LLM uses as input to predict the next word. |
+| Stride             |      | a set of data used to train an LLM, where the input is a sequence of tokens and the target is the next token in the sequence. |
+
+
+
 
 
 6. Match the terms to its description on the right:
@@ -7875,7 +8221,27 @@ Fill the table with the column mappings:
 
 
 
-2.8 编码单词位置信息
+### 2.8 编码单词位置信息
+
+1. What is the main shortcoming of LLMs in terms of token order and how is it addressed?
+
+  
+
+2. Explain the difference between absolute and relative positional embeddings.
+
+  
+
+3. How are positional embeddings used in OpenAI's GPT models?
+
+   
+
+4. Describe the process of creating input embeddings for an LLM using token embeddings and positional embeddings.
+
+  
+
+5. What is the purpose of the token_embedding_layer and pos_embedding_layer in the code provided?
+
+
 
 
 

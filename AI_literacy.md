@@ -1,6 +1,6 @@
 # 人工智能
 
-*Updated 2025-12-27 17:03 GMT+8*  
+*Updated 2025-12-27 23:50 GMT+8*  
 *Compiled by Hongfei Yan (2025 Summer)*    
 
 https://github.com/GMyhf/2025fall-cs201/blob/main/AI_literacy.md
@@ -7588,7 +7588,7 @@ Test Yourself on Build a Large Language Model
 
    AI is the broader field of creating machines that can perform tasks requiring human-like intelligence. Machine learning is a subset of AI that focuses on algorithms that learn from data. Deep learning is a subset of machine learning that uses deep neural networks with multiple layers to model complex patterns in data
 
-6. Match the terms to its description on the right:
+6. 将术语与其右侧的描述进行匹配：
 
 | Large Language Model (LLM) |      | A subset of machine learning that uses deep neural networks to model complex patterns and abstractions in data. |
 | -------------------------- | ---- | ------------------------------------------------------------ |
@@ -7622,9 +7622,7 @@ LLMs can analyze vast amounts of text in fields like medicine or law, summarizin
 
 LLMs have the potential to make technology more conversational, intuitive, and accessible by automating text-based tasks and enabling natural language interactions with AI systems.
 
-
-
-5. Match the terms to its description on the right:
+5. 将术语与其右侧的描述进行匹配：
 
 | Natural Language Processing |      | a field of computer science that focuses on enabling computers to understand and process human language. |
 | --------------------------- | ---- | ------------------------------------------------------------ |
@@ -7664,7 +7662,7 @@ Self-supervised learning allows LLMs to generate their own labels from the input
 
 Instruction fine-tuning uses labeled data consisting of instruction-answer pairs, while classification fine-tuning uses labeled data with texts and associated class labels.
 
-6. Match the terms to its description on the right:
+6. 将术语与其右侧的描述进行匹配：
 
 | Pretraining                |      | A type of fine-tuning where the labeled dataset consists of instruction and answer pairs, such as a query to translate a text accompanied by the correctly translated text. |
 | -------------------------- | ---- | ------------------------------------------------------------ |
@@ -7742,7 +7740,7 @@ Zero-shot learning allows GPT models to perform tasks without prior training on 
 
 Fine-tuning involves further training a pre-trained large language model on a smaller, task-specific dataset. This process adapts the model to perform well on specific tasks, such as text summarization or question answering, while leveraging the general knowledge learned during pretraining.
 
-6. Match the terms to its description on the right:
+6. 将术语与其右侧的描述进行匹配：
 
 | Encoder                  |      | The ability of a model to generalize to completely unseen tasks without any prior specific examples. |
 | ------------------------ | ---- | ------------------------------------------------------------ |
@@ -7793,7 +7791,7 @@ Fill the table with the column mappings:
 
 GPT models, particularly GPT-3, are significantly larger than the original transformer model, with a greater number of layers and parameters. This increased size and complexity contribute to their ability to perform a wider range of tasks and achieve higher accuracy.
 
-7. Match the terms to its description on the right:
+7. 将术语与其右侧的描述进行匹配：
 
 | Pretrained Models |      | Pretrained models that serve as a foundation for further fine-tuning on specific tasks. |
 | ----------------- | ---- | ------------------------------------------------------------ |
@@ -7801,8 +7799,6 @@ GPT models, particularly GPT-3, are significantly larger than the original trans
 | Base Models       |      | A process of adapting a pretrained model to a specific task by training it on a smaller dataset related to that task. |
 
 Fill the table with the column mappings:
-
-
 
 | Left Hand Column  | 1    | 2    | 3    |
 | ----------------- | ---- | ---- | ---- |
@@ -7816,7 +7812,7 @@ Fill the table with the column mappings:
 
 1. What are the three main stages involved in building a large language model from scratch?
 
-  The three stages are implementing the LLM architecture and data preparation process, pretraining an LLM to create a foundation model, and fine-tuning the foundation model for specific tasks
+   The three stages are implementing the LLM architecture and data preparation process, pretraining an LLM to create a foundation model, and fine-tuning the foundation model for specific tasks
 
 2. What is the key idea behind the transformer architecture used in LLMs?
 
@@ -7855,7 +7851,7 @@ Fill the table with your answer:
 
 
 
-7. Match the terms to its description on the right:
+7. 将术语与其右侧的描述进行匹配：
 
 | Autoregressive Model      |      | The task of predicting the next word in a sequence, which is used to train GPT models. |
 | ------------------------- | ---- | ------------------------------------------------------------ |
@@ -7881,7 +7877,7 @@ Fill the table with the column mappings:
 
 <img src="https://raw.githubusercontent.com/GMyhf/img/main/img/image-20251207203013472.png" alt="image-20251207203013472" style="zoom:33%;" />
 
-### 主要概念快速问答
+### 核心概念快速问答
 
 1. 在大语言模型（LLMs）的上下文中，分词（tokenization）的主要目的是什么？
    A. 分词用于将文本转换为小写。
@@ -7959,7 +7955,7 @@ The 're.split' function can be used to split text based on specific patterns. By
 
 Removing whitespaces reduces memory and computing requirements. However, keeping whitespaces can be useful for training models that are sensitive to the exact structure of the text, such as Python code, which relies on indentation and spacing.
 
-5. Match the terms to its description on the right:
+5. 将术语与其右侧的描述进行匹配：
 
 | Word Embeddings |      | The process of converting various data types, such as text, audio, or video, into a dense vector representation that deep learning models can understand. |
 | --------------- | ---- | ------------------------------------------------------------ |
@@ -7989,28 +7985,24 @@ Fill the table with the column mappings:
 
 3. What is the purpose of the encode method in the SimpleTokenizerV1 class?
 
-  The encode method takes text as input, splits it into tokens, and uses the vocabulary to convert these tokens into their corresponding integer IDs. This process allows for representing text data as a sequence of integers, which can be processed by the language model.
+   The encode method takes text as input, splits it into tokens, and uses the vocabulary to convert these tokens into their corresponding integer IDs. This process allows for representing text data as a sequence of integers, which can be processed by the language model.
 
 4. What is the purpose of the decode method in the SimpleTokenizerV1 class?
 
-  The decode method takes a sequence of token IDs as input and uses the inverse vocabulary to convert these IDs back into their corresponding text tokens. This process allows for converting the output of the language model, which is a sequence of integers, back into human-readable text.
+   The decode method takes a sequence of token IDs as input and uses the inverse vocabulary to convert these IDs back into their corresponding text tokens. This process allows for converting the output of the language model, which is a sequence of integers, back into human-readable text.
 
 5. What is the limitation of using a vocabulary built from a small training set?
 
-Using a vocabulary built from a small training set can lead to issues when encountering new words or phrases not present in the training data. This can result in errors during tokenization and decoding, highlighting the importance of using large and diverse training sets for building robust
-language models.
+   Using a vocabulary built from a small training set can lead to issues when encountering new words or phrases not present in the training data. This can result in errors during tokenization and decoding, highlighting the importance of using large and diverse training sets for building robust
+   language models.
 
-6. Match the terms to its description on the right:
-
-
+6. 将术语与其右侧的描述进行匹配：
 
 | Tokenization |  | individual units of text that result from tokenization, representing words, punctuation, or other special characters. | 
 |--------------|---|------------------------------------------------------------------------------------------------------------------| 
 | Tokens       |  | used to define patterns in text, allowing for flexible and precise text manipulation, including tokenization.     | 
 | Regular Expressions |  | initial steps taken to prepare text data for further processing, such as tokenization, which makes the text suitable for use in language models. | 
 | Preprocessing |  | splitting text into individual units, called tokens, which can be words, punctuation marks, or other special characters. |
-
-
 
 Fill the table with the column mappings:
 
@@ -8026,8 +8018,8 @@ Fill the table with the column mappings:
 
 1. What are the two special tokens added to the vocabulary and what are their purposes?
 
-  The two special tokens added are <|unk|> and <|endoftext|>. <|unk|> represents unknown words not in the training data, while <|endoftext|> separates unrelated text sources, helping the LLM understand their
-distinct nature.
+   The two special tokens added are <|unk|> and <|endoftext|>. <|unk|> represents unknown words not in the training data, while <|endoftext|> separates unrelated text sources, helping the LLM understand their
+   distinct nature.
 
 2. How does the modified SimpleTokenizerV2 handle unknown words?
 
@@ -8035,8 +8027,8 @@ distinct nature.
 
 3. Explain the purpose of the <|endoftext|> token when training on multiple independent documents.
 
-  The <|endoftext|> token acts as a marker between unrelated text sources, signaling the start or end of a particular segment. This helps the LLM understand that these texts, though concatenated for training, are
-distinct entities。
+   The <|endoftext|> token acts as a marker between unrelated text sources, signaling the start or end of a particular segment. This helps the LLM understand that these texts, though concatenated for training, are
+   distinct entities。
 
 4. A piece of the code has been removed from this listing. Which of these terms has been removed and where should it go?
 
@@ -8059,8 +8051,6 @@ def encode(self, text):
     return ids
 ```
 
-
-
 Fill out the table with your answer
 
 | Position | 1    |
@@ -8071,17 +8061,15 @@ Fill out the table with your answer
 
 5. What are the additional special tokens commonly used in LLMs, and what are their functions?
 
-Other common special tokens include [BOS] (beginning of sequence), [EOS] (end of sequence), and [PAD] (padding). [BOS] marks the start of a text, [EOS] indicates the end, and [PAD] is used to extend shorter texts
+   Other common special tokens include [BOS] (beginning of sequence), [EOS] (end of sequence), and [PAD] (padding). [BOS] marks the start of a text, [EOS] indicates the end, and [PAD] is used to extend shorter texts
 
-6. Match the terms to its description on the right:
+6. 将术语与其右侧的描述进行匹配：
 
 | Vocabulary   |      | integer representations of tokens, used as an intermediate step before converting tokens into embedding vectors. |
 | ------------ | ---- | ------------------------------------------------------------ |
 | Token IDs    |      | the dataset used to build the vocabulary and train the language model. |
 | Tokenizer    |      | a mapping from unique tokens to unique integer values, created by tokenizing the entire training dataset and sorting the tokens alphabetically. |
 | Training Set |      | a class that implements methods for encoding text into token IDs and decoding token IDs back into text. |
-
-
 
 Fill the table with the column mappings:
 
@@ -8091,11 +8079,15 @@ Fill the table with the column mappings:
 
 
 
-### 2.5 BPE
+### 2.5 Byte pair encoding
 
 1. What are the two stages in this diagram?
 
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/202512272049569.png" alt="image-20251227204908944" style="zoom: 33%;" />
 
+
+
+Fill out the table with your answers:
 
 | Stage | Description |
 | ----- | ----------- |
@@ -8177,8 +8169,6 @@ def create_dataloader_v1(txt, batch_size=4, max_length=256,
     return dataloader
 ```
 
-
-
 Fill out the table with your answers
 
 | Position | 1    | 2    |
@@ -8187,18 +8177,18 @@ Fill out the table with your answers
 
 
 
-
-
 7. What is the significance of using PyTorch's Dataset and DataLoader classes for creating a data loader for LLM training?
 
 PyTorch's Dataset and DataLoader classes provide a convenient and efficient way to manage and iterate over large datasets. They allow for batching, shuffling, and parallel data loading, which are crucial for
 optimizing the training process of LLMs.
 
-8. Match the terms to its description on the right:
+8. 将术语与其右侧的描述进行匹配：
 
-缺少
-
-
+| Byte Pair Encoding (BPE)      |      | words that are not present in the tokenizer's predefined vocabulary. |
+| ----------------------------- | ---- | ------------------------------------------------------------ |
+| Subword Units                 |      | total number of unique tokens that a tokenizer can recognize and represent. |
+| Out-of-Vocabulary (OOV) Words |      | smaller units of text that a BPE tokenizer breaks down words into, which can be individual characters or combinations of characters. |
+| Vocabulary Size               |      | a tokenization scheme that breaks down words into smaller subword units or individual characters, allowing it to handle unknown words by representing them as sequences of subword tokens or characters. |
 
 Fill the table with the column mappings:
 
@@ -8228,17 +8218,17 @@ The missing stage in the diagram is Token IDs.
 
 
 
-4. Q
+4. Describe the process of converting a token ID into an embedding vector using an embedding layer
 
    The embedding layer acts as a lookup table. When given a token ID, it retrieves the corresponding embedding vector from its weight matrix. This embedding vector is a continuous representation of the token, allowing the LLM to process it effectively.
 
-5. Q
+5. How does the embedding layer's weight matrix relate to the vocabulary size and embedding dimension?
 
-The embedding layer's weight matrix has a number of rows equal to the vocabulary size, representing each unique token. The number of columns corresponds to the embedding dimension, which determines the size of the embedding vector for each token.
+   The embedding layer's weight matrix has a number of rows equal to the vocabulary size, representing each unique token. The number of columns corresponds to the embedding dimension, which determines the size of the embedding vector for each token.
 
 
 
-6. Match the terms to its description on the right:
+6. 将术语与其右侧的描述进行匹配：
 
 | Context Size       |      | number of positions the input window is shifted when creating the next batch of input-target pairs. |
 | ------------------ | ---- | ------------------------------------------------------------ |
@@ -8258,12 +8248,12 @@ Fill the table with the column mappings:
 
 1. What is the main shortcoming of LLMs in terms of token order and how is it addressed?
 
-  LLMs' self-attention mechanism lacks a notion of token order. To address this, positional embeddings are introduced, which provide information about the position of each token within a sequence.
+   LLMs' self-attention mechanism lacks a notion of token order. To address this, positional embeddings are introduced, which provide information about the position of each token within a sequence.
 
 2. Explain the difference between absolute and relative positional embeddings.
 
-  Absolute positional embeddings assign a unique embedding to each position in a sequence, indicating its exact location. Relative positional embeddings focus on the relative distance between tokens, allowing the
-model to generalize better to sequences of varying lengths.
+   Absolute positional embeddings assign a unique embedding to each position in a sequence, indicating its exact location. Relative positional embeddings focus on the relative distance between tokens, allowing the
+   model to generalize better to sequences of varying lengths.
 
 3. How are positional embeddings used in OpenAI's GPT models?
 
@@ -8271,12 +8261,11 @@ model to generalize better to sequences of varying lengths.
 
 4. Describe the process of creating input embeddings for an LLM using token embeddings and positional embeddings.
 
-  Token embeddings are generated by mapping token IDs to vectors. Positional embeddings are then added to these token embeddings, resulting in input embeddings that incorporate both token identity and
-positional information.
+   Token embeddings are generated by mapping token IDs to vectors. Positional embeddings are then added to these token embeddings, resulting in input embeddings that incorporate both token identity and positional information.
 
 5. What is the purpose of the token_embedding_layer and pos_embedding_layer in the code provided?
 
-The token_embedding_layer converts token IDs into embedding vectors, while the pos_embedding_layer generates positional embeddings based on the position of each token in the sequence
+   The token_embedding_layer converts token IDs into embedding vectors, while the pos_embedding_layer generates positional embeddings based on the position of each token in the sequence.
 
 
 
@@ -8290,7 +8279,7 @@ The token_embedding_layer converts token IDs into embedding vectors, while the p
 
 
 
-**核心概念快速问答**
+### 核心概念快速问答
 
 1. 使用传统的编码器-解码器RNN架构进行语言翻译时，尤其是在处理长句子时，主要存在什么问题？
    **A. RNN难以保留输入序列早期部分的上下文信息，因为它依赖于单一的隐藏状态。**
@@ -8312,7 +8301,7 @@ The token_embedding_layer converts token IDs into embedding vectors, while the p
    B. 单头注意力（single-head attention）
    C. 神经注意力（neural attention）
 5. 注意力机制中的____________用于在训练过程中随机丢弃部分注意力权重，防止模型过度依赖某些特定连接。
-   A. dropout（丢弃法）
+   A. 丢弃法（dropout）
    **B. 正则化（regularization）**
    C. 编码（encoding）
 6. ____________类在一个单一类中集成了多头功能，而MultiHeadAttentionWrapper类则使用多个独立的CausalAttention对象组成的列表。
@@ -8327,15 +8316,43 @@ The token_embedding_layer converts token IDs into embedding vectors, while the p
 
 
 
-3.1 长序列建模中的问题
+### 3.1 长序列建模中的问题
+
+1. What is the main challenge in translating text from one language to another, and why can't we simply translate word by word?
+
+   The challenge lies in the grammatical structures of different languages. Direct word-by-word translation often fails to capture the meaning and context due to differences in sentence structure and word order.
+
+2. Describe the role of the encoder and decoder in a language translation model.
+
+   The encoder processes the entire input text and encodes its meaning into a hidden state. The decoder then uses this hidden state to generate the translated text, one word at a time.  
+
+3. What is the primary limitation of encoder-decoder RNNs in handling long sequences?
+
+   Encoder-decoder RNNs rely solely on the current hidden state during decoding, which can lead to a loss of context, especially when dependencies span long distances in complex sentences.  
+
+4. Explain the concept of a hidden state in the context of encoder-decoder RNNs.
+
+   The hidden state is a compressed representation of the input sequence, capturing the meaning of the entire text. It acts as a memory cell that the decoder uses to generate the translated output.
+
+
 
 ### 3.2 使用注意力机制捕获数据依赖关系
 
+1. What is the main limitation of RNNs for translating longer texts?
 
+   RNNs struggle with long texts because they need to remember the entire encoded input in a single hidden state before decoding, making it difficult to retain information from earlier parts of the input.
 
-3.Match the terms to its description on the right:
+2. What is the significance of self-attention in the context of LLMs?
 
+   Self-attention is a crucial component of contemporary LLMs based on the transformer architecture, such as the GPT series, enabling them to capture long-range dependencies and understand the relationships between words in a sentence.
 
+3. 将术语与其右侧的描述进行匹配：
+
+| Attention Mechanism      |      | A neural network architecture that relies on self-attention mechanisms to process sequential data, enabling it to handle long-range dependencies and outperform traditional RNNs in tasks like machine translation and text generation. |
+| ------------------------ | ---- | ------------------------------------------------------------ |
+| Self-Attention           |      | A family of large language models based on the transformer architecture, known for their impressive capabilities in generating human-like text, translating languages, and performing various other language-related tasks. |
+| Transformer Architecture |      | A technique that allows a neural network to focus on specific parts of an input sequence when generating an output, enabling it to capture long-range dependencies and improve performance on tasks like machine translation. |
+| GPT Series               |      | A type of attention mechanism where each element in a sequence can attend to all other elements in the same sequence, allowing the model to learn relationships and dependencies within the input. |
 
 Fill the table with the column mappings:
 
@@ -8347,11 +8364,62 @@ Fill the table with the column mappings:
 
 ### 3.3 通过自注意力机制关注输入的不同部分
 
+1. What is the purpose of the 'self' in self-attention?
 
+   The 'self' in self-attention refers to the mechanism's ability to compute attention weights by relating different positions within a single input sequence. It assesses and learns the relationships and dependencies between various parts of the input itself.
 
-10.Match the terms to its description on the right:
+2. Explain the concept of a context vector in self-attention.
 
+   A context vector is an enriched embedding vector that incorporates information from all other elements in the input sequence. It represents an enhanced understanding of each element by considering its relationships with other elements.
 
+3. What is the role of attention scores in self-attention?
+
+   Attention scores are intermediate values that represent the similarity between the query element and each other element in the input sequence. They are calculated using dot products and indicate the degree of attention or focus on each element.
+
+4. Why is normalization applied to attention scores?
+
+   Normalization is applied to attention scores to obtain attention weights that sum up to 1. This normalization is a convention that is useful for interpretation and maintaining training stability in an LLM.
+
+5. What function has been removed from this code at position 1?...
+
+   The dot() function has been removed. This calculates the dot product of the query.
+
+6. What is the purpose of the softmax function in self-attention?
+
+   The softmax function is used to normalize attention scores, ensuring that the attention weights are always positive and sum to 1. It provides a more stable and interpretable representation of attention weights as probabilities or relative importance.
+
+7. The diagram shows a simple attention mechanism. What does each numbered stage represent?...
+
+   The labels in the diagram represent (Figure 3.7):
+
+| Label | Description                                                  |
+| ----- | ------------------------------------------------------------ |
+| 1     | Input vector corresponding to the first token                |
+| 2     | Attention weight to weigh the importance of input vector x (1) |
+| 3     | The context vector z (2 ) is computed as a combination of all input<br/>vectors weighted with respect to input element x (2) |
+
+  
+
+8. Fill out the table with your answers:
+
+  | Label | Description |
+  | ----- | ----------- |
+  | 1     |             |
+  | 2     |             |
+  | 3     |             |
+
+  
+
+9. How are context vectors calculated using attention weights?
+
+   Context vectors are calculated by multiplying the embedded input tokens with their corresponding attention weights and then summing the resulting vectors. This weighted sum combines information from all input elements, creating an enriched representation of each element.
+
+10. 将术语与其右侧的描述进行匹配：
+
+| Context Vector    |      | Intermediate values calculated as dot products between the query element and all other input elements, representing the similarity or attention between them. |
+| ----------------- | ---- | ------------------------------------------------------------ |
+| Attention Scores  |      | Normalized attention scores that sum up to 1, representing the relative importance or contribution of each input element to the context vector. |
+| Attention Weights |      | An enriched embedding vector that incorporates information about a specific input element and all other elements in the input sequence, creating a more comprehensive representation. |
 
 Fill the table with the column mappings:
 
@@ -8361,17 +8429,65 @@ Fill the table with the column mappings:
 
 
 
-3.4 实现带可训练权重的自注意力机制
+### 3.4 实现带可训练权重的自注意力机制
+
+1. Explain the purpose of the weight matrices Wq, Wk, and Wv in the selfattention mechanism.
+
+   These matrices are used to project the embedded input tokens into query, key, and value vectors, respectively. This projection allows the model to learn relationships between different parts of the input sequence and determine the importance of each input element for generating context
+   vectors.
+
+2. Describe the process of computing attention scores and attention weights in the self-attention mechanism.
+
+   Attention scores are calculated by taking the dot product of the query vector with each key vector. These scores are then normalized using the softmax function to obtain attention weights, which represent the relative importance of each input element for the current query.
+
+3. Why is the scaling by the square root of the embedding dimension (d_k) important in the scaled-dot product attention mechanism?
+
+   Scaling by the square root of d_k helps to prevent small gradients during backpropagation, especially when dealing with large embedding dimensions. This scaling ensures that the softmax function operates in a more stable range, leading to more effective model training.
+
+4. The removed pieces map to the positions like this:...
+
+   
+
+5. What is the purpose of the SelfAttention_v1 and SelfAttention_v2 classes, and how do they differ in their implementation?
+
+   Both classes implement the self-attention mechanism. SelfAttention_v1 uses manual weight initialization with nn.Parameter, while SelfAttention_v2 utilizes nn.Linear layers for weight matrices, which offers optimized weight initialization and improved training stability.
+
+
 
 
 
 ### 3.5 利用因果注意力隐藏未来词汇
 
+1. What is the purpose of causal attention, and how does it differ from standard self-attention?
 
+   Causal attention, also known as masked attention, restricts a model to consider only previous and current inputs in a sequence when processing any given token. This is in contrast to standard self-attention, which allows access to the entire input sequence at once.
 
-7. Match the terms to its description on the right:
+2. What does this diagram show?...
 
+   The diagram shows that in causal attention, we mask out the attention weights above the diagonal so that for a given input, the LLM can’t access future tokens when computing the context vectors using the attention weights. (Figure 3.19)
 
+3. Describe the process of applying a causal attention mask to attention weights. What is the goal of this masking?
+
+   The causal attention mask is applied to the attention weights by zeroing out the elements above the diagonal, effectively preventing the model from attending to future tokens. This ensures that the model's predictions are based solely on past and current information.
+
+4. Explain the concept of information leakage in the context of causal attention and how it is addressed.
+
+   Information leakage occurs when masked positions still influence the softmax calculation. However, renormalizing the attention weights after masking effectively nullifies the effect of masked positions, ensuring that there is no information leakage from future tokens.
+
+5. What is the purpose of dropout in the attention mechanism, and how is it applied in the context of causal attention?
+
+   Dropout is a technique used to prevent overfitting by randomly dropping out hidden layer units during training. In causal attention, dropout is typically applied after calculating the attention weights, randomly zeroing out some of the weights and scaling up the remaining ones.  
+
+6. What is the significance of the register_buffer method in the CausalAttention class?
+
+   The register_buffer method ensures that the causal mask is automatically moved to the appropriate device (CPU or GPU) along with the model, avoiding device mismatch errors during training.
+
+7. 将术语与其右侧的描述进行匹配：
+
+| Causal Attention          |      | Used to project input tokens into query, key, and value vectors, which are then used to compute attention scores and weights. |
+| ------------------------- | ---- | ------------------------------------------------------------ |
+| Trainable Weight Matrices |      | Used to selectively hide certain values during computation, often used to implement causal attention. |
+| Mask                      |      | A specialized form of self-attention that restricts a model to only consider previous and current inputs in a sequence when processing any given token. |
 
 Fill the table with the column mappings:
 
@@ -8385,11 +8501,41 @@ Fill the table with the column mappings:
 
 ### 3.6 将单头注意力扩展到多头注意力
 
+1. What is the main purpose of multi-head attention in LLMs?
 
+   Multi-head attention allows LLMs to process information from different perspectives by running the attention mechanism multiple times with different learned linear projections. This enables the model to capture more complex patterns and relationships within the input data.
 
-7. Match the terms to its description on the right:
+2. How does the MultiHeadAttentionWrapper class implement multi-head attention?
 
+   The MultiHeadAttentionWrapper class creates multiple instances of the CausalAttention module, each representing a separate attention head. It then combines the outputs from these heads by concatenating them.  
 
+3. Explain the key difference between the MultiHeadAttentionWrapper and the MultiHeadAttention class.
+
+   The MultiHeadAttentionWrapper stacks multiple single-head attention modules, while the MultiHeadAttention class integrates multi-head functionality within a single class. The MultiHeadAttention class splits the input into multiple heads by reshaping the projected query, key, and value tensors and then combines the results from these heads after computing attention.
+
+  
+
+4. Pieces of the code have been...
+
+   
+
+5. What is the purpose of the output projection layer in the MultiHeadAttention class?
+
+   The output projection layer in the MultiHeadAttention class is used to project the combined outputs from all attention heads back to the original embedding dimension. This layer is not strictly necessary but is commonly used in many LLM architectures.
+
+6. Why is the MultiHeadAttention class more efficient than the MultiHeadAttentionWrapper?
+
+   The MultiHeadAttention class is more efficient because it performs matrix multiplications for the queries, keys, and values only once, instead of repeating them for each attention head as in the
+   MultiHeadAttentionWrapper.
+
+  
+
+7. 将术语与其右侧的描述进行匹配：
+
+| Masked Attention     |      | A specialized form of self-attention that restricts a model to only consider previous and current inputs in a sequence when processing any given token. |
+| -------------------- | ---- | ------------------------------------------------------------ |
+| Masked Attention     |      | A technique used during training to randomly ignore hidden layer units, preventing overfitting by ensuring that a model does not become overly reliant on any specific set of units. |
+| Multi-Head Attention |      | The process of dividing the attention mechanism into multiple independent heads, each with its own set of weights, to enhance pattern recognition and improve model performance. |
 
 Fill the table with the column mappings:
 
@@ -8409,7 +8555,7 @@ Fill the table with the column mappings:
 
 
 
-**核心概念快速问答**
+### 核心概念快速问答
 
 1. GPT_CONFIG_124M 字典中的 context_length 参数的作用是什么？
    A. 指定模型中 Transformer 块的数量。
@@ -8448,13 +8594,69 @@ Fill the table with the column mappings:
 
 
 
-4.1 构建一个大语言模型架构
+### 4.1 构建一个大语言模型架构
+
+1. What is the main purpose of a GPT model, and how does it achieve this?
+
+   A GPT model is designed to generate new text one word at a time. It achieves this by using a large deep neural network architecture that learns patterns from a massive dataset of text and then uses these
+   patterns to predict the next word in a sequence.
+
+2. Label this diagram:...
+
+   
+
+3. What are the key components of a GPT model, and how do they contribute to the model's functionality?
+
+   The key components of a GPT model include embedding layers, transformer blocks, and an output layer. Embedding layers convert words into numerical representations, transformer blocks process these representations to capture relationships between words, and the output layer predicts the probability of each word in the vocabulary.
+
+4. Explain the concept of 'parameters' in the context of LLMs like GPT.
+
+   Parameters in LLMs refer to the trainable weights of the model. These weights are adjusted during training to minimize a loss function, allowing the model to learn from the training data and improve its ability to generate text.
+
+5. What are the main differences between GPT-2 and GPT-3, and why is GPT-2 a better choice for learning LLM implementation?
+
+   GPT-3 is a larger model with more parameters and trained on more data than GPT-2. However, GPT-2 is more suitable for learning LLM implementation because its pretrained weights are publicly available, and it can be run on a single laptop computer, unlike GPT-3, which requires a GPU cluster.
+
+6. Describe the purpose of the GPT_CONFIG_124M dictionary and explain the meaning of each key-value pair.
+
+   The GPT_CONFIG_124M dictionary defines the configuration of the small GPT-2 model. It includes parameters like vocabulary size, context length, embedding dimension, number of attention heads, number of layers, dropout rate, and query-key-value bias, which determine the model's architecture and behavior.
+
+7. What is the role of the DummyGPTModel class in the code, and how does it contribute to the overall implementation of the GPT model?
+
+   The DummyGPTModel class provides a placeholder architecture for the GPT model, outlining the main components and their order. It serves as a starting point for building the full GPT model by defining the data flow and providing a framework for implementing the individual components.
+
+
 
 ### 4.2 使用层归一化进行归一化激活
 
-6.Match the terms to its description on the right:
+1. What is the main purpose of layer normalization in neural networks, and how does it contribute to improved training dynamics?
 
+   Layer normalization aims to stabilize and accelerate neural network training by adjusting the activations of a layer to have a mean of 0 and a variance of 1. This normalization process helps prevent vanishing or exploding gradients, ensuring consistent and reliable training.
 
+2. Describe the typical placement of layer normalization within GPT-2 and modern transformer architectures.
+
+   Layer normalization is commonly applied both before and after the multihead attention module in GPT-2 and modern transformer architectures. It is also applied before the final output layer.
+
+3. Pieces of the code have...
+
+  
+
+4. Explain the difference between biased and unbiased variance calculation, and why is the biased approach preferred in the context of LLMs?
+
+   Biased variance calculation divides by the number of inputs *n*, while unbiased variance uses *n* – *1* in the denominator to correct for bias. In LLMs, where the embedding dimension *n* is large, the difference
+   between these approaches is negligible, and the biased method is preferred for compatibility with GPT-2's normalization layers and TensorFlow's default behavior.
+
+5. What are the key differences between layer normalization and batch normalization, and why is layer normalization often favored in LLMs?
+
+   Layer normalization normalizes across the feature dimension, while batch normalization normalizes across the batch dimension. Layer normalization offers greater flexibility and stability, especially in scenarios with varying batch sizes or resource constraints, making it suitable for LLMs.
+
+6. 将术语与其右侧的描述进行匹配：
+
+| Transformer Block |  | The core building block of a GPT model, consisting of a masked multi-head attention module and a feedforward neural network, which are applied sequentially to the input data. |
+| -------------------- | ---- | ------------------------------------------------------------ |
+| Layer Normalization |  | A technique used to normalize the output of each layer in a neural network, ensuring that the data has a mean of zero and a standard deviation of one, which helps to improve the stability and performance of the model. |
+| Parameters |  | The trainable weights of a neural network model, which are adjusted during the training process to minimize a specific loss function. |
+| Logits |  | The output of a neural network model before applying the softmax function, representing the unnormalized probabilities of each possible output class. |
 
 Fill the table with the column mappings:
 
@@ -8464,17 +8666,111 @@ Fill the table with the column mappings:
 
 
 
-4.3 实现具有GELU激活函数的前馈神经网络
+### 4.3 实现具有GELU激活函数的前馈神经网络
 
-4.4 添加快捷连接
+1. What is the GELU activation function and how does it differ from the ReLU activation function?
 
-4.5 连接Transformer块中的注意力层和线性层
+   The GELU activation function is a smooth, nonlinear function that approximates ReLU but with a non-zero gradient for almost all negative values. Unlike ReLU, which outputs zero for any negative input, GELU allows for a small, non-zero output for negative values.
+
+2. Explain the purpose and structure of the FeedForward module in the context of an LLM.
+
+   The FeedForward module is a small neural network consisting of two linear layers and a GELU activation function. It expands the embedding dimension into a higher-dimensional space, applies a nonlinear transformation, and then contracts back to the original dimension, allowing for richer representation learning.
+
+3. Pieces of the code have...
+
+  
+
+4. How does the FeedForward module contribute to the model's ability to learn and generalize data?
+
+   The FeedForward module enhances the model's ability to learn and generalize data by exploring a richer representation space through the expansion and contraction of the embedding dimension. This allows the model to capture more complex relationships within the data.
+
+5. What is the significance of the FeedForward module having the same input and output dimensions?
+
+   The uniformity in input and output dimensions simplifies the architecture by enabling the stacking of multiple layers without the need to adjust dimensions between them, making the model more scalable.
+
+  
+
+### 4.4 添加快捷连接
+
+1. What is the vanishing gradient problem and how does it affect training deep neural networks?
+
+   The vanishing gradient problem occurs when gradients become progressively smaller as they propagate backward through the layers of a deep neural network, making it difficult to effectively train earlier layers. This can hinder the learning process and prevent the model from achieving optimal performance.
+
+2. Explain the concept of shortcut connections and how they address the vanishing gradient problem.
+
+   Shortcut connections, also known as skip connections, create alternative paths for gradients to flow through the network by bypassing certain layers. This helps preserve the flow of gradients during the backward pass, mitigating the vanishing gradient problem and enabling more effective training of deeper networks.
+
+3. How are shortcut connections implemented in this code listing:...
+
+   In the code, shortcut connections are implemented by adding the output of a layer to the output of a later layer. This is done conditionally based on the use_shortcut attribute, allowing for the inclusion or exclusion of shortcut connections during the forward pass.
+
+4. What is the purpose of the print_gradients function and how does it demonstrate the effectiveness of shortcut connections?
+
+   The print_gradients function calculates and displays the mean absolute gradient values for each layer in the model. By comparing the gradient values of models with and without shortcut connections, we can see that shortcut connections help maintain a more consistent gradient flow across layers, preventing the gradients from vanishing in earlier layers.
+
+5. This diagram shows (on the left) a deep neural network consisting of five layers and one with shortcut connections (on the right). Why are the values of the gradients bigger in the network on the right?...
+
+   The bigger gradient values on the right are because of the shortcut connections -these stop the gradient values from getting vanishingly small through the layers.
+
+  
+
+### 4.5 连接Transformer块中的注意力层和线性层
+
+1. What are the key components of a transformer block and how do they contribute to the processing of input sequences?
+
+   A transformer block consists of multi-head attention, feed forward layers, layer normalization, and dropout. The multi-head attention analyzes relationships between elements in the input sequence, while the feed forward network modifies the data individually at each position. Layer normalization ensures consistent scaling, and dropout prevents overfitting.  
+
+2. Explain the concept of Pre-LayerNorm and its significance in the transformer block architecture.
+
+   Pre-LayerNorm refers to applying layer normalization before the multihead attention and feed forward layers. This approach, unlike PostLayerNorm, has been shown to improve training dynamics and lead to better performance in transformer models.
+
+3. Describe the role of shortcut connections in the transformer block and their impact on gradient flow.
+
+   Shortcut connections add the input of the block to its output, allowing gradients to flow more easily through the network during training. This helps to prevent vanishing gradients and improves the learning of deep models.
+
+4. How does the transformer block preserve the input dimensions in its output?
+
+   The transformer block maintains the input dimensions by applying operations that do not alter the shape of the input sequence. This allows for a one-to-one correspondence between input and output vectors, enabling its use in various sequence-to-sequence.
+
+5. Explain how the transformer block integrates contextual information from the entire input sequence into its output.
+
+   While the transformer block preserves the physical dimensions of the input sequence, the content of each output vector is re-encoded to incorporate contextual information from across the entire input sequence. This allows the model to capture complex relationships between elements in the sequence.
+
+  
 
 ### 4.6 实现GPT模型
 
-7.Match the terms to its description on the right:
+1. What is the purpose of the GPTModel class and how does it relate to the TransformerBlock class?
 
+   The GPTModel class assembles the complete GPT architecture, utilizing the previously defined TransformerBlock class as a building block. It combines token and positional embeddings, applies multiple TransformerBlock layers, and finally projects the output into the vocabulary space to predict the next token.
 
+2. Explain the role of the LayerNorm layer in the GPTModel architecture.
+
+   The LayerNorm layer is applied after the transformer blocks to normalize the output, ensuring that the data has a consistent scale and distribution. This helps to stabilize the learning process and improve the model's performance.
+
+3. What is weight tying and how does it affect the number of parameters in a GPT model?
+
+   Weight tying is a technique where the weights of the token embedding layer are reused in the output layer. This reduces the number of trainable parameters, leading to a smaller model footprint and potentially faster training.
+
+4. Describe the process of converting the output of the GPTModel into text.
+
+   The output of the GPTModel is a tensor of shape [batch_size, num_tokens, vocab_size], representing the logits for each token in the vocabulary. To convert these logits into text, we need to apply a softmax
+   function to obtain probabilities, then select the token with the highest probability for each position in the sequence.
+
+5. Pieces of the code have been removed from three places in this listing. Which of these terms have been removed and where should they go?...
+
+   
+
+6. How does the number of transformer blocks affect the complexity and performance of a GPT model?
+
+   Increasing the number of transformer blocks in a GPT model generally leads to a larger model with more parameters, requiring more computational resources. However, it can also improve the model's ability to capture long-range dependencies in the input text, potentially leading to better performance on tasks like text generation.
+
+7. 将术语与其右侧的描述进行匹配：
+
+| Multi-Head Attention |      | a technique that normalizes the activations of a layer to have a mean of zero and a standard deviation of one, improving the stability and performance of the model. |
+| -------------------- | ---- | ------------------------------------------------------------ |
+| Layer Normalization  |      | allows the gradient to flow directly from the input to the output of a layer, preventing the vanishing gradient problem and enabling the training of deeper models. |
+| Shortcut Connection  |      | allows the model to attend to different parts of the input sequence simultaneously, capturing complex relationships between words and phrases. |
 
 Fill the table with the column mappings:
 
@@ -8484,7 +8780,47 @@ Fill the table with the column mappings:
 
 
 
-4.7 生成文本
+### 4.7 生成文本
+
+1. Explain the process by which a GPT model generates text, starting from its output tensors.
+
+   The GPT model converts its output tensors into text by decoding them, selecting tokens based on a probability distribution derived from the softmax function, and then converting these tokens back into humanreadable text.
+
+2. Describe the role of the softmax function in the text generation process.
+
+   The `softmax` function transforms the output logits into a probability distribution, where each value represents the likelihood of a particular token being the next in the sequence. This allows the model to select the most probable token for generation.
+
+3. What is the purpose of the generate_text_simple function, and how does it work?
+
+   The generate_text_simple function implements a simple generative loop for a language model. It iteratively predicts the next token based on the current context, appends it to the input sequence, and repeats this process until a specified number of new tokens are generated.
+
+4. Why is the softmax step technically redundant in the generate_text_simple function?
+
+   The softmax function is monotonic, meaning it preserves the order of its inputs. Therefore, applying torch.argmax directly to the logits tensor would yield the same result as applying it to the softmax output, as the position of the highest value remains unchanged.
+
+5. What is the significance of the greedy decoding approach in text generation?
+
+   Greedy decoding refers to the strategy of always selecting the most likely token at each step. While this approach can be efficient, it can also lead to repetitive or predictable text, as the model always chooses the most obvious continuation.
+
+6. Why does the GPT model generate gibberish when it hasn't been trained?
+
+     The model generates incoherent text because it has not yet learned the relationships between words and their contexts. Training is crucial for the model to develop the ability to generate meaningful and coherent text.
+
+7. Put these steps to implement the GPTModel architecture into the correct order:
+     A. Initialize token and positional embeddings, dropout, and a linear output layer.
+
+     B. Implement the forward pass, combining embeddings, transformer blocks, layer normalization, and the output layer.
+     C. Create a sequential container for TransformerBlock instances.
+     D. Create a GPTModel class inheriting from nn.Module. Fill the table with your answers:
+
+| Step Order | Step |
+| ---------- | ---- |
+| 1          | D    |
+| 2          | A    |
+| 3          | C    |
+| 4          | B    |
+
+
 
 
 
@@ -8496,7 +8832,7 @@ Fill the table with the column mappings:
 
 
 
-**核心概念快速问答**
+### 核心概念快速问答
 
 1. 交叉熵损失函数在 LLM 训练中的主要作用是什么？
    A. 为评估目的生成文本样本。
@@ -8526,13 +8862,78 @@ Fill the table with the column mappings:
 
 
 
-5.1 评估文本生成模型
+### 5.1 评估文本生成模型
+
+1. What is the purpose of the generate_text_simple function and how does it work?
+
+   The generate_text_simple function generates text by taking a starting context, converting it to token IDs, feeding it into the GPT model, and then converting the model's output logits back into token IDs, which are then decoded into text.
+
+2. Explain the concept of text generation loss and its significance in evaluating the quality of generated text.
+
+   Text generation loss is a numerical measure used to evaluate the quality of generated text. It quantifies the difference between the model's predicted output (token probabilities) and the actual desired output (target tokens). A lower loss indicates better text generation quality.  
+
+3. Describe the role of backpropagation in training an LLM and how it relates to the text generation loss.
+
+   Backpropagation is a technique used to update the model's weights during training. It uses the text generation loss to adjust the weights so that the model produces outputs closer to the target tokens, thereby minimizing the loss and improving the quality of generated text.
+
+4. What is cross entropy loss and how is it used in evaluating LLMs?
+
+   Cross entropy loss is a measure of the difference between two probability distributions, typically the true distribution of labels (tokens) and the predicted distribution from the model. It is used to evaluate the performance of LLMs by quantifying how well the model's predicted probability distribution matches the actual distribution of tokens in the dataset.
+
+5. Label this diagram...
+
+   
+
+6. Explain the concept of perplexity and its relationship to cross entropy loss.
+
+   Perplexity is a measure derived from cross entropy loss that provides a more interpretable way to understand the uncertainty of a model in predicting the next token. It represents the effective vocabulary size about which the model is uncertain at each step. A lower perplexity indicates less uncertainty and better model performance.
+
+7. Pieces of the code ...
+
+   
 
 ### 5.2 训练大语言模型
 
-7.Match the terms to its description on the right:
+1. What is the purpose of the train_model_simple function and what are its key components?
 
+   The train_model_simple function implements a basic training loop for the LLM. It iterates over epochs, processes batches, calculates loss, updates weights, and evaluates the model's performance using validation data.
 
+2. Explain the role of the evaluate_model function in the training process.
+
+   The evaluate_model function calculates the loss on both the training and validation sets to assess the model's performance. It ensures the model is in evaluation mode, disabling gradient tracking and dropout for accurate evaluation.
+
+3. Pieces of the code...
+
+   
+
+4. What is the purpose of the generate_and_print_sample function and how does it work?
+
+   The generate_and_print_sample function generates text samples from the model to visually assess its progress during training. It takes a text snippet as input, converts it to token IDs, and uses the
+   generate_text_simple function to generate new text.
+
+   
+
+5. The terms are connected like this: ...
+
+   
+
+6. What is AdamW and why is it preferred over Adam for training LLMs?
+
+   AdamW is a variant of the Adam optimizer that improves weight decay, a technique that penalizes larger weights to prevent overfitting. This makes AdamW more effective for regularizing and generalizing LLMs.
+
+7. What is the significance of the training and validation loss curves in Figure 5.12?
+
+   The curves show that the model initially learns well, but the training loss continues to decrease while the validation loss stagnates. This indicates overfitting, where the model memorizes the training data instead of generalizing to new data.
+
+  
+
+7. 将术语与其右侧的描述进行匹配：
+
+| Text Generation Loss |      | a common measure in machine learning that quantifies the difference between two probability distributions, typically the true distribution of labels and the predicted distribution from a model. |
+| -------------------- | ---- | ------------------------------------------------------------ |
+| Cross Entropy Loss   |      | a standard technique for training deep neural networks that involves updating the model's weights to minimize the difference between the model's predicted output and the actual desired output. |
+| Perplexity           |      | a measure used alongside cross entropy loss to evaluate the performance of models in tasks like language modeling, providing a more interpretable way to understand the uncertainty of a model in predicting the next token in a sequence. |
+| Backpropagation      |      | a numerical measure used to assess the quality of text generated during training, indicating how well the model's predictions align with the desired target text. |
 
 Fill the table with the column mappings:
 
@@ -8542,13 +8943,60 @@ Fill the table with the column mappings:
 
 
 
-5.3 控制随机性的解码策略
+### 5.3 控制随机性的解码策略
+
+1. What is the purpose of temperature scaling in text generation?
+
+   Temperature scaling adjusts the probability distribution of the next token by dividing the logits by a temperature value. Higher temperatures create a more uniform distribution, leading to more diverse outputs, while lower temperatures sharpen the distribution, favoring the most likely tokens.
+
+2. Explain how top-k sampling works and its benefit in text generation.
+
+   Top-k sampling selects only the top-k most likely tokens for the next token prediction. This helps to reduce the generation of nonsensical or grammatically incorrect text by focusing on the most probable options.
+
+3. Describe the difference between greedy decoding and probabilistic sampling in text generation.
+
+   Greedy decoding always selects the token with the highest probability, while probabilistic sampling chooses tokens based on their probability distribution. Probabilistic sampling introduces randomness and can lead to more diverse outputs.
+
+4. What is the purpose of the Inf Masking step in the top-k sampling process?...
+
+   The correct answer is C, “To set logits not in the top-k to negative infinity, removing them from consideration”
+
+5. How does the generate function incorporate temperature scaling and top-k sampling?
+
+   The generate function allows for the specification of temperature and top-k values. If a temperature is provided, the logits are scaled accordingly. If a top-k value is given, the logits are masked to exclude tokens outside the top-k most likely options
+
+   
 
 ### 5.4 使用 PyTorch 加载和保存模型权重
 
-5.Match the terms to its description on the right:
+1. Why is it important to save the model weights after training a large language model?
 
+   Saving the model weights allows you to reuse the trained model without retraining it from scratch, saving significant computational time and resources. This is especially important for large language models, which can take a long time to train.
 
+2. What is the recommended way to save a PyTorch model's weights?
+
+   The recommended way is to save the model's state_dict, which is a dictionary mapping each layer to its parameters, using the torch.save function. This allows you to easily load the weights into a new model
+   instance later.
+
+3. What is the purpose of the model.eval() method in PyTorch?
+
+   The model.eval() method switches the model to evaluation mode, disabling dropout layers. This is important for inference, as we don't want to randomly drop out information during prediction.
+
+4. Why is it important to save the optimizer state when saving a model?
+
+   Saving the optimizer state allows you to resume training from where you left off. This is important for adaptive optimizers like AdamW, which store historical data to adjust learning rates dynamically. Without the optimizer state, the model may learn suboptimally or fail to converge properly.
+
+5. Pieces of the code have ...
+
+   
+
+6. 将术语与其右侧的描述进行匹配：
+
+| AdamW           |      | the process of iterating over the training data multiple times, calculating the loss for each batch, and updating the model weights to minimize the loss |
+| --------------- | ---- | ------------------------------------------------------------ |
+| Training Loop   |      | a variant of the Adam optimizer that improves the weight decay approach, which aims to minimize model complexity and prevent overfitting by penalizing larger weights |
+| Overfitting     |      | the loss calculated on a separate dataset that is not used for training, which provides an estimate of the model's performance on unseen data |
+| Validation Loss |      | a phenomenon that occurs when a model learns the training data too well and performs poorly on unseen data |
 
 Fill the table with the column mappings:
 
@@ -8560,9 +9008,33 @@ Fill the table with the column mappings:
 
 ### 5.5 从 OpenAI 加载预训练权重
 
-6.Match the terms to its description on the right:
+1. What is the primary advantage of using pretrained weights from OpenAI for a GPT-2 model?
 
+   Using pretrained weights from OpenAI eliminates the need for extensive training on a large corpus, saving significant time and computational resources
 
+2. What are the key components of the settings and params dictionaries obtained from OpenAI's GPT-2 model weights?
+
+   The settings dictionary contains the LLM architecture settings, while the params dictionary holds the actual weight tensors for the model's layers.
+
+3. How are the pretrained weights from OpenAI loaded into a custom GPTModel instance?
+
+   The load_weights_into_gpt function carefully matches the weights from OpenAI's implementation with the corresponding layers in the custom GPTModel instance, ensuring consistency and functionality.
+
+4. What is the significance of the model_configs dictionary in the context of loading pretrained weights?
+
+   The model_configs dictionary provides the specific architectural settings for different GPT-2 model sizes, allowing for the selection and loading of weights for the desired model.
+
+5. Why is it necessary to update the NEW_CONFIG dictionary with context_length and qkv_bias settings?
+
+   The pretrained GPT-2 models from OpenAI were trained with a different context_length and used bias vectors in the attention module, requiring these settings to be updated for compatibility.  
+
+6. 将术语与其右侧的描述进行匹配：
+
+| State Dict      |      | a dictionary containing the parameters of each layer in a PyTorch model. |
+| --------------- | ---- | ------------------------------------------------------------ |
+| Model Weights   |      | a dictionary containing the internal state of the optimizer, such as the learning rate and momentum. |
+| Optimizer State |      | the parameters that are learned during the training process and are used to make predictions. |
+| Evaluation Mode |      | a mode in which the model is used for inference, and dropout layers are disabled. |
 
 Fill the table with the column mappings:
 
@@ -8582,7 +9054,7 @@ Fill the table with the column mappings:
 
 
 
-**核心概念快速问答**
+### 核心概念快速问答
 
 1. ____________ 的主要目的是训练模型识别并预测特定的类别标签。
    **A. 分类微调（classification-finetuning）**
@@ -8621,13 +9093,69 @@ Fill the table with the column mappings:
 
 
 
-6.1 不同类型的微调
+### 6.1 不同类型的微调
+
+1. What are the two most common ways to fine-tune language models?
+
+   The two most common ways to fine-tune language models are instruction fine-tuning and classification fine-tuning. Instruction fine-tuning focuses on training the model to understand and execute tasks based on natural language prompts, while classification fine-tuning trains the model to recognize specific class labels.
+
+2. Describe the purpose of instruction fine-tuning and provide an example.
+
+   Instruction fine-tuning aims to improve a model's ability to understand and execute tasks based on natural language instructions. For example, training a model to translate English sentences into German using specific instructions would be an instance of instruction fine-tuning.
+
+3. Explain the concept of classification fine-tuning and give an example.
+
+   Classification fine-tuning involves training a model to recognize specific class labels. For instance, training a model to identify whether an email is spam or not spam is an example of classification fine-tuning. This approach is also used in tasks like image classification and sentiment analysis.
+
+4. What is the key limitation of a classification fine-tuned model?
+
+   A classification fine-tuned model is restricted to predicting classes it has encountered during training. It can only classify data into the predefined categories it was trained on, limiting its ability to handle tasks outside its training scope.
+
+5. Compare the flexibility of instruction fine-tuned models and classification fine-tuned models.
+
+   Instruction fine-tuned models are more flexible and can handle a broader range of tasks based on user instructions. Classification fine-tuned models are highly specialized and excel at categorizing data into
+   predefined classes, but they lack the flexibility of instruction fine-tuned models.  
+
+6. When is instruction fine-tuning the preferred approach?
+
+   Instruction fine-tuning is best suited for models that need to handle a variety of tasks based on complex user instructions, improving flexibility and interaction quality. It is ideal for applications requiring adaptability and the ability to respond to diverse user requests.
+
+  
 
 ### 6.2 准备数据集
 
-7.Match the terms to its description on the right:
+1. What is the purpose of the dataset used in this section and what type of data does it contain?
 
+   The dataset used is a collection of text messages classified as either 'spam' or 'non-spam' (also known as 'ham'). This dataset is used to demonstrate the process of fine-tuning a large language model for
+   classification tasks.
 
+2. Why is the dataset undersampled to include an equal number of 'spam' and 'non-spam' messages?
+
+   The original dataset has a significant imbalance between 'spam' and 'nonspam' messages. Undersampling creates a balanced dataset, which is beneficial for training a classification model as it prevents the model from being biased towards the majority class.
+
+3. How are the 'string' class labels ('ham' and 'spam') converted into integer class labels?
+
+   The 'string' class labels are converted into integer class labels (0 and 1) using a mapping dictionary. This process is similar to converting text into token IDs, but instead of using the GPT vocabulary, it uses only two token IDs.
+
+4. Describe the purpose of the random_split function and how it divides the dataset.
+
+   The random_split function divides the dataset into three parts: training, validation, and testing. The training set is used to train the model, the validation set is used to adjust hyperparameters and prevent overfitting, and the testing set is used to evaluate the model's performance on unseen data.
+
+5. Pieces of the code have been removed from two places in this listing. Which of these terms have been removed and where should they go?...
+
+   
+
+6. What is the significance of saving the dataset as CSV files?...
+
+   Saving the dataset as CSV files allows for easy reuse of the data in future steps. This ensures that the prepared dataset can be readily accessed for further analysis and model training.
+
+7. 将术语与其右侧的描述进行匹配：
+
+| Instruction Fine-Tuning    |      | The process of training a language model on a set of tasks using specific instructions to improve its ability to understand and execute tasks described in natural language prompts. |
+| -------------------------- | ---- | ------------------------------------------------------------ |
+| Classification Fine-Tuning |      | A model that can perform well across a variety of tasks.     |
+| Generalist Model           |      | A model that is highly trained to perform a specific task.   |
+| Specialized Model          |      | A method of training a model to recognize a specific set of class labels, such as 'spam' and 'not spam'. |
 
 Fill the table with the column mappings:
 
@@ -8637,19 +9165,203 @@ Fill the table with the column mappings:
 
 
 
-6.3 创建数据加载器
+### 6.3 创建数据加载器
 
-6.4 初始化带有预训练权重的模型
+1. What are the two primary options for batching text messages of varying lengths?
 
-6.5 添加分类头
+   The two options are truncating all messages to the length of the shortest message or padding all messages to the length of the longest message. Truncation is computationally cheaper but can lead to information loss, while padding preserves the entire content of all messages.
 
-6.6 计算分类损失和准确率
+2. Pieces of the code have been removed from four places in this listing. Which of these terms have been removed and where should they go? Note that a term may appear more than once!...
 
-6.7 在有监督数据上微调模型
+  
 
-6.8 使用大语言模型作为垃圾分类分类器
+3. What is the purpose of the padding token and how is it used in the SpamDataset class?
+
+   The padding token is used to ensure that all text messages in a batch have the same length. In the SpamDataset class, shorter messages are padded with the padding token ID (50256) to match the length of the longest message.
+
+4. What is the role of the SpamDataset class in the data loading process?
+
+   The SpamDataset class handles several key tasks: loading data from CSV files, tokenizing text messages using the GPT-2 tokenizer, and padding or truncating sequences to a uniform length. It also provides methods to access individual data samples and the overall dataset length.
+
+5. Label this diagram by assigning the label numbers to the matching description...
+
+   
+
+6. How are the validation and test sets padded and truncated in relation to the training set?
+
+   The validation and test sets are padded to match the length of the longest training sequence. Any samples exceeding this length are truncated. This ensures consistency in input lengths across all datasets.
+
+7. Describe the structure of a single training batch in terms of input and target tensors.
+
+   A single training batch consists of eight text messages represented as token IDs, each with 120 tokens. The corresponding class labels for each message are stored in a separate tensor. This structure allows for efficient processing of multiple training examples simultaneously.
+
+8. What is the purpose of the DataLoader class and how is it used to create training, validation, and test loaders?
+
+   The DataLoader class is used to create data loaders that efficiently load and process data in batches. It takes a dataset as input and allows for customization of parameters like batch size, shuffling, and number of workers. Separate data loaders are created for training, validation, and testing, each with specific configurations.
+
+  
+
+### 6.4 初始化带有预训练权重的模型
+
+1. What is the purpose of initializing a pretrained model before fine-tuning for classification?
+
+   Initializing a pretrained model prepares it for classification fine-tuning by loading the weights learned during pretraining on unlabeled data. This allows the model to leverage its existing knowledge and accelerate the learning process for the specific classification task.
+
+2. Describe the process of loading pretrained weights into the GPT model.
+
+   The process involves using the download_and_load_gpt2 function to retrieve the pretrained weights based on the chosen model size. These weights are then loaded into the GPTModel using the
+   load_weights_into_gpt function, ensuring the model is ready for finetuning.
+
+3. How is the model's ability to generate coherent text used to verify that the pretrained weights have been loaded correctly?
+
+   By providing a prompt and generating text using the generate_text_simple function, we can assess whether the model produces coherent and meaningful output. If the generated text is sensible, it indicates that the pretrained weights have been loaded successfully.
+
+4. What is the purpose of prompting the model with a spam message before fine-tuning?
+
+   Prompting the model with a spam message allows us to evaluate its initial ability to classify spam. This provides a baseline understanding of the model's performance before fine-tuning and helps identify areas for improvement.
+
+  
+
+### 6.5 添加分类头
+
+1. Why is it necessary to modify the output layer of a pretrained LLM for classification fine-tuning?
+
+   The original output layer of a pretrained LLM is designed for language generation, mapping hidden representations to a large vocabulary of tokens. For classification, we need a smaller output layer that maps to the specific classes we want to predict.
+
+2. Explain the rationale behind using a number of output nodes equal to the number of classes in a classification task.
+
+   Using a separate output node for each class allows for a more general approach to classification, as it avoids the need to modify the loss function for binary tasks. This approach is easily adaptable to multi-class problems.
+
+3. Why is it often sufficient to fine-tune only the last layers of a pretrained LLM for a new task?
+
+   The lower layers of a pretrained LLM typically capture general language structures and semantics, while the upper layers learn task-specific features. Fine-tuning only the last layers allows for efficient adaptation to new tasks without disrupting the learned general language knowledge.
+
+4. Describe the process of freezing and unfreezing layers in a pretrained LLM for fine-tuning.
+
+   Freezing layers prevents their weights from being updated during training. This is done by setting the requires_grad attribute of their parameters to False. Unfreezing layers allows their weights to be
+   updated by setting requires_grad to True.
+
+5. Why is the last token in a sequence considered the most informative for classification tasks using a causal attention mask?
+
+   The causal attention mask restricts each token's attention to itself and preceding tokens. As a result, the last token accumulates information from all previous tokens, making it the most comprehensive
+   representation of the input sequence.
+
+6. Explain the significance of focusing on the last output token for classification fine-tuning in a GPT-like model.
+
+   Since the last token in a sequence has access to information from all preceding tokens due to the causal attention mask, it provides the most relevant context for classification. Therefore, fine-tuning based on the last token's output allows for more accurate predictions
 
 
+
+### 6.6 计算分类损失和准确率
+
+1. Explain how the model's output is converted into a class label prediction for spam classification.
+
+   The model's output for the last token is a 2-dimensional tensor representing the probability scores for each class (spam or not spam). The class label is determined by finding the index of the highest
+   probability score using the argmax function.
+
+2. What is the purpose of the softmax function in this context, and why is it optional?
+
+   The softmax function converts the model's output into probabilities that sum to 1. It is optional because the largest output values directly correspond to the highest probability scores, so argmax can be applied directly to the output tensor
+
+3. Describe the function of the calc_accuracy_loader function and how it is used to calculate the classification accuracy.
+
+   The calc_accuracy_loader function iterates through a data loader, applies the argmax prediction to each input, and calculates the proportion of correct predictions. It returns the classification accuracy as a percentage.
+
+4. Why is cross-entropy loss used as a proxy for maximizing classification accuracy?
+
+   Classification accuracy is not a differentiable function, making it unsuitable for optimization. Cross-entropy loss is a differentiable function that can be used to optimize the model's parameters to indirectly maximize classification accuracy.
+
+5. Explain the key difference between the calc_loss_batch function used for classification and the one used for language modeling.
+
+   The classification calc_loss_batch function focuses on optimizing only the last token's output, while the language modeling version optimizes the output of all tokens. This difference reflects the focus on predicting the class label for the last token in classification.
+
+
+
+### 6.7 在有监督数据上微调模型
+
+1. What is the primary difference between the training loop used for finetuning and the one used for pretraining?
+
+   The primary difference is that during fine-tuning, we calculate the classification accuracy instead of generating sample text to evaluate the model's performance.
+
+2. Describe the key modifications made to the train_classifier_simple function compared to the train_model_simple function used for pretraining.
+
+   The train_classifier_simple function tracks the number of training examples seen instead of tokens and calculates accuracy after each epoch. It also omits the step of printing a sample text.
+
+3. What is the purpose of the evaluate_model function in the context of fine-tuning?
+
+   The evaluate_model function calculates the loss for both the training and validation sets, providing insights into the model's performance on both seen and unseen data.
+
+4. Explain the significance of the loss curves plotted here:...
+
+   The loss curves in Figure 6.16 show a sharp decline in both training and validation loss during the initial epochs, indicating effective learning. The close proximity of the curves suggests that the model is generalizing well to unseen data and not overfitting.
+
+5. What factors influence the choice of the number of epochs during finetuning?
+
+   The number of epochs depends on the dataset's complexity and the task's difficulty. Overfitting may necessitate reducing the number of epochs, while insufficient training might require increasing them.
+
+6. Pieces of the code have been removed from three places in this listing. Which of these terms have been removed and where should they go?...
+
+   
+
+7. How does the eval_iter parameter affect the accuracy estimations during training?
+
+   The eval_iter parameter determines the number of batches used to calculate training and validation accuracy. A smaller eval_iter value leads to faster training but less accurate performance estimations.
+
+8. Put these steps to prepare and fine-tune the GPT-2 Model into the correct order:
+   A. Load pretrained GPT-2 model weights.
+   B. Train the model using the training data loader for a specified number of epochs.
+   C. Freeze all model parameters except the output layer and the last transformer block.
+   D. Initialize an AdamW optimizer.
+
+   E. Define functions to calculate loss and accuracy for a batch and a data loader.
+   F. Set the requires_grad attribute to True for the new output layer and the last transformer block.
+   G. Replace the original output layer with a new linear layer mapping to two classes (spam\/not spam).
+   H. Evaluate the model's performance on the validation set after each epoch.
+   Fill the table with your answers – two are already in place:
+
+| Step Order | Step |
+| ---------- | ---- |
+| 1          | A    |
+| 2          | C    |
+| 3          | G    |
+| 4          | F    |
+| 5          | E    |
+| 6          | D    |
+| 7          | B    |
+| 8          | H    |
+
+   
+
+### 6.8 使用大语言模型作为垃圾分类分类器
+
+1. Describe the process of using a fine-tuned LLM for spam classification.
+
+   The process involves using a pre-trained LLM, fine-tuned for classification, to predict the class label (spam or not spam) for a given text message. This is achieved by converting the text into token IDs, feeding it to the model, and obtaining the predicted class label based on the model's
+   output.
+
+2. Explain the role of the classify_review function in spam classification.
+
+   The classify_review function takes a text message as input, preprocesses it, converts it into token IDs, feeds it to the fine-tuned model, and predicts the class label (spam or not spam) based on the
+   model's output. It then returns the corresponding class name.
+
+3. How is the classification accuracy of a spam classification model evaluated?
+
+  The classification accuracy is evaluated by calculating the fraction or percentage of correct predictions made by the model on a test dataset. This metric indicates how well the model is able to correctly classify spam and non-spam messages.
+
+4. In this code listing, order the stages to match the numbers in the listing:...
+
+   
+
+5. What is the purpose of saving a fine-tuned spam classification model?
+
+   Saving the model allows for its reuse later without the need for retraining. This is useful for deploying the model for real-time spam detection or for further experimentation and analysis.
+
+6. How does the classification fine-tuning process differ from the pretraining
+  process of an LLM?
+
+  While both processes involve converting text into token IDs and using a cross-entropy loss function, classification fine-tuning focuses on training the model to output a correct class label, whereas pretraining aims to predict the next token in a sequence. Classification fine-tuning also involves replacing the output layer of the LLM with a smaller classification layer.
+
+  
 
 ## 7 通过微调遵循人类指令
 
@@ -8659,7 +9371,7 @@ Fill the table with the column mappings:
 
 
 
-**核心概念快速问答**
+### 核心概念快速问答
 
 1. 预训练大语言模型在处理指令时通常面临的主要挑战是什么？
    A. 无法完成句子。
@@ -8694,13 +9406,56 @@ Fill the table with the column mappings:
 
 
 
-7.1 指令微调介绍
+### 7.1 指令微调介绍
+
+1. What is the primary function of a pretrained LLM?
+
+   A pretrained LLM is primarily capable of text completion, meaning it can finish sentences or write text paragraphs given a fragment as input.
+
+2. What is the challenge that pretrained LLMs often face?
+
+   Pretrained LLMs often struggle with specific instructions, such as grammar correction or voice conversion, requiring further fine-tuning.
+
+3. What is the purpose of instruction fine-tuning?
+
+   Instruction fine-tuning aims to improve an LLM's ability to follow specific instructions and generate desired responses based on those instructions.
+
+4. What is a crucial aspect of instruction fine-tuning?
+
+   Preparing a suitable dataset is a key aspect of instruction fine-tuning, providing the model with examples of instructions and desired responses.
+
+   
 
 ### 7.2 为有监督指令微调准备数据
 
-6.Match the terms to its description on the right:
+1. What is the purpose of the instruction dataset used for fine-tuning a pretrained LLM?
 
+  The instruction dataset consists of instruction-response pairs that are used to train the LLM to follow instructions and generate appropriate responses based on given inputs.
 
+2. Describe the format of the instruction dataset used in this section.
+
+   The dataset is stored in a JSON file and contains entries that are Python dictionary objects. Each entry includes an 'instruction', 'input', and 'output' field, representing the task, input data, and desired response, respectively.
+
+3. What are the two prompt styles mentioned in the section, and how do they differ?
+
+  The two prompt styles are Alpaca and Phi-3. Alpaca uses a structured format with defined sections for instruction, input, and response, while Phi-3 employs a simpler format with designated <|user|> and
+  <|assistant|> tokens.
+
+4. What is the purpose of the format_input function, and how does it work?
+
+  The format_input function converts the entries in the instruction dataset into the Alpaca-style input format. It constructs a formatted string that includes the instruction, input (if available), and a placeholder for the response.
+
+5. How is the instruction dataset divided into training, validation, and test sets?
+
+  The dataset is divided into training, validation, and test sets using a specific ratio. The training set is used to train the model, the validation set is used to evaluate the model's performance during training, and the test set is used to evaluate the model's final performance.
+
+6. 将术语与其右侧的描述进行匹配：
+
+| Instruction-Response Pairs |      | Different formats for presenting instructions and inputs to a language model, influencing how the model interprets and responds to the task. |
+| -------------------------- | ---- | ------------------------------------------------------------ |
+| Prompt Styles              |      | A simpler format for instruction fine-tuning that uses designated tokens to mark user input and assistant output, allowing for more flexibility in task presentation. |
+| Alpaca Prompt Style        |      | The dataset consists of pairs of instructions and their corresponding responses, providing examples of how to complete tasks. |
+| Phi-3 Prompt Style         |      | A structured format for instruction fine-tuning that uses separate sections for the instruction, input, and response, making it clear for the model to understand the task. |
 
 Fill the table with the column mappings:
 
@@ -8710,13 +9465,70 @@ Fill the table with the column mappings:
 
 
 
-7.3 将数据组织成训练批次
+### 7.3 将数据组织成训练批次
+
+1. What is the purpose of a custom collate function in instruction finetuning?
+
+   A custom collate function is used to handle the specific requirements and formatting of the instruction fine-tuning dataset. It ensures that training examples are padded to the same length within each batch, allowing for efficient processing by the model.
+
+2. How does the custom collate function handle padding in instruction finetuning?
+
+   The custom collate function pads training examples to the length of the longest example in each batch, using the <|endoftext|> token ID (50256). This minimizes unnecessary padding by only extending
+   sequences to match the longest one in each batch.
+
+3. Explain the role of target token IDs in instruction fine-tuning and how they are generated.
+
+   Target token IDs represent the desired output sequence that the model should generate. They are created by shifting the input token IDs one position to the right, omitting the first token and appending an end-oftext token. This setup allows the model to learn how to predict the next token in a sequence.
+
+4. Why are padding tokens replaced with the -100 placeholder value in the target token IDs?
+
+  Replacing padding tokens with -100 allows the cross entropy loss function to ignore them during training. This ensures that only meaningful data influences model learning and prevents padding tokens from contributing to the loss calculation.
+
+5. What is the purpose of retaining one end-of-text token in the target sequence?
+
+  Retaining one end-of-text token in the target sequence helps the LLM learn to generate end-of-text tokens, which act as an indicator that the generated response is complete.
+
+6. Pieces of the code have been removed from four places in this listing. Which of these terms have been removed and where should they go?
+  Note that a term may appear more than once!...
+
+  
 
 ### 7.4 创建指令数据集的数据加载器
 
-7.Match the terms to its description on the right:
+1. What is the purpose of the custom_collate_fn function in the context of instruction fine-tuning?
 
+  The custom_collate_fn function is used to batch the instruction dataset, ensuring that the input and target tensors are moved to the specified device (CPU, GPU, or MPS) before being fed into the LLM for fine-tuning.
 
+2. Explain the advantage of moving data to the target device within the custom_collate_fn function instead of the main training loop.
+
+  By performing the device transfer within the custom_collate_fn, the process becomes a background task, preventing it from blocking the GPU during model training and improving efficiency.
+
+3. How is the device setting determined and used in the custom_collate_fn function?
+
+  The device setting is determined based on the availability of a GPU or MPS. The partial function from functools is used to create a new version of the custom_collate_fn with the device argument prefilled,
+  ensuring that the function uses the correct device for data transfer.
+
+4. What is the purpose of the allowed_max_length parameter in the customized_collate_fn function?
+
+  The allowed_max_length parameter is used to truncate the data to the maximum context length supported by the LLM model being fine-tuned, in this case, the GPT-2 model.
+
+5. Describe the process of creating data loaders for the training, validation, and test sets using the DataLoader class.
+
+  The DataLoader class is used to create data loaders for each set (training, validation, and test). The batch_size, collate_fn, shuffle, drop_last, and num_workers parameters are configured to control the
+  batching process, shuffling, and data loading behavior.
+
+6. Pieces of the code have been removed from four places in this listing. Which of these terms have been removed and where should they go?
+  Note that a term may appear more than once!...
+
+  
+
+7. 将术语与其右侧的描述进行匹配：
+
+| Batching Process        |      | A function that defines how to combine individual data samples into a batch, specifically tailored for the requirements of instruction fine-tuning. |
+| ----------------------- | ---- | ------------------------------------------------------------ |
+| Custom Collate Function |      | The process of organizing training data into groups of samples, called batches, to improve training efficiency. |
+| Padding Tokens          |      | Special tokens added to the end of sequences to ensure all inputs in a batch have the same length, allowing for efficient processing by the model. |
+| Ignore Index            |      | A special value, typically -100, used to indicate padding tokens in the target sequence, preventing them from contributing to the loss calculation during training. |
 
 Fill the table with the column mappings:
 
@@ -8726,17 +9538,110 @@ Fill the table with the column mappings:
 
 
 
-7.5 加载预训练的大语言模型
+### 7.5 加载预训练的大语言模型
 
-7.6 在指令数据上微调大语言模型
+1. Why is a larger pretrained model, like 'gpt2-medium', preferred for instruction fine-tuning compared to the smaller 'gpt2-small' model?
 
-7.7 抽取并保存模型回复
+  The smaller model lacks the capacity to learn and retain the complex patterns and nuanced behaviors required for high-quality instructionfollowing tasks. The larger model has more parameters, allowing it to handle more intricate instructions and generate more accurate responses.
+
+2. What is the purpose of loading a pretrained LLM before starting instruction fine-tuning?
+
+  Loading a pretrained LLM provides a foundation for the fine-tuning process. It allows the model to leverage existing knowledge and patterns learned during pretraining, enabling it to learn new tasks more efficiently and effectively.
+
+3. How does the code for loading a pretrained model differ from the code used for pretraining or classification fine-tuning?
+
+  The code remains largely the same, but instead of specifying the 'gpt2-small' model, we now specify 'gpt2-medium' to load the larger model with 355 million parameters. This change reflects the choice of a more capable model for instruction fine-tuning.
+
+4. What is the purpose of evaluating the pretrained LLM's performance on a validation task before fine-tuning?
+
+  Evaluating the pretrained LLM's performance provides a baseline understanding of its capabilities before fine-tuning. This allows us to assess the impact of fine-tuning on the model's ability to follow
+  instructions and generate accurate responses.
+
+5. How is the model's generated response isolated from the input instruction in the provided code?
+
+  The code subtracts the length of the input instruction from the start of the generated text, effectively removing the input text and leaving only the model's generated response. The strip() function is then applied to remove any extra whitespace.
+
+  
+
+### 7.6 在指令数据上微调大语言模型
+
+1. What is the purpose of fine-tuning an LLM on instruction data?
+
+   Fine-tuning an LLM on instruction data aims to improve its ability to understand and follow instructions, leading to more accurate and relevant responses to user prompts.
+
+2. Describe the process of fine-tuning an LLM on instruction data, highlighting the key steps involved.
+
+  The process involves loading a pretrained LLM, preparing an instruction dataset, and training the model on this dataset using a suitable loss function and optimizer. The training process aims to minimize the loss, indicating improved performance in following instructions.
+
+3. What are some potential challenges encountered during fine-tuning an LLM on instruction data, and how can these challenges be addressed?
+
+  Challenges include hardware limitations, such as memory constraints, which can be addressed by using a smaller model, reducing the batch size, or utilizing a GPU for faster training. Additionally, managing the length of input sequences can be crucial for efficient training.
+
+4. How is the effectiveness of fine-tuning evaluated during the training process?
+
+  The effectiveness is evaluated by monitoring the training and validation losses. A decrease in these losses indicates that the model is learning to follow instructions better. Additionally, inspecting the generated responses during training provides qualitative insights into the model's progress.
+
+5. What is the significance of the Alpaca dataset in the context of fine-tuning LLMs?
+
+  The Alpaca dataset is a valuable resource for fine-tuning LLMs on instruction data. It provides a large collection of diverse instructions and corresponding responses, enabling the model to learn a wider range of task-specific behaviors.
+
+  
+
+### 7.7 抽取并保存模型回复
+
+1. Describe the process of evaluating the performance of an instruction-finetuned Large Language Model (LLM) after training.
+
+   Evaluation involves extracting model-generated responses from a heldout test set, manually analyzing them, and then quantifying the response quality using various methods such as benchmarks, human comparison, or automated metrics
+
+2. What are the different methods for evaluating the performance of instruction-fine-tuned LLMs, and what are their relative strengths and weaknesses?
+
+  Methods include short-answer benchmarks (e.g., MMLU), human preference comparisons, and automated conversational benchmarks (e.g., AlpacaEval). Human evaluation provides valuable insights but is time-consuming, while automated methods are efficient but may lack the nuance of human judgment.
+
+3. What is meant by 'conversational performance' in the context of LLMs, and why is it important?
+
+  Conversational performance refers to an LLM's ability to engage in human-like communication, understanding context, nuance, and intent. It's crucial for applications like chatbots where natural and coherent interaction is essential.
+
+4. How can the responses generated by an LLM be automatically evaluated using another LLM, and what are the advantages of this approach?
+
+  An approach similar to AlpacaEval can be used, employing another LLM to evaluate the responses. This automated method is efficient, saving time and resources compared to manual human evaluation while still providing meaningful performance indicators.
+
+5. Explain the process of appending generated model responses to a test set and saving the updated data for later analysis.
+
+  The generated model responses are added to a dictionary containing the test data. This updated data is then saved as a JSON file (e.g., 'instruction-data-with-response.json') for easy access and analysis in
+  future sessions.
+
+  
+
+  
 
 ### 7.8 评估微调后的大语言模型
 
-6.Match the terms to its description on the right:
+1. What is the purpose of using a larger LLM to evaluate the responses of a fine-tuned model?
 
+  A larger LLM, like Llama 3 or GPT-4, can be used to automatically assess the quality of responses generated by a fine-tuned model. This provides a more objective and scalable method for evaluating model performance compared to manually reviewing a few examples.
 
+2. Describe the process of using Ollama to evaluate the responses of a finetuned model.
+
+   Ollama, an open-source application, allows you to run LLMs locally. You can use the query_model function to send prompts to the LLM, such as asking it to score a model's response on a scale of 0 to 100. The LLM's evaluation can then be used to assess the overall performance of the fine-tuned model.
+
+3. What are some alternative LLMs that can be used for evaluating model responses, besides the 8-billion-parameter Llama 3 model?
+
+  Other LLMs, such as the 3.8-billion-parameter phi3 model or the larger 70-billion-parameter Llama 3 model, can be used with Ollama. The choice of model depends on the available computational resources and the desired level of performance.
+
+4. How can the generate_model_scores function be used to assess the performance of a fine-tuned model?
+
+  The generate_model_scores function iterates through a set of test data, sending prompts to the LLM to evaluate each model response. It then calculates the average score across all responses, providing a quantitative measure of the model's performance.
+
+5. What are some strategies for improving the performance of a fine-tuned model?
+
+  Strategies for improving model performance include adjusting hyperparameters during fine-tuning, increasing the size or diversity of the training dataset, experimenting with different prompts or instruction formats, and using a larger pretrained model.
+
+6. 将术语与其右侧的描述进行匹配：
+
+| Test Set                            |      | A method of evaluating the conversational performance of a language model using another language model to assess the quality of responses. |
+| ----------------------------------- | ---- | ------------------------------------------------------------ |
+| Conversational Performance          |      | The ability of a language model to engage in human-like communication, understanding context, nuance, and intent. |
+| Automated Conversational Benchmarks |      | A portion of data that is held out from the training process and used to evaluate the performance of a trained model. |
 
 Fill the table with the column mappings:
 

@@ -1,6 +1,6 @@
 # 人工智能
 
-*Updated 2025-12-27 00:42 GMT+8*  
+*Updated 2025-12-27 17:03 GMT+8*  
 *Compiled by Hongfei Yan (2025 Summer)*    
 
 https://github.com/GMyhf/2025fall-cs201/blob/main/AI_literacy.md
@@ -7921,21 +7921,23 @@ Fill the table with the column mappings:
 
 1. Why are word embeddings necessary for processing text data in deep learning models?
 
-  
+Deep learning models operate on numerical data, while text is categorical. Word embeddings convert words into continuous-valued vectors, making them compatible with the mathematical operations used in neural networks. 
 
 2. What is the main idea behind the Word2Vec approach to generating word embeddings?
 
-  
+Word2Vec trains a neural network to predict the context of a word given the target word or vice versa. This approach assumes that words appearing in similar contexts tend to have similar meanings, resulting in clustered representations of related words in the embedding space.
 
 3. Explain the trade-off involved in choosing the dimensionality of word embeddings.
 
-  
+Higher dimensionality in word embeddings can capture more nuanced relationships between words but comes at the cost of computational efficiency. Lower dimensionality offers faster processing but may sacrifice some semantic detail.
 
 4. How do LLMs typically handle word embeddings compared to using pretrained models like Word2Vec?
 
-  
+LLMs often generate their own embeddings as part of the input layer and optimize them during training. This allows for embeddings tailored to the specific task and data, potentially leading to better performance than using pre-trained embeddings.
 
 5. What is the primary challenge associated with visualizing highdimensional word embeddings?
+
+Our visual perception and common graphical representations are limited to three dimensions or fewer. Visualizing high-dimensional embeddings requires specialized techniques or dimensionality reduction methods.
 
 
 
@@ -7943,19 +7945,19 @@ Fill the table with the column mappings:
 
 1. What is the purpose of tokenizing text in the context of building a large language model?
 
-  
+Tokenization is a crucial preprocessing step for creating embeddings for an LLM. It involves splitting input text into individual tokens, which are either words or special characters, to prepare the text for further processing and embedding creation.
 
 2. Describe the process of tokenizing text using Python's regular expression library 're'.
 
-  
+The 're.split' function can be used to split text based on specific patterns. By defining a regular expression that matches whitespace characters, punctuation marks, and other special characters, we can separate the text into individual tokens. The resulting list can then be further processed to remove redundant whitespace characters.
 
 3. Why is it important to consider capitalization when tokenizing text for LLM training?
 
-  
+  Capitalization helps LLMs distinguish between proper nouns and common nouns, understand sentence structure, and learn to generate text with proper capitalization. Therefore, preserving capitalization during tokenization is beneficial for training effective language models.
 
 4. Explain the trade-off between removing whitespaces during tokenization and keeping them.
 
-
+Removing whitespaces reduces memory and computing requirements. However, keeping whitespaces can be useful for training models that are sensitive to the exact structure of the text, such as Python code, which relies on indentation and spacing.
 
 5. Match the terms to its description on the right:
 
@@ -7979,25 +7981,34 @@ Fill the table with the column mappings:
 
 1. What is the purpose of converting tokens into token IDs?
 
-   
+   Converting tokens into token IDs is an intermediate step before converting them into embedding vectors. This process allows for efficient representation and processing of text data within a language model.
 
 2. How is a vocabulary created for tokenization?
 
-   
+   A vocabulary is created by tokenizing the entire training dataset, sorting the unique tokens alphabetically, and assigning a unique integer to each token. This mapping allows for efficient conversion between tokens and their corresponding integer representations.
 
 3. What is the purpose of the encode method in the SimpleTokenizerV1 class?
 
-  
+  The encode method takes text as input, splits it into tokens, and uses the vocabulary to convert these tokens into their corresponding integer IDs. This process allows for representing text data as a sequence of integers, which can be processed by the language model.
 
 4. What is the purpose of the decode method in the SimpleTokenizerV1 class?
 
-  
+  The decode method takes a sequence of token IDs as input and uses the inverse vocabulary to convert these IDs back into their corresponding text tokens. This process allows for converting the output of the language model, which is a sequence of integers, back into human-readable text.
 
 5. What is the limitation of using a vocabulary built from a small training set?
 
-
+Using a vocabulary built from a small training set can lead to issues when encountering new words or phrases not present in the training data. This can result in errors during tokenization and decoding, highlighting the importance of using large and diverse training sets for building robust
+language models.
 
 6. Match the terms to its description on the right:
+
+
+
+| Tokenization |  | individual units of text that result from tokenization, representing words, punctuation, or other special characters. | 
+|--------------|---|------------------------------------------------------------------------------------------------------------------| 
+| Tokens       |  | used to define patterns in text, allowing for flexible and precise text manipulation, including tokenization.     | 
+| Regular Expressions |  | initial steps taken to prepare text data for further processing, such as tokenization, which makes the text suitable for use in language models. | 
+| Preprocessing |  | splitting text into individual units, called tokens, which can be words, punctuation marks, or other special characters. |
 
 
 
@@ -8015,15 +8026,17 @@ Fill the table with the column mappings:
 
 1. What are the two special tokens added to the vocabulary and what are their purposes?
 
-  
+  The two special tokens added are <|unk|> and <|endoftext|>. <|unk|> represents unknown words not in the training data, while <|endoftext|> separates unrelated text sources, helping the LLM understand their
+distinct nature.
 
 2. How does the modified SimpleTokenizerV2 handle unknown words?
 
-   
+   When encountering a word not in the vocabulary, SimpleTokenizerV2 replaces it with the <|unk|> token, ensuring that all words are represented in the encoded text.
 
 3. Explain the purpose of the <|endoftext|> token when training on multiple independent documents.
 
-  
+  The <|endoftext|> token acts as a marker between unrelated text sources, signaling the start or end of a particular segment. This helps the LLM understand that these texts, though concatenated for training, are
+distinct entities。
 
 4. A piece of the code has been removed from this listing. Which of these terms has been removed and where should it go?
 
@@ -8052,15 +8065,21 @@ Fill out the table with your answer
 
 | Position | 1    |
 | -------- | ---- |
-| Term     |      |
+| Term     | C    |
 
 
 
 5. What are the additional special tokens commonly used in LLMs, and what are their functions?
 
-
+Other common special tokens include [BOS] (beginning of sequence), [EOS] (end of sequence), and [PAD] (padding). [BOS] marks the start of a text, [EOS] indicates the end, and [PAD] is used to extend shorter texts
 
 6. Match the terms to its description on the right:
+
+| Vocabulary   |      | integer representations of tokens, used as an intermediate step before converting tokens into embedding vectors. |
+| ------------ | ---- | ------------------------------------------------------------ |
+| Token IDs    |      | the dataset used to build the vocabulary and train the language model. |
+| Tokenizer    |      | a mapping from unique tokens to unique integer values, created by tokenizing the entire training dataset and sorting the tokens alphabetically. |
+| Training Set |      | a class that implements methods for encoding text into token IDs and decoding token IDs back into text. |
 
 
 
@@ -8080,22 +8099,24 @@ Fill the table with the column mappings:
 
 | Stage | Description |
 | ----- | ----------- |
-| 1     |             |
-| 2     |             |
+| 1     | Tokens      |
+| 2     | Token IDs   |
 
 2. What is the primary advantage of using Byte Pair Encoding (BPE) for tokenization, especially when dealing with unknown words?
 
-  
+  BPE tokenizers break down unknown words into smaller subword units or even individual characters. This allows them to handle any word without needing a special <|unk|> token, ensuring that the tokenizer and the LLM can process any text, even if it contains words not present in the training data.
 
 3. What is the total vocabulary size of the BPE tokenizer used in models like GPT-2, GPT-3, and the original ChatGPT?
 
-  
+  The BPE tokenizer used in these models has a vocabulary size of 50,257, with the <|endoftext|> token assigned the largest token ID.
 
 4. How does the BPE tokenizer handle unknown words, such as someunknownPlace, without using <|unk|> tokens?
 
-  
+  The BPE tokenizer breaks down unknown words into smaller subword units or individual characters. This allows it to represent any word as a sequence of known subword tokens or characters, enabling it to process any text without needing a special token for unknown words
 
 5. What Python library is used to implement the BPE tokenizer in the provided code example?
+
+The code uses the tiktoken library, which is an open-source Python library that efficiently implements the BPE algorithm based on Rust code.
 
 
 
@@ -8103,11 +8124,11 @@ Fill the table with the column mappings:
 
 1. Explain the purpose of creating input-target pairs in the context of training a large language model (LLM).
 
-  
+  Input-target pairs are essential for training LLMs because they provide the model with examples of text sequences and their corresponding next words. This allows the LLM to learn the relationships between words and predict the most likely next word in a given context.
 
 2. Describe the sliding window approach used for generating input-target pairs and how it works.
 
-  
+  The sliding window approach involves iterating through a text sequence and extracting overlapping chunks of text as inputs. Each input chunk is paired with the corresponding next word as the target. The window slides across the text, creating multiple input-target pairs for training.
 
 3. Pieces of the code have been removed from three places in this listing. Which of these terms have been removed and where should they go?
 
@@ -8125,11 +8146,12 @@ A torch.vector B tiktoken C tokenizer D torch.tensor
 
 4. What is the role of the stride parameter in the GPTDatasetV1 class, and how does it affect the generation of input-target pairs?
 
-  
+  The stride parameter determines the step size of the sliding window. A smaller stride results in more overlapping input chunks, while a larger stride creates less overlap. The choice of stride influences the amount of data generated and the potential for capturing long-range dependencies in the text.
 
 5. Explain the purpose of the max_length parameter in the GPTDatasetV1 class and its impact on the input-target pairs.
 
-  
+  The max_length parameter defines the size of the input chunks extracted from the text. It determines the number of tokens included in each input sequence. A larger max_length allows the LLM to process longer
+contexts, but it also increases the computational cost of training.
 
 6. Pieces of the code have been removed from two places in this listing. Which of these terms have been removed and where should they go?
 
@@ -8169,9 +8191,12 @@ Fill out the table with your answers
 
 7. What is the significance of using PyTorch's Dataset and DataLoader classes for creating a data loader for LLM training?
 
-
+PyTorch's Dataset and DataLoader classes provide a convenient and efficient way to manage and iterate over large datasets. They allow for batching, shuffling, and parallel data loading, which are crucial for
+optimizing the training process of LLMs.
 
 8. Match the terms to its description on the right:
+
+缺少
 
 
 
@@ -8187,11 +8212,11 @@ Fill the table with the column mappings:
 
 1. Why are embedding vectors necessary for training GPT-like LLMs?
 
-   
+   Embedding vectors are essential for training GPT-like LLMs because these models are deep neural networks that rely on the backpropagation algorithm for learning. Backpropagation requires continuous vector representations, which embedding vectors provide.
 
 2. How are embedding weights initialized in the beginning of LLM training?
 
-   
+   Embedding weights are initially assigned random values. These random values serve as the starting point for the LLM's learning process. During training, the embedding weights are optimized through backpropagation to improve the model's performance.
 
 3. What is the missing stage from this diagram?
 
@@ -8199,19 +8224,27 @@ Fill the table with the column mappings:
 
 
 
-| Context Size       |      | number of positions the input window is shifted when creating the next batch of input-target pairs. |
-| ------------------ | ---- | ------------------------------------------------------------ |
-| Input-Target Pairs |      | a technique used to create input-target pairs from a text dataset by moving a window of tokens across the text. |
-| Sliding Window     |      | number of tokens that the LLM uses as input to predict the next word. |
-| Stride             |      | a set of data used to train an LLM, where the input is a sequence of tokens and the target is the next token in the sequence. |
+The missing stage in the diagram is Token IDs.
 
 
+
+4. Q
+
+   The embedding layer acts as a lookup table. When given a token ID, it retrieves the corresponding embedding vector from its weight matrix. This embedding vector is a continuous representation of the token, allowing the LLM to process it effectively.
+
+5. Q
+
+The embedding layer's weight matrix has a number of rows equal to the vocabulary size, representing each unique token. The number of columns corresponds to the embedding dimension, which determines the size of the embedding vector for each token.
 
 
 
 6. Match the terms to its description on the right:
 
-
+| Context Size       |      | number of positions the input window is shifted when creating the next batch of input-target pairs. |
+| ------------------ | ---- | ------------------------------------------------------------ |
+| Input-Target Pairs |      | a technique used to create input-target pairs from a text dataset by moving a window of tokens across the text. |
+| Sliding Window     |      | number of tokens that the LLM uses as input to predict the next word. |
+| Stride             |      | a set of data used to train an LLM, where the input is a sequence of tokens and the target is the next token in the sequence. |
 
 Fill the table with the column mappings:
 
@@ -8225,23 +8258,25 @@ Fill the table with the column mappings:
 
 1. What is the main shortcoming of LLMs in terms of token order and how is it addressed?
 
-  
+  LLMs' self-attention mechanism lacks a notion of token order. To address this, positional embeddings are introduced, which provide information about the position of each token within a sequence.
 
 2. Explain the difference between absolute and relative positional embeddings.
 
-  
+  Absolute positional embeddings assign a unique embedding to each position in a sequence, indicating its exact location. Relative positional embeddings focus on the relative distance between tokens, allowing the
+model to generalize better to sequences of varying lengths.
 
 3. How are positional embeddings used in OpenAI's GPT models?
 
-   
+   GPT models use absolute positional embeddings that are optimized during training. These embeddings are not fixed or predefined but are learned alongside the model's other parameters.
 
 4. Describe the process of creating input embeddings for an LLM using token embeddings and positional embeddings.
 
-  
+  Token embeddings are generated by mapping token IDs to vectors. Positional embeddings are then added to these token embeddings, resulting in input embeddings that incorporate both token identity and
+positional information.
 
 5. What is the purpose of the token_embedding_layer and pos_embedding_layer in the code provided?
 
-
+The token_embedding_layer converts token IDs into embedding vectors, while the pos_embedding_layer generates positional embeddings based on the position of each token in the sequence
 
 
 

@@ -1,6 +1,6 @@
 # 人工智能
 
-*Updated 2025-12-27 23:50 GMT+8*  
+*Updated 2026-01-03 17:21 GMT+8*  
 *Compiled by Hongfei Yan (2025 Summer)*    
 
 https://github.com/GMyhf/2025fall-cs201/blob/main/AI_literacy.md
@@ -8301,8 +8301,8 @@ Fill the table with the column mappings:
    B. 单头注意力（single-head attention）
    C. 神经注意力（neural attention）
 5. 注意力机制中的____________用于在训练过程中随机丢弃部分注意力权重，防止模型过度依赖某些特定连接。
-   A. 丢弃法（dropout）
-   **B. 正则化（regularization）**
+   **A. 丢弃法（dropout）**
+   B. 正则化（regularization）
    C. 编码（encoding）
 6. ____________类在一个单一类中集成了多头功能，而MultiHeadAttentionWrapper类则使用多个独立的CausalAttention对象组成的列表。
    A. CausalAttention

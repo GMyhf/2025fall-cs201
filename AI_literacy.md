@@ -1,6 +1,6 @@
 # 人工智能
 
-*Updated 2026-01-03 17:21 GMT+8*  
+*Updated 2026-01-04 18:03 GMT+8*  
 *Compiled by Hongfei Yan (2025 Summer)*    
 
 https://github.com/GMyhf/2025fall-cs201/blob/main/AI_literacy.md
@@ -8935,11 +8935,11 @@ Fill the table with the column mappings:
 | Perplexity           |      | a measure used alongside cross entropy loss to evaluate the performance of models in tasks like language modeling, providing a more interpretable way to understand the uncertainty of a model in predicting the next token in a sequence. |
 | Backpropagation      |      | a numerical measure used to assess the quality of text generated during training, indicating how well the model's predictions align with the desired target text. |
 
-Fill the table with the column mappings:
+Fill the table with the column mappings:  ⚠️这个连线题目答案给的是 3 1 4 2，是错的。应该是 4 1 3 2。
 
 | Left Hand Column  | 1    | 2    | 3    | 4    |
 | ----------------- | ---- | ---- | ---- | ---- |
-| Right Hand Column | 3    | 1    | 4    | 2    |
+| Right Hand Column | 4    | 1    | 3    | 2    |
 
 
 

@@ -1214,12 +1214,6 @@ print(total)
 
 
 
-
-
-
-
-
-
 ## 五、每日选做题目
 
 网址，https://github.com/GMyhf/2025fall-cs201/blob/main/DSA_problem_list_at_2025fall.md
@@ -5183,8 +5177,6 @@ print(max_sum)
 146.LRU缓存
 
 hash table, doubly-linked list, https://leetcode.cn/problems/lru-cache/
-
-
 
 
 

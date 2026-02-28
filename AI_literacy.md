@@ -1,6 +1,6 @@
 # 人工智能
 
-*Updated 2026-01-04 18:03 GMT+8*  
+*Updated 2026-02-28 22:40 GMT+8*  
 *Compiled by Hongfei Yan (2025 Summer)*    
 
 https://github.com/GMyhf/2025fall-cs201/blob/main/AI_literacy.md
@@ -5571,7 +5571,61 @@ if __name__ == '__main__':
 
 
 
-# 5. 运行《从零构建大模型》代码
+# 5.强化学习
+
+## 5.1 Pong 游戏智能体
+
+包含多种强化学习算法（Q-learning, DQN, A2C）用于训练 Pong 游戏智能体的仓库。本项目提供了完整的训练环境、算法实现以及可视化工具。
+
+> 【钟煜晨25级工院】贡献几个RL的实例，《动手学强化学习》https://hrl.boyuai.com 上的前面的算法，都用自己创建的一个乒乓球小游戏的环境在cpu上面跑通过。然后还看了一些yutube上面斯坦福的cs231n。
+
+https://github.com/DawnTilDusk/RL-pong
+
+
+
+![b4b9b09baae54999124c0d40b103f821](https://raw.githubusercontent.com/GMyhf/img/main/img/b4b9b09baae54999124c0d40b103f821.png)
+
+
+
+![069863b29821d10dce6ac5be5b672f88](https://raw.githubusercontent.com/GMyhf/img/main/img/069863b29821d10dce6ac5be5b672f88.png)
+
+
+
+![f2b4206a1e4b9b226b94b1cdf6080e36](https://raw.githubusercontent.com/GMyhf/img/main/img/f2b4206a1e4b9b226b94b1cdf6080e36.png)
+
+
+
+## 5.2 2048 游戏智能体
+
+图形界面，上下左右键玩2048
+
+https://github.com/GMyhf/2025spring-cs201/blob/main/code/2048/1_game_2048_gui.py
+
+<img src="https://raw.githubusercontent.com/GMyhf/img/main/img/4c2083c36ead794a176139ce9b55a844.png" alt="4c2083c36ead794a176139ce9b55a844" style="zoom:50%;" />
+
+
+
+用强化学习 DQN 算法训练，在我的Mac Studio 运行19个小时。
+
+https://github.com/GMyhf/2025spring-cs201/blob/main/code/2048/DQN_train_2048.py
+
+![8be359d76c8a61f2095958c2562a4214](https://raw.githubusercontent.com/GMyhf/img/main/img/8be359d76c8a61f2095958c2562a4214.png)
+
+
+
+获得模型参数文件 https://github.com/GMyhf/2025spring-cs201/blob/main/code/2048/2048_bot.pth
+
+
+
+利用模型，自动玩2048，https://github.com/GMyhf/2025spring-cs201/blob/main/code/2048/play_2048.py
+
+![d22f25773c3cc351bc791c1a77a0e5d9](https://raw.githubusercontent.com/GMyhf/img/main/img/d22f25773c3cc351bc791c1a77a0e5d9.png)
+
+
+
+
+
+# 6. 运行《从零构建大模型》代码
 
 《从零构建大模型》代码，https://github.com/rasbt/LLMs-from-scratch
 

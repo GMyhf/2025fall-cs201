@@ -5577,7 +5577,7 @@ if __name__ == '__main__':
 
 包含多种强化学习算法（Q-learning, DQN, A2C）用于训练 Pong 游戏智能体的仓库。本项目提供了完整的训练环境、算法实现以及可视化工具。
 
-> 【钟煜晨25级工院】贡献几个RL的实例，《动手学强化学习》https://hrl.boyuai.com 上的前面的算法，都用自己创建的一个乒乓球小游戏的环境在cpu上面跑通过。然后还看了一些yutube上面斯坦福的cs231n。
+> 【25级工学院同学】贡献几个RL的实例，《动手学强化学习》https://hrl.boyuai.com 上的前面的算法，都用自己创建的一个乒乓球小游戏的环境在cpu上面跑通过。然后还看了一些yutube上面斯坦福的cs231n。
 
 https://github.com/DawnTilDusk/RL-pong
 

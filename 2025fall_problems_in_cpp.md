@@ -5351,7 +5351,7 @@ int main() {
 >
 > 如果用 `class`：
 >
-> ```c++
+> ```cpp
 > class Model {
 >     string name;
 >     double value;
@@ -5361,7 +5361,7 @@ int main() {
 > - 默认是 **private**
 > - 你必须提供 getter 或者把成员改成 `public`：
 >
-> ```c++
+> ```cpp
 > class Model {
 > public:
 >     string name;

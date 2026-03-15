@@ -1,15 +1,15 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2025-12-13 13:40 GMT+8*
+*Updated 2026-03-15 20:13 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
 
 > Logs:
 >
-> 2025/10/15: 加了些 数算、计概 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】、【罗锐，25工学院，】、【海博治 城市与环境学院】、【刘思哲 25工学院】同学的CPP代码。
+> 2025fall～2026spring: 加了些 数算、计概 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】、【罗锐，25工学院，】、【海博治 城市与环境学院】、【刘思哲 25工学院】、【黄浩展 25工学院】同学的CPP代码。
 >
-> 鉴于每学期都有同学偏好C++编程，本学期除维护Python题解外，也开始提供C++题解支持。
+> 鉴于每学期都有同学偏好C++编程，也开始提供C++题解支持。
 
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                     
+>                                                                                                                                        
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                     
+>                                                                                                                                        
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                     
+>                                                                                                                                        
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                     
+>                                                                                                                                        
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                     
+>                                                                                                                                        
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -6392,6 +6392,117 @@ int main() {
 
 
 
+## T20052:最大点数（同2048规则）
+
+dfs, matrices, http://cs101.openjudge.cn/pctbook/T20052/
+
+【黄浩展 25工学院】思路：
+
+先写最简单的左移操作，右移可直接翻转，上移对每列转化为数组进行左移操作，下移为上移翻转，之后递归搜索并更新最大值
+
+```cpp
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+void mergeleft(vector<int>& line) {
+	vector<int>nxt, tmp;
+	for (int n : line)
+		if (n != 0)
+			nxt.push_back(n);
+	line = vector<int>(line.size(), 0);
+	for (int i = 0; i < nxt.size();) {
+		if (i + 1 < nxt.size() && nxt[i] == nxt[i + 1]) {
+			tmp.push_back(2 * nxt[i]);
+			i += 2;
+		}
+		else {
+			tmp.push_back(nxt[i]);
+			i++;
+		}
+	}
+	for(int i=0;i<tmp.size();i++)
+		line[i] = tmp[i];
+}
+
+void mergeright(vector<int>& line) {
+	reverse(line.begin(), line.end());
+	mergeleft(line);
+	reverse(line.begin(), line.end());
+}
+
+void ml(vector <vector<int>>& grid) {
+	for (auto &r : grid)
+		mergeleft(r);
+}
+
+void mr(vector<vector<int>>& grid) {
+	for (auto &r : grid)
+		mergeright(r);
+}
+
+void mu(vector<vector<int>>& grid) {
+	for (int i = 0; i < grid[0].size(); i++) {
+		vector<int>tmp;
+		for (int j = 0; j < grid.size(); j++)
+			tmp.push_back(grid[j][i]);
+		mergeleft(tmp);
+		for (int k = 0; k < grid.size(); k++)
+			grid[k][i] = (k<tmp.size()?tmp[k]:0);
+	}
+}
+
+void md(vector<vector<int>>& grid) {
+	reverse(grid.begin(), grid.end());
+	mu(grid);
+	reverse(grid.begin(), grid.end());
+}
+
+int findmax(vector<vector<int>>& grid) {
+	int res = 0, m = grid.size(), n = grid[0].size();
+	for (int i = 0; i < m; i++)
+		for (int j = 0; j < n; j++)
+			res = max(res, grid[i][j]);
+	return res;
+}
+
+void dfs(vector<vector<int>>& grid, int step, int& ans, int p) {
+	ans = max(ans, findmax(grid));
+	if (step == p) return;
+	vector<vector<int>>tl = grid, tr = grid, tu = grid, td = grid;
+	ml(tl);
+	if(tl!= grid)
+		dfs(tl, step + 1, ans, p);
+	mr(tr);
+	if (tr!= grid)
+		dfs(tr, step + 1, ans, p);
+	mu(tu);
+	if (tu!= grid)
+		dfs(tu, step + 1, ans, p);
+	md(td);
+	if (td!= grid)
+		dfs(td, step + 1, ans, p);
+}
+
+int main() {
+	int m, n, p; 
+	cin >> m >> n >> p;
+	vector<vector<int>>grid(m, vector<int>(n));
+	for (int i = 0; i < m; i++)
+		for (int j = 0; j < n; j++)
+			cin >> grid[i][j];
+	int ans = 0;
+	dfs(grid, 0, ans, p);
+	cout << ans << endl;
+	return 0;
+}
+```
+
+
+
+
+
 ## T20576: printExp
 
 http://cs101.openjudge.cn/practice/20576/
@@ -8367,6 +8478,281 @@ public:
 
 
 
+## E108.将有序数组转换为二叉搜索树
+
+https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/
+
+思路：mid = (left + right) / 2 选中间元素作为根节点；
+
+左子数组递归生成左子树；
+
+右子数组递归生成右子树；
+
+```c++
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return build(nums, 0, nums.size() - 1);
+    }
+
+private:
+    TreeNode* build(const vector<int>& nums, int left, int right) {
+        if (left > right) return nullptr;  // 递归终止条件
+        int mid = left + (right - left) / 2;  // 取中点
+        TreeNode* root = new TreeNode(nums[mid]);
+        root->left = build(nums, left, mid - 1);
+        root->right = build(nums, mid + 1, right);
+        return root;
+    }
+};
+```
+
+
+
+
+
+## E118.杨辉三角
+
+dp, https://leetcode.cn/problems/pascals-triangle/
+
+思路：写两个循环即可
+
+```cpp
+class Solution 
+{
+public:
+    vector<vector<int>> generate(int numRows) 
+    {
+        vector<vector<int>> ans;
+        for (int i = 0; i < numRows; i++)
+        {
+            ans.push_back(vector<int>());
+            for (int j = 0; j < i + 1; j++)
+            {
+                if (j == 0 || j == i)
+                    ans[i].push_back(1);
+                else
+                    ans[i].push_back(ans[i - 1][j - 1] + ans[i - 1][j]);
+            }
+        }
+        return ans;
+
+    }
+};
+```
+
+
+
+
+
+## E160.相交链表
+
+two pinters, https://leetcode.cn/problems/intersection-of-two-linked-lists/
+
+思路：一路存地址即可，用时约20min
+
+```cpp
+class Solution 
+{
+public:
+    ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) 
+	{
+        map<ListNode*, int> m;
+		while (headA != NULL)
+		{
+            m[headA] = 1;
+            headA = headA->next;
+
+		}
+		while (headB != NULL)
+		{
+            if (m.find(headB) != m.end())
+                return headB;
+            headB = headB->next;
+		}
+        return NULL;
+
+    }
+};
+```
+
+
+
+
+
+## E190.颠倒二进制位
+
+  bit manipulation, https://leetcode.cn/problems/reverse-bits/
+
+```cpp
+class Solution {
+public:
+    int reverseBits(int n) {
+        unsigned int ori = n, ans = 0;
+        for (int i = 0; i < 32; i++) {
+            ans = (ans << 1) | (ori & 1);
+            ori >>= 1;
+        }
+        return static_cast<int>(ans);
+    }
+};
+```
+
+
+
+## E206.反转链表
+
+three pinters, recursion, https://leetcode.cn/problems/reverse-linked-list/
+
+思路：直接写就行，0ms，一遍过，用时约10min
+
+```cpp
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* prev = nullptr;
+        ListNode* cur = head;
+        while (cur) 
+        {
+            ListNode* nxt = cur->next;
+            cur->next = prev;
+            prev = cur;
+            cur = nxt;
+        }
+        head = prev;
+        return head;
+    }
+};
+```
+
+
+
+## E283.移动零
+
+stack, two pinters, https://leetcode.cn/problems/move-zeroes/
+
+思路：双指针处理即可,主要是考虑到各自的位置进行swap
+
+```c++
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        //要保证相对顺序不变 双指针来记录
+        //左指针指向处理好的尾部  右指针指向待处理的头部
+        //要实现把0都放到最后面 只需要每次左指针指向处理好的第一个0,右指针把非0转移即可
+        int l=0;
+        int r;
+        for(r=0;r<nums.size();r++){
+            if(nums[r]!=0){
+                swap(nums[l],nums[r]);
+                l++;
+            }
+        }
+    }
+};
+```
+
+
+
+
+
+思路：只需要将0放到最后即可
+
+```cpp
+class Solution
+{
+public:
+    void moveZeroes(vector<int>& nums)
+    {
+        int n = nums.size();
+        vector<int> temp;
+        for (int i = 0; i < n; i++)
+        {
+            if (nums[i] != 0)
+                temp.push_back(nums[i]);
+        }
+        for (int i = 0; i < n; i++)
+        {
+            if (i < temp.size())
+                nums[i] = temp[i];
+            else
+                nums[i] = 0;
+        }
+
+    }
+};
+```
+
+
+
+## E1078: Bigram分词
+
+https://leetcode.cn/problems/occurrences-after-bigram/
+
+思路：注意到text是以空格分割的，因此可以用流函数来构建wordList，再寻找符合条件的答案插入到结果列表即可
+
+```cpp
+class Solution
+{
+public:
+    vector<string> findOcurrences(string text, string first, string second)
+    {
+        vector<string> wordList;
+        stringstream ss(text);
+        string word;
+        while (ss >> word) 
+        {
+            wordList.push_back(word);
+        }
+
+        vector<string> result;
+        for (int i = 0; i < wordList.size() - 2; i++)
+        {
+            if (wordList[i] == first && wordList[i + 1] == second)
+            {
+                result.push_back(wordList[i + 2]);
+            }
+        }
+        return result;
+    }
+};
+```
+
+
+
+思路：分词后遍历即可
+
+```c++
+class Solution {
+public:
+    vector<string> findOcurrences(string text, string first, string second) {
+        //遍历即可
+        //将text分词
+        vector<string> dic;
+        string tmp="";
+        for(int i=0;i<text.size();i++){
+            if(text[i]!=' ') tmp+=text[i];
+            else{
+                dic.push_back(tmp);
+                tmp="";
+            }
+        }
+        dic.push_back(tmp);
+        vector<string> ans;
+        for(int i=0;i<dic.size();i++){
+            if(dic[i]==first){
+                if(i+2<dic.size()&&dic[i+1]==second){
+                    ans.push_back(dic[i+2]);
+                }
+            }
+        }
+        return ans;
+    }
+};
+```
+
+
+
 
 
 ## M46.全排列
@@ -8440,70 +8826,6 @@ public:
 };
 
 
-```
-
-
-## T51.N皇后
-
-backtracking, [https://leetcode.cn/problems/n-queens/](https://leetcode.cn/problems/n-queens/)
-
- 
-
-```c++
-#include <iostream>  
- #include <vector>  
- using namespace std;  
- 
- vector<int> row;  
- 
- bool is_Valid(int x, int y)  
- {  
-     for (int i = 0; i < x; i++)  
-         if (row[i] == y || abs(x - i) == abs(y - row[i]))  
-             return false;  
-     return true;  
- }  
- 
- void solve(int n, vector<vector<string>>& q, int x)  
- {  
-     if (x == n)  
-     {  
-         vector<string> tmp(n, string(n, '.'));  
-         for (int i = 0; i < row.size(); i++)  
-             tmp[i][row[i]] = 'Q';  
-         q.push_back(tmp);  
-         return;  
-     }  
-     for (int i = 0; i < n; i++)  
-         if (is_Valid(x, i))  
-         {  
-             row.push_back(i);  
-             solve(n, q, x + 1);  
-             row.pop_back();  
-         }  
- }  
-
- vector<vector<string>> solveNQueens(int n)  
- {  
-     vector<vector<string>> ans;  
-     solve(n, ans, 0);  
-     return ans;  
- }  
-
- int main()  
- {  
-     ios::sync_with_stdio(false);  
-     cin.tie(nullptr);  
-
-     int n = 4;  
-     for (auto i : solveNQueens(n))  
-     {  
-         for (auto j : i)  
-             cout << j << ' ';  
-         cout << '\n';  
-     }  
-     return 0;  
- }
 ```
 
 
@@ -8643,69 +8965,6 @@ public:
 ```
 
 
-
-## E108.将有序数组转换为二叉搜索树
-
-https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/
-
-思路：mid = (left + right) / 2 选中间元素作为根节点；
-
-左子数组递归生成左子树；
-
-右子数组递归生成右子树；
-
-```c++
-class Solution {
-public:
-    TreeNode* sortedArrayToBST(vector<int>& nums) {
-        return build(nums, 0, nums.size() - 1);
-    }
-
-private:
-    TreeNode* build(const vector<int>& nums, int left, int right) {
-        if (left > right) return nullptr;  // 递归终止条件
-        int mid = left + (right - left) / 2;  // 取中点
-        TreeNode* root = new TreeNode(nums[mid]);
-        root->left = build(nums, left, mid - 1);
-        root->right = build(nums, mid + 1, right);
-        return root;
-    }
-};
-```
-
-
-
-
-
-## E118.杨辉三角
-
-dp, https://leetcode.cn/problems/pascals-triangle/
-
-思路：写两个循环即可
-
-```cpp
-class Solution 
-{
-public:
-    vector<vector<int>> generate(int numRows) 
-    {
-        vector<vector<int>> ans;
-        for (int i = 0; i < numRows; i++)
-        {
-            ans.push_back(vector<int>());
-            for (int j = 0; j < i + 1; j++)
-            {
-                if (j == 0 || j == i)
-                    ans[i].push_back(1);
-                else
-                    ans[i].push_back(ans[i - 1][j - 1] + ans[i - 1][j]);
-            }
-        }
-        return ans;
-
-    }
-};
-```
 
 
 
@@ -8878,37 +9137,6 @@ public:
 
 
 
-## E160.相交链表
-
-two pinters, https://leetcode.cn/problems/intersection-of-two-linked-lists/
-
-思路：一路存地址即可，用时约20min
-
-```cpp
-class Solution 
-{
-public:
-    ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) 
-	{
-        map<ListNode*, int> m;
-		while (headA != NULL)
-		{
-            m[headA] = 1;
-            headA = headA->next;
-
-		}
-		while (headB != NULL)
-		{
-            if (m.find(headB) != m.end())
-                return headB;
-            headB = headB->next;
-		}
-        return NULL;
-
-    }
-};
-```
-
 
 
 ## M200.岛屿数量
@@ -8951,31 +9179,6 @@ private:
 ```
 
 
-
-## E206.反转链表
-
-three pinters, recursion, https://leetcode.cn/problems/reverse-linked-list/
-
-思路：直接写就行，0ms，一遍过，用时约10min
-
-```cpp
-class Solution {
-public:
-    ListNode* reverseList(ListNode* head) {
-        ListNode* prev = nullptr;
-        ListNode* cur = head;
-        while (cur) 
-        {
-            ListNode* nxt = cur->next;
-            cur->next = prev;
-            prev = cur;
-            cur = nxt;
-        }
-        head = prev;
-        return head;
-    }
-};
-```
 
 
 
@@ -9039,130 +9242,6 @@ public:
 
 
 
-## E283.移动零
-
-stack, two pinters, https://leetcode.cn/problems/move-zeroes/
-
-思路：双指针处理即可,主要是考虑到各自的位置进行swap
-
-```c++
-class Solution {
-public:
-    void moveZeroes(vector<int>& nums) {
-        //要保证相对顺序不变 双指针来记录
-        //左指针指向处理好的尾部  右指针指向待处理的头部
-        //要实现把0都放到最后面 只需要每次左指针指向处理好的第一个0,右指针把非0转移即可
-        int l=0;
-        int r;
-        for(r=0;r<nums.size();r++){
-            if(nums[r]!=0){
-                swap(nums[l],nums[r]);
-                l++;
-            }
-        }
-    }
-};
-```
-
-
-
-
-
-思路：只需要将0放到最后即可
-
-```cpp
-class Solution
-{
-public:
-    void moveZeroes(vector<int>& nums)
-    {
-        int n = nums.size();
-        vector<int> temp;
-        for (int i = 0; i < n; i++)
-        {
-            if (nums[i] != 0)
-                temp.push_back(nums[i]);
-        }
-        for (int i = 0; i < n; i++)
-        {
-            if (i < temp.size())
-                nums[i] = temp[i];
-            else
-                nums[i] = 0;
-        }
-
-    }
-};
-```
-
-
-
-## E1078: Bigram分词
-
-https://leetcode.cn/problems/occurrences-after-bigram/
-
-思路：注意到text是以空格分割的，因此可以用流函数来构建wordList，再寻找符合条件的答案插入到结果列表即可
-
-```cpp
-class Solution
-{
-public:
-    vector<string> findOcurrences(string text, string first, string second)
-    {
-        vector<string> wordList;
-        stringstream ss(text);
-        string word;
-        while (ss >> word) 
-        {
-            wordList.push_back(word);
-        }
-
-        vector<string> result;
-        for (int i = 0; i < wordList.size() - 2; i++)
-        {
-            if (wordList[i] == first && wordList[i + 1] == second)
-            {
-                result.push_back(wordList[i + 2]);
-            }
-        }
-        return result;
-    }
-};
-```
-
-
-
-思路：分词后遍历即可
-
-```c++
-class Solution {
-public:
-    vector<string> findOcurrences(string text, string first, string second) {
-        //遍历即可
-        //将text分词
-        vector<string> dic;
-        string tmp="";
-        for(int i=0;i<text.size();i++){
-            if(text[i]!=' ') tmp+=text[i];
-            else{
-                dic.push_back(tmp);
-                tmp="";
-            }
-        }
-        dic.push_back(tmp);
-        vector<string> ans;
-        for(int i=0;i<dic.size();i++){
-            if(dic[i]==first){
-                if(i+2<dic.size()&&dic[i+1]==second){
-                    ans.push_back(dic[i+2]);
-                }
-            }
-        }
-        return ans;
-    }
-};
-```
-
 
 
 ## M1123.最深叶节点的最近公共祖先
@@ -9205,6 +9284,47 @@ public:
 
 
 
+## M1536.排布二进制网格的最少交换次数
+
+greedy, matrix, https://leetcode.cn/problems/minimum-swaps-to-arrange-a-binary-grid/
+
+思路：统计后缀零后第一个1的位置再按行冒泡检查能否满足  
+
+```cpp
+class Solution {
+public:
+    int minSwaps(vector<vector<int>>& grid) {
+        int n = grid.size();
+        vector<int>col(n,-1);
+        for (int i = 0; i < n; i++) {
+            for (int j = n - 1; j >= 0; j--) {
+                if (grid[i][j] == 1) {
+                    col[i] = j;
+                    break;
+                }
+            }
+        }
+        int ans = 0, check = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                if (col[j] <= i) {
+                    ans += (j - i);
+                    for (int k = j; k > i; k--)
+                        col[k] = col[k - 1];
+                    goto nxt;
+                }
+            }
+            return -1;
+        nxt:
+            ;
+        }
+        return ans;
+    }
+};
+```
+
+  
+
 
 
 ## M1760.袋子里最少数目的球
@@ -9244,6 +9364,71 @@ public:
     }
 };
 
+```
+
+
+
+## T51.N皇后
+
+backtracking, [https://leetcode.cn/problems/n-queens/](https://leetcode.cn/problems/n-queens/)
+
+ 
+
+```c++
+#include <iostream>  
+ #include <vector>  
+ using namespace std;  
+ 
+ vector<int> row;  
+ 
+ bool is_Valid(int x, int y)  
+ {  
+     for (int i = 0; i < x; i++)  
+         if (row[i] == y || abs(x - i) == abs(y - row[i]))  
+             return false;  
+     return true;  
+ }  
+ 
+ void solve(int n, vector<vector<string>>& q, int x)  
+ {  
+     if (x == n)  
+     {  
+         vector<string> tmp(n, string(n, '.'));  
+         for (int i = 0; i < row.size(); i++)  
+             tmp[i][row[i]] = 'Q';  
+         q.push_back(tmp);  
+         return;  
+     }  
+     for (int i = 0; i < n; i++)  
+         if (is_Valid(x, i))  
+         {  
+             row.push_back(i);  
+             solve(n, q, x + 1);  
+             row.pop_back();  
+         }  
+ }  
+
+ vector<vector<string>> solveNQueens(int n)  
+ {  
+     vector<vector<string>> ans;  
+     solve(n, ans, 0);  
+     return ans;  
+ }  
+
+ int main()  
+ {  
+     ios::sync_with_stdio(false);  
+     cin.tie(nullptr);  
+
+     int n = 4;  
+     for (auto i : solveNQueens(n))  
+     {  
+         for (auto j : i)  
+             cout << j << ' ';  
+         cout << '\n';  
+     }  
+     return 0;  
+ }
 ```
 
 

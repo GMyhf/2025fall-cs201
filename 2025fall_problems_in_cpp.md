@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-03-15 20:13 GMT+8*
+*Updated 2026-03-18 11:37 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                              
+>                                                                                                                                                 
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                              
+>                                                                                                                                                 
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                              
+>                                                                                                                                                 
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                              
+>                                                                                                                                                 
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                              
+>                                                                                                                                                 
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -4507,6 +4507,83 @@ int main(){
 
 
 
+## 20018:蚂蚁王国的越野跑
+
+http://cs101.openjudge.cn/practice/20018/
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Fenwick
+{
+private:
+    int n;
+    vector<int> tree;
+
+public:
+    Fenwick(int n) : n(n), tree(n + 1, 0) {}
+
+    void update(int i)
+    {
+        while (i <= n)
+        {
+            ++tree[i];
+            i += (i & -i);
+        }
+    }
+
+    long long query(int i)
+    {
+        long long s = 0;
+        while (i > 0)
+        {
+            s += tree[i];
+            i &= i - 1;
+        }
+        return s;
+    }
+};
+
+int main()
+{
+    cin.tie(nullptr)->sync_with_stdio(false);
+
+    int N;
+    cin >> N;
+    vector<int> v(N), vals(N);
+    for (int i = 0; i < N; ++i)
+    {
+        int ipt;
+        cin >> ipt;
+        v[i] = ipt, vals[i] = ipt;
+    }
+
+    sort(v.begin(), v.end());
+    v.erase(unique(v.begin(), v.end()), v.end());
+
+    Fenwick BIT(N);
+
+    long long ans = 0;
+    for (const auto &x : vals)
+    {
+        int r = lower_bound(v.begin(), v.end(), x) - v.begin() + 1;
+        ans += BIT.query(r - 1);
+        BIT.update(r);
+    }
+
+    cout << ans << '\n';
+    return 0;
+}
+```
+
+
+
+
+
+
 ## M21509:序列的中位数
 
 heap, http://cs101.openjudge.cn/practice/21509
@@ -6046,6 +6123,111 @@ int main(){
 
 
 # 挑战Tough
+
+## 01019: Number Sequence
+
+http://cs101.openjudge.cn/practice/01019/
+
+```cpp
+#include <iostream>
+using namespace std;
+
+typedef long long ll;
+class Solution
+{
+private:
+    ll get_Sk_len(ll k)
+    {
+        ll len = 0;
+        for (ll start = 1, digits = 1; start <= k; start *= 10, digits++)
+        {
+            ll end = start * 10 - 1;
+            if (end > k)
+                end = k;
+            len += (end - start + 1) * digits;
+        }
+        return len;
+    }
+
+    ll get_total_len(ll k)
+    {
+        ll total = 0;
+        for (ll start = 1, digits = 1; start <= k; start *= 10, digits++)
+        {
+            ll end = start * 10 - 1;
+            if (end > k)
+                end = k;
+
+            ll first_Sk_len = get_Sk_len(start);
+            ll last_Sk_len = get_Sk_len(end);
+            ll n = (end - start + 1);
+
+            total += (first_Sk_len + last_Sk_len) * n / 2;
+        }
+        return total;
+    }
+
+public:
+    char solve(int x)
+    {
+        ll l = 1, r = 31268, k = 1;
+        while (l <= r)
+        {
+            ll mid = l + (r - l) / 2;
+            if (get_total_len(mid) >= x)
+            {
+                k = mid;
+                r = mid - 1;
+            }
+            else
+            {
+                l = mid + 1;
+            }
+        }
+
+        x -= get_total_len(k - 1);
+
+        l = 1, r = k;
+        ll num = 1;
+        while (l <= r)
+        {
+            ll mid = l + (r - l) / 2;
+            if (get_Sk_len(mid) >= x)
+            {
+                num = mid;
+                r = mid - 1;
+            }
+            else
+            {
+                l = mid + 1;
+            }
+        }
+
+        x -= get_Sk_len(num - 1);
+        string s = to_string(num);
+        return s[x - 1];
+    }
+};
+
+int main()
+{
+    cin.tie(nullptr)->sync_with_stdio(false);
+    int t;
+    cin >> t;
+    Solution sol;
+    while (t--)
+    {
+        ll x;
+        cin >> x;
+        cout << sol.solve(x) << '\n';
+    }
+    return 0;
+}
+```
+
+
+
+
 
 ## T01661: Help Jimmy
 
@@ -7653,6 +7835,153 @@ int main(){
 
 
 
+## M30178:数字华容道（Easy Version）
+
+merge sort, binary indexed tree, http://cs101.openjudge.cn/practice/30178/
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Fenwick
+{
+private:
+    int n;
+    vector<int> tree;
+
+public:
+    Fenwick(int n) : n(n), tree(n + 1, 0) {}
+
+    void update(int i)
+    {
+        while (i <= n)
+        {
+            ++tree[i];
+            i = i + (i & -i);
+        }
+    }
+
+    int query(int i)
+    {
+        int sum = 0;
+        while (i > 0)
+        {
+            sum += tree[i];
+            i &= i - 1;
+        }
+        return sum;
+    }
+};
+
+int main()
+{
+    cin.tie(nullptr)->sync_with_stdio(false);
+
+    int n;
+    cin >> n;
+    int sz = n * n;
+    vector<int> matrix;
+    int bottom_up;
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < n; ++j)
+        {
+            int x;
+            cin >> x;
+            if (x == 0)
+                bottom_up = n - i;
+            else
+                matrix.push_back(x);
+        }
+
+    Fenwick bit(sz);
+    long long cnt = 0;
+
+    for (int i = matrix.size() - 1; i >= 0; --i)
+    {
+        cnt += bit.query(matrix[i] - 1);
+        bit.update(matrix[i]);
+    }
+
+    bool flag = false;
+    if (n % 2 != 0)
+    {
+        if (cnt % 2 == 0)
+            flag = true;
+    }
+    else
+    {
+        if ((cnt + bottom_up) % 2 == 1)
+            flag = true;
+    }
+
+    cout << (flag == true ? "yes\n" : "no\n");
+    return 0;
+}
+```
+
+>共用时1h
+
+
+
+
+
+
+
+
+## T30201: 旅行售货商问题
+
+bitmask dp, http://cs101.openjudge.cn/practice/30201/
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+constexpr static int INF = 1e9;
+
+int main()
+{
+    cin.tie(nullptr)->sync_with_stdio(false);
+
+    int n;
+    cin >> n;
+    vector<vector<int>> G(n, vector<int>(n));
+    for (auto &g : G)
+        for (auto &x : g)
+            cin >> x;
+
+    int N = 1 << n;
+    vector<vector<int>> dp(N, vector<int>(n + 1, INF));
+    dp[1][0] = 0;
+
+    for (int mask = 1; mask < N; ++mask)
+        for (int u = 0; u < n; ++u)
+        {
+            if (!(mask & (1 << u)))
+                continue;
+            if (dp[mask][u] == INF)
+                continue;
+            for (int v = 0; v < n; ++v)
+            {
+                if ((mask & (1 << v)))
+                    continue;
+                dp[mask | (1 << v)][v] = min(dp[mask | (1 << v)][v], dp[mask][u] + G[u][v]);
+            }
+        }
+
+    int ans = INF;
+    for (int i = 1; i < n; ++i)
+        ans = min(ans, dp[N - 1][i] + G[i][0]);
+    cout << ans << '\n';
+    return 0;
+}
+```
+
+>共用时1h
+
+
+
 
 
 # Codeforces
@@ -8713,6 +9042,98 @@ public:
 
 
 
+## E303.区域和检索 - 数组不可变
+
+https://leetcode.cn/problems/range-sum-query-immutable/
+
+```cpp
+#include <iostream>
+#include <ranges>
+#include <vector>
+using namespace std;
+
+class NumArray
+{
+private:
+    vector<int> prefixSum;
+
+public:
+    NumArray(vector<int> &nums) : prefixSum(nums.size() + 1)
+    {
+        for (auto [i, v] : nums | views::enumerate)
+            prefixSum[i + 1] = prefixSum[i] + v;
+    }
+
+    int sumRange(int left, int right)
+    {
+        return prefixSum[right + 1] - prefixSum[left];
+    }
+};
+
+int main()
+{
+    cin.tie(nullptr)->sync_with_stdio(false);
+
+    vector<int> nums = {-2, 0, 3, -5, 2, -1};
+    int left = 2, right = 5;
+    NumArray *obj = new NumArray(nums);
+    int param_1 = obj->sumRange(left, right);
+    cout << param_1 << '\n';
+    return 0;
+}
+
+```
+
+
+
+
+
+## E868.二进制间距
+
+bit manipulation, https://leetcode.cn/problems/binary-gap/
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution
+{
+public:
+    int binaryGap(int n)
+    {
+        int last = -1, ans = 0;
+        for (int i = 0; n; ++i)
+        {
+            if (n & 1)
+            {
+                if (last != -1)
+                    ans = max(ans, i - last);
+                last = i;
+            }
+            n >>= 1;
+        }
+
+        return ans;
+    }
+};
+
+int main()
+{
+    cin.tie(nullptr)->sync_with_stdio(false);
+
+    Solution sol;
+    cout << sol.binaryGap(22) << '\n';
+    return 0;
+}
+```
+
+>共用时5min
+
+
+
+
+
 ## E1078: Bigram分词
 
 https://leetcode.cn/problems/occurrences-after-bigram/
@@ -9070,6 +9491,79 @@ public:
 
 
 
+
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+class Solution
+{
+public:
+    vector<vector<string>> partition(string s)
+    {
+        int n = s.length();
+        vector<vector<string>> ans;
+        vector<string> a;
+
+        auto dfs = [&](this auto &&dfs, int i)
+        {
+            if (i == n)
+            {
+                ans.emplace_back(a);
+                return;
+            }
+
+            for (int j = i; j < n; ++j)
+            {
+                string sub = s.substr(i, j - i + 1);
+                if (isPanlindromic(sub))
+                {
+                    a.emplace_back(sub);
+                    dfs(j + 1);
+                    a.pop_back();
+                }
+            }
+        };
+
+        dfs(0);
+        return ans;
+    }
+
+private:
+    inline bool isPanlindromic(const string &s)
+    {
+        int l = 0, r = s.length() - 1;
+        while (l < r)
+            if (s[l++] != s[r--])
+                return false;
+        return true;
+    }
+};
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    Solution sol;
+    string s = "aab";
+    for (auto i : sol.partition(s))
+    {
+        for (auto j : i)
+            cout << j << ' ';
+        cout << '\n';
+    }
+    return 0;
+}
+```
+
+
+
+
+
 ## M146.LRU缓存
 
 hash table, doubly-linked list, https://leetcode.cn/problems/lru-cache/
@@ -9268,6 +9762,106 @@ public:
 
 
 
+## M304.二维区域和检索 - 矩阵不可变
+
+prefix sum, https://leetcode.cn/problems/range-sum-query-2d-immutable/
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class NumMatrix
+{
+    vector<vector<int>> sum;
+
+public:
+    NumMatrix(vector<vector<int>> &matrix)
+    {
+        int n = matrix.size(), m = matrix[0].size();
+        sum.resize(n + 1, vector<int>(m + 1));
+        for (int i = 0; i < n; ++i)
+            for (int j = 0; j < m; ++j)
+                sum[i + 1][j + 1] = sum[i + 1][j] + sum[i][j + 1] - sum[i][j] + matrix[i][j];
+    }
+
+    int sumRegion(int row1, int col1, int row2, int col2)
+    {
+        return sum[row2 + 1][col2 + 1] - sum[row2 + 1][col1] - sum[row1][col2 + 1] + sum[row1][col1];
+    }
+};
+
+int main()
+{
+    cin.tie(nullptr)->sync_with_stdio(false);
+
+    vector<vector<int>> matrix = {{3, 0, 1, 4, 2}, {5, 6, 3, 2, 1}, {1, 2, 0, 1, 5}, {4, 1, 0, 1, 7}, {1, 0, 3, 0, 5}};
+    NumMatrix *numMatrix = new NumMatrix(matrix);
+    cout << numMatrix->sumRegion(2, 1, 4, 3) << '\n'; // return 8 (红色矩形框的元素总和)
+    cout << numMatrix->sumRegion(1, 1, 2, 2) << '\n'; // return 11 (绿色矩形框的元素总和)
+    cout << numMatrix->sumRegion(1, 2, 2, 4) << '\n'; // return 12 (蓝色矩形框的元素总和)
+    return 0;
+}
+```
+
+>共用时10min
+
+
+
+## M647.回文子串
+
+https://leetcode.cn/problems/palindromic-substrings/
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution
+{
+public:
+    int countSubstrings(string s)
+    {
+        string t = "^#";
+        for (char c : s)
+        {
+            t += c;
+            t += "#";
+        }
+        t += "$";
+
+        int n = t.size();
+        int ans = 0;
+        vector<int> p(n);
+        int r = 0, c = 0;
+        for (int i = 1; i < n - 1; ++i)
+        {
+            if (i < r)
+                p[i] = min(p[(c << 1) - i], r - i);
+            else
+                p[i] = 1;
+            while (t[i - p[i]] == t[i + p[i]])
+                ++p[i];
+            if (i + p[i] > r)
+                r = i + p[i], c = i;
+            ans += p[i] / 2;
+        }
+
+        return ans;
+    }
+};
+
+int main()
+{
+    cin.tie(nullptr)->sync_with_stdio(false);
+
+    Solution sol;
+    string s = "aaa";
+    cout << sol.countSubstrings(s) << '\n';
+    return 0;
+}
+```
+
 
 
 
@@ -9312,6 +9906,69 @@ public:
 
 
 
+## M1461.检查一个字符串是否包含所有长度为 K 的二进制子串
+
+bit manipulation, https://leetcode.cn/problems/check-if-a-string-contains-all-binary-codes-of-size-k/
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <unordered_set>
+using namespace std;
+
+class Solution
+{
+public:
+    bool hasAllCodes(string s, int k)
+    {
+        int total_needed = 1 << k;
+        if (s.size() < (size_t)total_needed + k - 1)
+            return false;
+
+        vector<bool> seen(total_needed, false);
+
+        int x = 0;
+        int cnt = 0;
+        int MASK = total_needed - 1;
+
+        for (int i = 0; i < k - 1; ++i)
+        {
+            x = (x << 1) | (s[i] & 1);
+        }
+
+        for (int i = k - 1; i < s.length(); ++i)
+        {
+            x = ((x << 1) & MASK) | (s[i] & 1);
+            if (!seen[x])
+            {
+                seen[x] = true;
+                if (++cnt == total_needed)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+};
+
+int main()
+{
+    cin.tie(nullptr)->sync_with_stdio(false);
+
+    Solution sol;
+    string s = "0110";
+    int k = 2;
+    cout << sol.hasAllCodes(s, k) << '\n';
+    return 0;
+}
+```
+
+>共用时20min
+
+
+
+
+
 ## M1536.排布二进制网格的最少交换次数
 
 greedy, matrix, https://leetcode.cn/problems/minimum-swaps-to-arrange-a-binary-grid/
@@ -9351,7 +10008,100 @@ public:
 };
 ```
 
-  
+ 
+
+## M1545. 找出第 N 个二进制字符串中的第 K 位
+
+https://leetcode.cn/problems/find-kth-bit-in-nth-binary-string/
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution
+{
+public:
+    char findKthBit(int n, int k)
+    {
+        if (n == 1)
+            return '0';
+        if (k == (1 << (n - 1)))
+            return '1';
+        if (k < (1 << (n - 1)))
+            return findKthBit(n - 1, k);
+        return findKthBit(n - 1, (1 << n) - k) ^ 1;
+    }
+};
+
+int main()
+{
+    cin.tie(nullptr)->sync_with_stdio(false);
+
+    Solution sol;
+    int n = 4, k = 11;
+    cout << sol.findKthBit(n, k) << '\n';
+    return 0;
+}
+```
+
+被0神的方法震撼到了。。。数学，很神奇吧
+
+```cpp
+class Solution
+{
+public:
+    char findKthBit(int n, int k)
+    {
+        if (k % 2)
+            return '0' + k / 2 % 2;
+        k /= k & -k;
+        return '1' - k / 2 % 2;
+    }
+};
+```
+
+
+
+## M1680.连接连续二进制数字
+
+bit manipulation, https://leetcode.cn/problems/concatenation-of-consecutive-binary-numbers/
+
+```cpp
+#include <iostream>
+#include <numeric>
+using namespace std;
+
+class Solution
+{
+public:
+    int concatenatedBinary(int n)
+    {
+        constexpr int MOD = 1000000007;
+        long long res = 0;
+        for (int i = 1; i <= n; ++i)
+        {
+            int w = bit_width((uint32_t)i);
+            res = (res << w | i) % MOD;
+        }
+        return res;
+    }
+};
+
+int main()
+{
+    cin.tie(nullptr)->sync_with_stdio(false);
+
+    Solution sol;
+    int n = 12;
+    cout << sol.concatenatedBinary(n) << '\n';
+    return 0;
+}
+```
+
+
+>共用时5min
+
 
 
 

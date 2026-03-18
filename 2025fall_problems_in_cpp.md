@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                 
+>                                                                                                                                                    
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                 
+>                                                                                                                                                    
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                 
+>                                                                                                                                                    
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                 
+>                                                                                                                                                    
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                 
+>                                                                                                                                                    
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -1164,7 +1164,7 @@ int main()
 
 
 
-## 20742: 泰波拿契數
+## E20742: 泰波拿契數
 
 http://cs101.openjudge.cn/practice/20742/
 
@@ -1195,6 +1195,32 @@ int main() {
     return 0;
 }
 ```
+
+
+
+
+
+```cpp
+#include <array>
+#include <iostream>
+
+auto main() -> int {
+  int n;
+  std::array<int, 31> T = {0, 1, 1};
+  std::cin >> n;
+  if (n >= 1 && n <= 2) {
+    std::cout << T[n] << "\n";
+    return 0;
+  }
+  for (int i = 3; i <= n; i++) {
+    T[i] = T[i - 1] + T[i - 2] + T[i - 3];
+  }
+  std::cout << T[n] << "\n";
+  return 0;
+}
+```
+
+>共用时5min
 
 
 
@@ -1733,6 +1759,40 @@ int main(){
 
 
 
+## E29950:稳定的符文序列
+
+two pointers, http://cs101.openjudge.cn/practice/E29950
+
+```cpp
+#include <iostream>
+#include <vector>
+
+auto main() -> int {
+  std::cin.tie(nullptr)->sync_with_stdio(false);
+
+  std::string s;
+  std::cin >> s;
+  int maxLen = 0;
+  int left = 0;
+  std::vector<int> last(26, -1);
+  for (int right = 0; right < s.length(); ++right) {
+    int char_idx = s[right] - 'a';
+    if (last[char_idx] >= left)
+      left = last[char_idx] + 1;
+
+    last[char_idx] = right;
+    maxLen = std::max(maxLen, right - left + 1);
+  }
+
+  std::cout << maxLen << '\n';
+  return 0;
+}
+```
+
+>共用时20min
+
+
+
 ## E29952 咒语序列
 
 思路：
@@ -1863,6 +1923,32 @@ int main(){
 ```
 
 
+
+## E30571.十进制整数的反码
+
+bit manipulation, http://cs101.openjudge.cn/practice/E30571/
+
+```cpp
+#include <array>
+#include <iostream>
+
+auto main() -> int {
+  int n;
+  std::array<int, 31> T = {0, 1, 1};
+  std::cin >> n;
+  if (n >= 1 && n <= 2) {
+    std::cout << T[n] << "\n";
+    return 0;
+  }
+  for (int i = 3; i <= n; i++) {
+    T[i] = T[i - 1] + T[i - 2] + T[i - 3];
+  }
+  std::cout << T[n] << "\n";
+  return 0;
+}
+```
+
+>共用时10min
 
 
 
@@ -6035,6 +6121,10 @@ int main(){
 
 
 
+
+
+
+
 ## M29954 逃离紫罗兰监狱
 
 思路：
@@ -6117,6 +6207,124 @@ int main(){
 	return 0;
 }
 ```
+
+
+
+bfs
+
+```cpp
+#include <iostream>
+#include <queue>
+#include <vector>
+
+auto main() -> int {
+  std::cin.tie(nullptr)->sync_with_stdio(false);
+
+  int R, C, K;
+  std::cin >> R >> C >> K;
+  std::vector<std::vector<char>> p(R, std::vector<char>(C));
+
+  int sx, sy, dx, dy;
+  for (int i = 0; i < R; ++i)
+    for (int j = 0; j < C; ++j) {
+      std::cin >> p[i][j];
+      if (p[i][j] == 'S')
+        sx = i, sy = j;
+      if (p[i][j] == 'E')
+        dx = i, dy = j;
+    }
+
+  std::vector<std::vector<std::vector<int>>> visited(
+      R, std::vector<std::vector<int>>(C, std::vector<int>(K + 1, -1)));
+
+  std::queue<std::pair<std::pair<int, int>, int>> q;
+  q.push({{sx, sy}, K});
+  visited[sx][sy][K] = 0;
+
+  int dict[4][2] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+
+  while (!q.empty()) {
+    auto [x, y] = q.front().first;
+    int k = q.front().second;
+    q.pop();
+
+    if (dx == x && dy == y) {
+      std::cout << visited[x][y][k] << '\n';
+      return 0;
+    }
+
+    for (auto &i : dict) {
+      int newX = x + i[0], newY = y + i[1];
+
+      if (newX >= 0 && newX < R && newY >= 0 && newY < C) {
+        char c = p[newX][newY];
+        int next_k = k;
+        if (c == '#') {
+          if (next_k > 0)
+            --next_k;
+          else
+            continue;
+        }
+
+        if (visited[newX][newY][next_k] == -1) {
+          q.push({{newX, newY}, next_k});
+          visited[newX][newY][next_k] = visited[x][y][k] + 1;
+        }
+      }
+    }
+  }
+
+  std::cout << -1 << '\n';
+  return 0;
+}
+```
+
+>共用时30min
+
+
+
+## M30218:狭路相逢
+
+stack, http://cs101.openjudge.cn/practice/M30218/
+
+```cpp
+#include <iostream>
+#include <vector>
+
+auto main() -> int {
+  std::cin.tie(nullptr)->sync_with_stdio(false);
+
+  int N;
+  std::cin >> N;
+  std::vector<int> st;
+
+  while (N--) {
+    int v;
+    std::cin >> v;
+
+    bool flag = true;
+    while (flag && v < 0 && !st.empty() && st.back() > 0) {
+      if (st.back() < -v)
+        v = st.back() + v, st.pop_back();
+      else if (st.back() == -v)
+        st.pop_back(), flag = false;
+      else
+        st.back() += v, flag = false;
+    }
+
+    if (flag)
+      st.push_back(v);
+  }
+
+  std::cout << st.size() << '\n';
+
+  for (const auto &a : st)
+    std::cout << a << ' ';
+  return 0;
+}
+```
+
+>共用时30min
 
 
 

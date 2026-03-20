@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-03-20 10:22 GMT+8*
+*Updated 2026-03-20 22:22 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -13,7 +13,7 @@
 
 
 
-# 简单Easy
+# OJ简单
 
 ## E01003: Hangover
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                          
+>                                                                                                                                                             
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                          
+>                                                                                                                                                             
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                          
+>                                                                                                                                                             
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                          
+>                                                                                                                                                             
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                          
+>                                                                                                                                                             
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -1994,7 +1994,7 @@ auto main() -> int {
 
 
 
-# 中等Medium
+# OJ中等
 
 
 
@@ -6692,6 +6692,89 @@ auto main() -> int {
 
 merge sort, binary indexed tree, http://cs101.openjudge.cn/practice/30178/
 
+
+
+思路：容易猜到把二维数组展平后统计逆序对, 但充分性的证明还没想到. (看了群里的 Hard Version 的证明确实觉得优雅)
+
+```c++
+#include <bits/stdc++.h>
+using namespace std;
+
+class BIT {
+private:
+    int n;
+    vector<int> tree;
+
+    int lowbit(int x) {
+        return x & (-x);
+    }
+    
+public:
+    BIT(int n) : n(n), tree(n + 1, 0) {}
+
+    void update(int i, int delta=1) {
+        for (int j = i; j <= n; j += lowbit(j)) {
+            tree[j] += delta;
+        }
+    }
+
+    int query(int i) {
+        int sum = 0;
+        for (int j = i; j > 0; j -= lowbit(j)) {
+            sum += tree[j];
+        }
+        return sum;
+    }
+};
+
+bool is_solvable(const vector<int>& nums, int n, int blank_row) {
+    int N = n * n - 1;
+    int inverse = 0;
+    BIT bit(N);
+    vector<int> sorted_nums = nums;
+    sort(sorted_nums.begin(), sorted_nums.end());
+
+    for (int i = N - 1; i >= 0; i--) {
+        int rank = lower_bound(sorted_nums.begin(), sorted_nums.end(), nums[i]) - sorted_nums.begin() + 1;
+        inverse += bit.query(rank - 1);
+        bit.update(rank);
+    }
+    
+    if (n & 1) {
+        return inverse % 2 == 0;
+    } else {
+        return (inverse + blank_row) % 2 == 0;
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n;
+    cin >> n;
+    int blank_row = 0;
+    vector<int> nums;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            int x;
+            cin >> x;
+            if (x == 0) {
+                blank_row = n - i - 1;
+            } else {
+                nums.push_back(x);
+            }
+        }
+    }
+    cout << (is_solvable(nums, n, blank_row) ? "yes" : "no") << "\n";
+    return 0;
+}
+```
+
+> 35min
+
+
+
 ```cpp
 #include <iostream>
 #include <vector>
@@ -6917,7 +7000,7 @@ auto main() -> int {
 
 
 
-# 挑战Tough
+# OJ挑战
 
 ## 01019: Number Sequence
 
@@ -8927,6 +9010,57 @@ int main(){
 
 bitmask dp, http://cs101.openjudge.cn/practice/30201/
 
+
+
+思路：以前没接触过状压DP, 看懂课件上的做法后, 自己码了一遍, 嵌套层数有点多, 难点是理清思路 (下次记得还是不要随便命名变量了, 不然自己都看不懂)
+
+```c++
+#include <bits/stdc++.h>
+using namespace std;
+
+// Bitmask DP solution for the Traveling Salesman Problem (TSP)
+int main() {
+    int n;
+    cin >> n;
+    vector<vector<int>> grid(n, vector<int>(n));
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> grid[i][j];
+        }
+    }
+
+    int total = 1 << n;
+    const int INF = 1e9;
+    vector<vector<int>> dp(total, vector<int>(n, INF));
+    dp[1][0] = 0;
+    for (int mask = 1; mask < total; mask += 2) {
+        for (int j = 0; j < n; j++) {
+            if (dp[mask][j] != INF) {
+                for (int u = 1; u < n; u++) {
+                    if (((mask >> u) & 1) == 0) {
+                        int nxt = mask | (1 << u);
+                        dp[nxt][u] = min(dp[nxt][u], dp[mask][j] + grid[j][u]);
+                    }
+                }
+            }
+        }
+    }
+
+    int ans = INF;
+    for (int i = 1; i < n; i++) {
+        ans = min(ans, dp[total - 1][i] + grid[i][0]);
+    }
+    cout << ans << endl;
+    return 0;
+}
+```
+
+> 用时50min
+
+
+
+
+
 ```cpp
 #include <iostream>
 #include <vector>
@@ -9813,7 +9947,7 @@ int main() {
 
 
 
-# LeetCode
+# 力扣简单
 
 
 
@@ -10212,6 +10346,32 @@ int main()
 
 
 
+简单的位运算
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int binaryGap(int n) {
+        int ans = 0, prev = -1, pos = 0;
+        while (n) {
+            if (n & 1) {
+                if (prev != -1) ans = max(ans, pos - prev);
+                prev = pos;
+            }
+            n >>= 1;
+            pos++;
+        }
+        return ans;
+    }
+};
+
+```
+
+> 用时5min
+
 
 
 ## E1078: Bigram分词
@@ -10313,6 +10473,8 @@ public:
 > 用时5min
 
 
+
+# 力扣中等&挑战
 
 ## M46.全排列
 
@@ -10876,6 +11038,8 @@ public:
 
 prefix sum, https://leetcode.cn/problems/range-sum-query-2d-immutable/
 
+二维前缀和
+
 ```cpp
 #include <iostream>
 #include <vector>
@@ -10915,6 +11079,10 @@ int main()
 ```
 
 >共用时10min
+
+
+
+
 
 
 
@@ -11016,9 +11184,72 @@ public:
 
 
 
+## M1680.连接连续二进制数字
+
+bit manipulation, https://leetcode.cn/problems/concatenation-of-consecutive-binary-numbers/
+
+
+
+思路：记录当前数字的二进制长度即可, 用 `(i & (i - 1)) == 0` 判断 `i` 是否为二的幂次
+
+```c++
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int concatenatedBinary(int n) {
+        int len = 0, ans = 0, mod = 1e9 + 7;
+        for (int i = 1; i <= n; i++) {
+            if ((i & (i - 1)) == 0) {
+                len++;
+            }
+            ans = ((long long)ans << len | i) % mod;
+        }
+        return ans;
+    }
+};
+```
+
+> 用时10min
+
+
+
 ## M1461.检查一个字符串是否包含所有长度为 K 的二进制子串
 
 bit manipulation, https://leetcode.cn/problems/check-if-a-string-contains-all-binary-codes-of-size-k/
+
+
+
+思路：滑动窗口, 学会了 `stoi` (string to int) 的用法, `int stoi( const std::string& str, std::size_t* pos = nullptr, int base = 10 )`
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool hasAllCodes(string s, int k) {
+        int num = stoi(s.substr(0, k), nullptr, 2);
+        unordered_set<int> a;
+        a.insert(num);
+        for (int i = k; i < s.length(); i++) {
+            num <<= 1;
+            if (num >= (1 << k)) {
+                num -= (1 << k);
+            }
+            num += (s[i] - '0');
+            a.insert(num);
+        }
+
+        return a.size() == (1 << k);
+    }
+};
+```
+
+> 用时10min
+
+
 
 ```cpp
 #include <iostream>
@@ -11223,6 +11454,33 @@ public:
 ## M1680.连接连续二进制数字
 
 bit manipulation, https://leetcode.cn/problems/concatenation-of-consecutive-binary-numbers/
+
+
+
+思路：记录当前数字的二进制长度即可, 用 `(i & (i - 1)) == 0` 判断 `i` 是否为二的幂次
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int concatenatedBinary(int n) {
+        int len = 0, ans = 0, mod = 1e9 + 7;
+        for (int i = 1; i <= n; i++) {
+            if ((i & (i - 1)) == 0) {
+                len++;
+            }
+            ans = ((long long)ans << len | i) % mod;
+        }
+        return ans;
+    }
+};
+```
+
+> 用时10min
+
+
 
 ```cpp
 #include <iostream>

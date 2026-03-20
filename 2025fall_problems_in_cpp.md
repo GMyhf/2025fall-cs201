@@ -7,7 +7,7 @@
 
 > Logs:
 >
-> 2025fall～2026spring: 加了些 数算、计概 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】、【罗锐，25工学院，】、【海博治 城市与环境学院】、【刘思哲 25工学院】、【黄浩展 25工学院】、【江昊中 25数院】同学的CPP代码。
+> 2025fall～2026spring: 加了些 数算、计概 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】、【罗锐，25工学院，】、【海博治 城市与环境学院】、【刘思哲 25工学院】、【黄浩展 25工学院】、【江昊中 25数院】、【姚博骞 25物院】同学的CPP代码。
 >
 > 鉴于每学期都有同学偏好C++编程，也开始提供C++题解支持。
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                       
+>                                                                                                                                                          
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                       
+>                                                                                                                                                          
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                       
+>                                                                                                                                                          
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                       
+>                                                                                                                                                          
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                       
+>                                                                                                                                                          
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -2225,7 +2225,7 @@ int main() {
 
 
 
-## 07218:献给阿尔吉侬的花束
+## 07218: 献给阿尔吉侬的花束
 
 Bfs, http://cs101.openjudge.cn/practice/07218/
 
@@ -2648,7 +2648,7 @@ int main(){
 ```
 
 
-## M02299:Ultra-QuickSort
+## M02299: Ultra-QuickSort
 
 merge sort, http://cs101.openjudge.cn/practice/02299/
 
@@ -2700,6 +2700,68 @@ int main()
 
 
 ```
+
+
+
+## M02431: Expedition
+
+heap,greedy, http://cs101.openjudge.cn/practice/02431/
+
+【姚博骞 25物院】思路：构建一个堆，永远只吃堆里面最多的那个
+其实有点后悔贪心的想法。
+
+```cpp
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+int main()//greedy heap
+{
+    int n;
+    cin>>n;
+    vector<pair<int,int>> stop;
+    for(int i=0;i<n;i++)
+    {
+        int p,q;
+        cin>>p>>q;
+        stop.push_back({p,q});
+    }
+    int l,p;
+    cin>>l>>p;
+    sort(stop.begin(),stop.end(),[](pair<int,int> &a,pair<int,int> &b){
+        return a.first>b.first;
+    });
+    priority_queue<int> pq;//大顶堆；
+    int ans=0;
+    int i=0;
+    int dist=l-p;
+    while(i<n&&dist>0)
+    {
+        while(i<n&&stop[i].first>=dist)
+        {
+            pq.push(stop[i].second);
+            i++;
+        }
+        if(pq.empty()) break;
+        dist-=pq.top();
+        pq.pop();
+        ans++;
+    }
+    if(dist<=0)
+    {
+        cout<<ans;
+    }
+    else
+    {
+        cout<<-1;
+    }
+    return 0;
+}
+
+```
+
+
 
 
 
@@ -2885,6 +2947,202 @@ int main(){
 	return 0;
 }
 ```
+
+
+
+## M02766: 最大子矩阵
+
+binary, dp,kadane http://cs101.openjudge.cn/pctbook/M02766/
+
+【姚博骞 25物院】思路：三种算法我都写了，其中分治比我想的难写很多，比一维要难，且复杂度只降到O(n^3log n)
+dp其实也包含了kadane的思想，无非是直接用kadane还是间接，两个方法的复杂度都是O(n^3)
+
+```cpp
+#include<iostream>
+#include<vector>
+using namespace std;//kadane 算法
+int max(int a,int b)
+{
+    return (a>b)?a:b;
+}
+int min(int a,int b)
+{
+    return(a<b)?a:b;
+}
+int juxing(int p,int q,int r,int s,vector<vector<int>>&qz)
+{
+    return qz[p][r]+qz[q][s]-qz[p][s]-qz[q][r];
+}
+int fenzhi(vector<vector<int>>&qz,int i1,int i2,int j1,int j2)
+{
+    int midi=0.5*(i1+i2);
+    int midj=0.5*(j1+j2);
+    int ans=-100000000;
+    if((j2==j1)||(i2==i1)) return -10000000;
+    if(i1!=i2)
+    {
+        int ans1=fenzhi(qz,i1,midi,j1,j2);
+        int ans2=fenzhi(qz,midi+1,i2,j1,j2);
+        ans=max(ans,max(ans1,ans2));
+    }
+    if(j1!=j2)
+    {
+        int ans1=fenzhi(qz,i1,i2,j1,midj);
+        int ans2=fenzhi(qz,i1,i2,midj+1,j2);
+        ans=max(ans,max(ans1,ans2));
+    }
+    int ans3,ans4;
+    ans3=ans4=-100000000;
+    for(int i=i1;i<=i2;i++)
+    {
+        for(int i_=i+1;i_<=i2;i_++)
+        {
+            int p,q;
+            p=100000000;
+            q=-100000000;
+            for(int j=j1;j<=midj;j++)
+            {
+                p=min(p,juxing(i,i_,j1,j,qz));
+            }
+            for(int j=midj+1;j<=j2;j++)
+            {
+                q=max(q,juxing(i,i_,j1,j,qz));
+            }
+            ans3=max(q-p,ans3);
+        }
+    }
+    for(int j=j1;j<=j2;j++)
+    {
+        for(int j_=j+1;j_<=j2;j_++)
+        {
+            int p,q;
+            p=100000000;
+            q=-100000000;
+            for(int i=i1;i<=midi;i++)
+            {
+                p=min(p,juxing(i1,i,j,j_,qz));
+            }
+            for(int i=midi+1;i<=i2;i++)
+            {
+                q=max(q,juxing(i1,i,j,j_,qz));
+            }
+            ans4=max(q-p,ans4);
+        }
+    }
+    ans=max(ans,max(ans3,ans4));
+    return ans; 
+}
+int maxSubmatrix(vector<vector<int>>& a)
+{
+    int n = a.size();
+    int m = a[0].size();
+    int ans = -1e9;
+
+    // 枚举上边界
+    for(int top = 0; top < n; top++)
+    {
+        vector<int> sum(m, 0);  // 压缩后的数组
+
+        // 枚举下边界
+        for(int bottom = top; bottom < n; bottom++)
+        {
+            // 把这一行加进去（压缩列）
+            for(int j = 0; j < m; j++)
+                sum[j] += a[bottom][j];
+
+            // ⭐ 在 sum 上跑一维 Kadane
+            int cur = sum[0], best = sum[0];
+            for(int j = 1; j < m; j++)
+            {
+                cur = max(sum[j], cur + sum[j]);
+                best = max(best, cur);
+            }
+
+            ans = max(ans, best);
+        }
+    }
+    return ans;
+}
+int kadane(vector<vector<int>>&a)
+{
+    int n=a.size();
+    vector<vector<int>>lieqianzhui(n+1,vector<int>(n,0));
+    vector<vector<int>>hangqianzhui(n,vector<int>(n+1,0));
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            hangqianzhui[i][j+1]=hangqianzhui[i][j]+a[i][j];
+        }   
+    }
+    for(int j=0;j<n;j++)
+    {
+        for(int i=0;i<n;i++)
+        {
+            lieqianzhui[i+1][j]=lieqianzhui[i][j]+a[i][j];
+        }   
+    }
+    vector<vector<int>>dp(n,vector<int>(n,-10000000));
+    vector<vector<vector<int>>>dpx(n,vector<vector<int>>(n));
+    vector<vector<vector<int>>>dpy(n,vector<vector<int>>(n));
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            int ans1,ans2;
+            ans1=ans2=-100000000;
+            for(int i1=0;i1<i;i1++)
+            {
+                dpx[i][j].push_back(((j>0)?max(0, dpx[i][j-1][i1]):0)+lieqianzhui[i+1][j]-lieqianzhui[i1+1][j]);
+                ans1=max(ans1,dpx[i][j][i1]);
+            }
+            for(int j1=0;j1<j;j1++)
+            {
+                dpy[i][j].push_back(((i>0)?max(0,dpy[i-1][j][j1]):0)+hangqianzhui[i][j+1]-hangqianzhui[i][j1+1]);
+                ans2=max(ans2,dpy[i][j][j1]);
+            }
+            dp[i][j]=max(max(ans1,ans2),a[i][j]);//kadane算法
+        }
+    }
+    int ans=-1000000000;
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            ans=max(ans,dp[i][j]);
+        }
+    }
+    return ans;
+}
+int main()
+{
+    int n;
+    cin>>n;
+    vector<vector<int>>a(n,vector<int>(n));
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            cin>>a[i][j];
+        }
+    }
+    vector<vector<int>>qianzhui(n+1,vector<int>(n+1,0));
+    vector<vector<int>>hangqianzhui(n,vector<int>(n+1,0));
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            hangqianzhui[i][j+1]=hangqianzhui[i][j]+a[i][j];
+            qianzhui[i+1][j+1]=hangqianzhui[i][j+1]+qianzhui[i][j+1];
+        }   
+    }
+    cout<<maxSubmatrix(a);
+    return 0;
+}
+
+```
+
+
 
 
 
@@ -3099,36 +3357,6 @@ int main(){
 ```
 
 
-
-## M3532.针对图的路径存在性查询 I
-
-思路：
-
-- 由于 `nums` 单调不降排序，若 $r - l > 1$，则 $l, r$ 间有边直接相连意味着 $\text{nums}_r - \text{nums}_l \leq \text{maxDiff} \Rightarrow \forall l \leq i < r, \text{nums}_{i + 1} - \text{nums}_i \leq \text{nums}_r - \text{nums}_l \leq \text{maxDiff}$，即边 $(i, i + 1)$ 存在，$(l, r)$ 这条边可以被“替代”。
-- 故只需考虑所有形如 $(i, i + 1)$ 的边，进而可知对每个 $i$ 都有 $\text{maxr}_i$，表示从 $i$ 出发向右、能到达的最大节点编号。
-- 回答询问时，不妨设 $u \leq v$，则存在路径当且仅当 $v \leq \text{maxr}_u$。
-
-```cpp
-class Solution {
-public:
-	vector<bool> pathExistenceQueries(int n, vector<int>& nums, int maxDiff, vector<vector<int>>& queries) {
-		vector<int> maxr(n);
-		vector<bool> answer;
-		for (int i = 0; i < n; i++){
-			int l = i;
-			while (i + 1 < n && nums[i + 1] - nums[i] <= maxDiff) i++;
-			for (int j = l; j <= i; j++){
-				maxr[j] = i;
-			}
-		}
-		for (vector<int> i : queries){
-			if (i[0] > i[1]) swap(i[0], i[1]);
-			answer.push_back(i[1] <= maxr[i[0]]);
-		}
-		return answer;
-	}
-};
-```
 
 
 
@@ -5151,6 +5379,8 @@ int main() {
 
 ```
 
+
+
 ## M24729: 括号嵌套树
 
 dfs, stack, [http://cs101.openjudge.cn/practice/24729/](http://cs101.openjudge.cn/practice/24729/)
@@ -5227,6 +5457,73 @@ int main()
 ```
 
  ​
+
+思路：用栈解析括号表达式建树，再递归输出前序与后序序列。
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <stack>
+#include <cctype>
+using namespace std;
+
+struct Node {
+    char val;
+    vector<Node*> children;
+    Node(char c) : val(c) {}
+};
+
+void preorder(Node* root) {
+    if (!root) return;
+    cout << root->val;
+    for (auto child : root->children)
+        preorder(child);
+}
+
+void postorder(Node* root) {
+    if (!root) return;
+    for (auto child : root->children)
+        postorder(child);
+    cout << root->val;
+}
+
+int main() {
+    string s;
+    cin >> s;
+    stack<Node*> st;
+    Node* root = nullptr;
+    Node* last = nullptr;
+
+    for (int i = 0; i < (int)s.size(); ++i) {
+        char c = s[i];
+        if (isupper(c)) { 
+            Node* node = new Node(c);
+            if (!st.empty())
+                st.top()->children.push_back(node);
+            else
+                root = node;
+            last = node;
+        } else if (c == '(') {
+            st.push(last);
+        } else if (c == ')') {
+            st.pop();
+        } else if (c == ',') {
+            continue;
+        }
+    }
+
+    preorder(root);
+    cout << "\n";
+    postorder(root);
+    cout << "\n";
+
+    return 0;
+}
+```
+
+
+
+
 
 ## M25145: 猜二叉树（按层次遍历）
 
@@ -6391,6 +6688,188 @@ auto main() -> int {
 
 
 
+## M30178:数字华容道（Easy Version）
+
+merge sort, binary indexed tree, http://cs101.openjudge.cn/practice/30178/
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Fenwick
+{
+private:
+    int n;
+    vector<int> tree;
+
+public:
+    Fenwick(int n) : n(n), tree(n + 1, 0) {}
+
+    void update(int i)
+    {
+        while (i <= n)
+        {
+            ++tree[i];
+            i = i + (i & -i);
+        }
+    }
+
+    int query(int i)
+    {
+        int sum = 0;
+        while (i > 0)
+        {
+            sum += tree[i];
+            i &= i - 1;
+        }
+        return sum;
+    }
+};
+
+int main()
+{
+    cin.tie(nullptr)->sync_with_stdio(false);
+
+    int n;
+    cin >> n;
+    int sz = n * n;
+    vector<int> matrix;
+    int bottom_up;
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < n; ++j)
+        {
+            int x;
+            cin >> x;
+            if (x == 0)
+                bottom_up = n - i;
+            else
+                matrix.push_back(x);
+        }
+
+    Fenwick bit(sz);
+    long long cnt = 0;
+
+    for (int i = matrix.size() - 1; i >= 0; --i)
+    {
+        cnt += bit.query(matrix[i] - 1);
+        bit.update(matrix[i]);
+    }
+
+    bool flag = false;
+    if (n % 2 != 0)
+    {
+        if (cnt % 2 == 0)
+            flag = true;
+    }
+    else
+    {
+        if ((cnt + bottom_up) % 2 == 1)
+            flag = true;
+    }
+
+    cout << (flag == true ? "yes\n" : "no\n");
+    return 0;
+}
+```
+
+>共用时1h
+
+
+
+【姚博骞 25物院】思路：方法是计算每行的逆序数然后分n奇数欧树讨论，这个证明还暂时不会，目前会先把这些相对偏组合数学一些的一些证明先放一放，但是像是kmp算法包括树状数组的证明这种直观上能理解的可以接受即可，严格证明以后可以一起写，现在还是主要提升代码能力。
+目前写的是分治法计算逆序数组，需要变归并边排序，时间复杂度较高
+还有一种方法是树状数组记录前缀和，考虑一个巨大的数组，从前向后读入，出现了的数字记作1，没出现的记作0，计算当前该数为下标的前缀和，即为前面出现的比该数小的元素个数，用树状数组可以O（logn）进行跟新和查询，故两种方法复杂度均为O(n^2logn),但是树状数组本身写起来比较简单故更快（记得加到cheatsheet上）
+
+```cpp
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int nixu(vector<int>& a,int p,int q)
+{
+    if(p==q) return 0;
+    int mid=(p+q)/2;
+    int ans=nixu(a,p,mid)+nixu(a,mid+1,q);
+    vector<int>b(a.begin()+p,a.begin()+q+1);
+    int s,r,nx,leiji;
+    s=r=nx=leiji=0;
+    int i=p;
+    while(s<mid-p+1&&r<q-mid)
+    {
+        if(b[s]<=b[mid-p+1+r]){
+            a[i]=b[s];
+            s++;
+            nx+=leiji;
+        }
+        else{
+            a[i]=b[mid-p+1+r];
+            r++;
+            leiji++;
+        }
+        i++;
+    }
+    if(s==mid-p+1){
+        for(int j=i;j<=q;j++){
+            a[j]=b[mid-p+1+r];
+            r++;
+        }
+    }
+    else{
+        for(int j=i;j<=q;j++){
+            a[j]=b[s];
+            s++;
+            nx+=leiji;
+        }
+    }
+    ans+=nx;
+    return ans;
+}
+int main()
+{
+    int n;
+    cin>>n;
+    vector<vector<int>>a(n,vector<int>(n));
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++)
+        {
+            cin>>a[i][j];
+        }
+    }
+    vector<int>c;
+    int p;  // 记录空格所在行
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(a[i][j]!=0){
+                c.push_back(a[i][j]);
+            }
+            else{
+                p=i;  // 空格所在行
+            }
+        }
+    }
+    int ans=nixu(c,0,c.size()-1);  // 逆序对数
+    if(n%2==1)  // 奇数列
+    {
+        if(ans%2==0) cout<<"yes";
+        else cout<<"no";
+    }
+    else  // 偶数列
+    {
+        if((ans+n-p)%2==1) cout<<"yes";
+        else cout<<"no";
+    }
+    return 0;
+}
+```
+
+
+
+
+
+
+
 ## M30218:狭路相逢
 
 stack, http://cs101.openjudge.cn/practice/M30218/
@@ -6626,7 +7105,7 @@ int main()
 
 
 
-## T01958 Strange Towers of Hanoi
+## T01958: Strange Towers of Hanoi
 
 [http://cs101.openjudge.cn/practice/01958/](http://cs101.openjudge.cn/practice/01958/)
 
@@ -6918,7 +7397,7 @@ int main() {
 
 
 
-## T20052:最大点数（同2048规则）
+## T20052: 最大点数（同2048规则）
 
 dfs, matrices, http://cs101.openjudge.cn/pctbook/T20052/
 
@@ -7420,74 +7899,75 @@ int main() {
 
 
 
+## T22508: 最小奖金方案
 
+topologic sort, http://cs101.openjudge.cn/practice/22508/
 
-## M24729: 括号嵌套树
-
-dfs, stack, http://cs101.openjudge.cn/practice/24729/
-
-思路：用栈解析括号表达式建树，再递归输出前序与后序序列。
+【姚博骞 25物院】思路：构建图，记录出度和入度的来源数组，这个学期也可以学习一下基本图论，以前没怎么搞过数学竞赛。
+关键的转移方程：
+`prize[beatenby[i][j]]=max(prize[beatenby[i][j]],prize[i]+1);`
 
 ```cpp
-#include <iostream>
-#include <vector>
-#include <stack>
-#include <cctype>
+#include<iostream>
+#include<queue>
+#include<vector>
+#include<unordered_map>
 using namespace std;
-
-struct Node {
-    char val;
-    vector<Node*> children;
-    Node(char c) : val(c) {}
-};
-
-void preorder(Node* root) {
-    if (!root) return;
-    cout << root->val;
-    for (auto child : root->children)
-        preorder(child);
+int max(int a,int b)
+{
+    return (a>b)?a:b;
 }
-
-void postorder(Node* root) {
-    if (!root) return;
-    for (auto child : root->children)
-        postorder(child);
-    cout << root->val;
-}
-
-int main() {
-    string s;
-    cin >> s;
-    stack<Node*> st;
-    Node* root = nullptr;
-    Node* last = nullptr;
-
-    for (int i = 0; i < (int)s.size(); ++i) {
-        char c = s[i];
-        if (isupper(c)) { 
-            Node* node = new Node(c);
-            if (!st.empty())
-                st.top()->children.push_back(node);
-            else
-                root = node;
-            last = node;
-        } else if (c == '(') {
-            st.push(last);
-        } else if (c == ')') {
-            st.pop();
-        } else if (c == ',') {
-            continue;
+int main()
+{
+    //记录每个队伍打败的队伍数量，以及被打败的队伍的集合
+    //考虑拓扑排序，肯定要一个也没打败的，直接把打败他的队伍奖金都变成max（now，ta+1），然后踢出去。
+    int n,m;
+    cin>>n>>m;
+    vector<pair<int,int>>pk;
+    vector<int> prize(n,100);
+    for(int i=0;i<m;i++)
+    {
+        int a,b;
+        cin>>a>>b;
+        pk.push_back({a,b});
+    }
+    //构建图
+    vector<int>num_beat(n,0);
+    vector<vector<int>>beatenby(n,vector<int>(0));
+    for(int i=0;i<m;i++)
+    {
+        num_beat[pk[i].first]++;
+        beatenby[pk[i].second].push_back(pk[i].first);
+    }
+    queue<int>q;
+    for(int i=0;i<n;i++)
+    {
+        if(!num_beat[i]) q.push(i);
+    }
+    while(!q.empty())
+    {
+        int i=q.front();
+        q.pop();
+        for(int j=0;j<beatenby[i].size();j++)
+        {
+            num_beat[beatenby[i][j]]--;
+            prize[beatenby[i][j]]=max(prize[beatenby[i][j]],prize[i]+1);
+            if(num_beat[beatenby[i][j]]==0) q.push(beatenby[i][j]);
         }
     }
-
-    preorder(root);
-    cout << "\n";
-    postorder(root);
-    cout << "\n";
-
+    int ans=0;
+    for(int i=0;i<n;i++)
+    {
+        ans+=prize[i];
+    }
+    cout<<ans;
     return 0;
 }
+
+
 ```
+
+
 
 
 
@@ -8270,6 +8750,137 @@ int main(){
 
 
 
+## T27384: 候选人追踪
+
+heap,lazy delete, http://cs101.openjudge.cn/practice/27384/
+
+【姚博骞 25物院】思路：将在k个人里面和不在k个人里的人的投票数据分别加入两个堆，比较第一个堆最小和第一个堆最大。思路还行但执行起来非常难办对我而言，起码提交了20次没过。要注意的是投票时间间隔中票数都不变，故应当找开始满足的时刻和结束满足的时刻做差。
+最后的bug出现在对最末尾的处理，要同时判断存在一个之前满足的时刻并且在这之后没有不满足的时刻才最后要用tmax-tlast。
+
+懒删除的意思就是我不做队列中的删除但是做用数组记录，同时把正确的入队，如果出队的时候发现匹配不上就不管他。
+
+```cpp
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<set>
+#include<algorithm>
+#include<unordered_map>
+using namespace std;
+struct Compareda//return true 时a的优先级小于b
+{
+    bool operator()(pair<int,int> &a,pair<int,int> &b)
+    {
+        return a.second<b.second;
+    }
+};
+struct Comparexiao//return true 时a的优先级小于b
+{
+    bool operator()(pair<int,int> &a,pair<int,int> &b)
+    {
+        return a.second>b.second;
+    }
+};
+int main()
+{
+    int n,k;
+    vector<pair<int,int>> vote;
+    cin>>n>>k;
+    for(int i=0;i<n;i++)
+    {
+        int t,c;
+        cin>>t>>c;
+        vote.push_back({t,c});
+    }
+    set<int> s;
+    for(int i=0;i<k;i++)
+    {
+        int p;
+        cin>>p;
+        s.insert(p);
+    }
+    sort(vote.begin(),vote.end(),[&s](pair<int,int>&a,pair<int,int>&b)
+    {
+            return a.first<b.first;
+    });
+    vector<int> sum(314160,0);
+    priority_queue<pair<int,int>,vector<pair<int,int>>,Comparexiao> kgeren;//第一个是序号，第二个是票数
+    priority_queue<pair<int,int>,vector<pair<int,int>>,Compareda> qita;
+    int ans=0;
+    for(int i=1;i<314160;i++)
+    {
+        if(s.find(i)!=s.end())
+            {
+                kgeren.push({i,0});
+            }
+            else
+            {
+                qita.push({i,0});
+            }
+    }
+    //只要我让k个的最小值比其它的最大值大就行。
+    int i=0;
+    int flag=0;
+    int t_last=-1;
+    while(i<n)
+    {
+        if(k==314159) break;
+        while(i<n)
+        {
+            sum[vote[i].second]++;
+            if(s.find(vote[i].second)!=s.end())
+            {
+                kgeren.push({vote[i].second,sum[vote[i].second]});
+            }
+            else
+            {
+                qita.push({vote[i].second,sum[vote[i].second]});
+            }
+            i++;
+            if(i==n||vote[i].first!=vote[i-1].first)
+            {
+                break;
+            }
+        }
+        while(kgeren.top().second!=sum[kgeren.top().first]||qita.top().second!=sum[qita.top().first])
+        {
+            if(!kgeren.empty()&&kgeren.top().second!=sum[kgeren.top().first])
+            {
+                kgeren.pop();
+            }
+            if(!qita.empty()&&qita.top().second!=sum[qita.top().first])
+            {
+                qita.pop();
+            }
+        }
+        if(qita.top().second<kgeren.top().second)
+        {
+            if(flag==0) {t_last=vote[i-1].first;}
+            flag=1;
+        }   
+        else if(flag==1)
+        {
+            flag=0;
+            ans+=vote[i-1].first-t_last;
+        }
+    }
+    if(flag==1&&t_last!=-1)
+    {
+        ans+=vote[i-1].first-t_last;
+    }
+    if(k==314159) 
+    {cout<<vote[n-1].first;}
+    else 
+    {cout<<ans;}
+    return 0;
+}
+
+```
+
+
+
+
+
 ## T29947: 校门外的树又来了
 
 http://cs101.openjudge.cn/practice/29947/
@@ -8306,97 +8917,6 @@ int main(){
     return 0;
 }
 ```
-
-
-
-## M30178:数字华容道（Easy Version）
-
-merge sort, binary indexed tree, http://cs101.openjudge.cn/practice/30178/
-
-```cpp
-#include <iostream>
-#include <vector>
-using namespace std;
-
-class Fenwick
-{
-private:
-    int n;
-    vector<int> tree;
-
-public:
-    Fenwick(int n) : n(n), tree(n + 1, 0) {}
-
-    void update(int i)
-    {
-        while (i <= n)
-        {
-            ++tree[i];
-            i = i + (i & -i);
-        }
-    }
-
-    int query(int i)
-    {
-        int sum = 0;
-        while (i > 0)
-        {
-            sum += tree[i];
-            i &= i - 1;
-        }
-        return sum;
-    }
-};
-
-int main()
-{
-    cin.tie(nullptr)->sync_with_stdio(false);
-
-    int n;
-    cin >> n;
-    int sz = n * n;
-    vector<int> matrix;
-    int bottom_up;
-    for (int i = 0; i < n; ++i)
-        for (int j = 0; j < n; ++j)
-        {
-            int x;
-            cin >> x;
-            if (x == 0)
-                bottom_up = n - i;
-            else
-                matrix.push_back(x);
-        }
-
-    Fenwick bit(sz);
-    long long cnt = 0;
-
-    for (int i = matrix.size() - 1; i >= 0; --i)
-    {
-        cnt += bit.query(matrix[i] - 1);
-        bit.update(matrix[i]);
-    }
-
-    bool flag = false;
-    if (n % 2 != 0)
-    {
-        if (cnt % 2 == 0)
-            flag = true;
-    }
-    else
-    {
-        if ((cnt + bottom_up) % 2 == 1)
-            flag = true;
-    }
-
-    cout << (flag == true ? "yes\n" : "no\n");
-    return 0;
-}
-```
-
->共用时1h
-
-
 
 
 
@@ -8453,6 +8973,68 @@ int main()
 ```
 
 >共用时1h
+
+
+
+思路：状压dp,自底向上写动态规划，动态规划的难点在于知道dp数组记录的是什么，这里记录在到达不同点的状态下（用二进制记录，即为状压），到达最后一个城市所用的最大值，直到把所有城市都遍历过，1<<k-1状态，再加上所有结束点回到起点，计算最大值。
+
+ps：如果不用回到原点，可以这么写,dp数组的含义仍然不变，最后只要找dp[1<<k-1]中的最小值。
+
+```cpp
+for(int i = 0; i < n; i++)
+    dp[1<<i][i] = 0;
+```
+
+
+代码：
+
+```cpp
+#include<iostream>
+#include<vector>
+using namespace std;
+int min(int a,int b){
+    return (a<b)?a:b;
+}
+int main()
+{
+    int n;
+    cin>>n;
+    vector<vector<int>> cost(n,vector<int>(n));
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            cin>>cost[i][j];
+        }
+    }
+    int mask[1<<18];//状压dp：把每个城市去没去过的状态记录一下
+    vector<vector<int>> dp(1<<18,vector<int>(n,1000000000));
+    dp[1][0]=0;//一开始什么都不走的时候花费为0
+    //由于最后的路线是一个圈，所以我们不妨假定就从下标为0的城市出发，上面的dp数组是（状态，最后在的城市）所花的最小值。
+    for(int i=1;i<(1<<n);i+=2){
+        for(int j=0;j<n;j++)//自底向上的dp写法。
+        {
+            int curr_dist=dp[i][j];
+            if(dp[i][j]==1000000000){
+                continue;
+            }
+            for(int k=0;k<n;k++){
+                if((i>>k)&1){
+                    continue;
+                }
+                int new_i=i|(1<<k);
+                int new_cost=cost[j][k];
+                dp[new_i][k]=min(dp[new_i][k],new_cost+dp[i][j]);
+            }
+        }   
+    }
+    int ans=1000000000;
+    for(int i=1;i<n;i++){
+        ans=min(ans,cost[0][i]+dp[(1<<n)-1][i]);
+    }
+    cout<<ans;
+    return 0;
+}
+
+```
 
 
 
@@ -10718,6 +11300,42 @@ public:
 };
 
 ```
+
+
+
+## M3532.针对图的路径存在性查询 I
+
+union find, binary search, https://leetcode.cn/problems/path-existence-queries-in-a-graph-i/
+
+思路：
+
+- 由于 `nums` 单调不降排序，若 $r - l > 1$，则 $l, r$ 间有边直接相连意味着 $\text{nums}_r - \text{nums}_l \leq \text{maxDiff} \Rightarrow \forall l \leq i < r, \text{nums}_{i + 1} - \text{nums}_i \leq \text{nums}_r - \text{nums}_l \leq \text{maxDiff}$，即边 $(i, i + 1)$ 存在，$(l, r)$ 这条边可以被“替代”。
+- 故只需考虑所有形如 $(i, i + 1)$ 的边，进而可知对每个 $i$ 都有 $\text{maxr}_i$，表示从 $i$ 出发向右、能到达的最大节点编号。
+- 回答询问时，不妨设 $u \leq v$，则存在路径当且仅当 $v \leq \text{maxr}_u$。
+
+```cpp
+class Solution {
+public:
+	vector<bool> pathExistenceQueries(int n, vector<int>& nums, int maxDiff, vector<vector<int>>& queries) {
+		vector<int> maxr(n);
+		vector<bool> answer;
+		for (int i = 0; i < n; i++){
+			int l = i;
+			while (i + 1 < n && nums[i + 1] - nums[i] <= maxDiff) i++;
+			for (int j = l; j <= i; j++){
+				maxr[j] = i;
+			}
+		}
+		for (vector<int> i : queries){
+			if (i[0] > i[1]) swap(i[0], i[1]);
+			answer.push_back(i[1] <= maxr[i[0]]);
+		}
+		return answer;
+	}
+};
+```
+
+
 
 
 

@@ -1,13 +1,13 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-03-18 11:37 GMT+8*
+*Updated 2026-03-20 10:22 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
 
 > Logs:
 >
-> 2025fall～2026spring: 加了些 数算、计概 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】、【罗锐，25工学院，】、【海博治 城市与环境学院】、【刘思哲 25工学院】、【黄浩展 25工学院】同学的CPP代码。
+> 2025fall～2026spring: 加了些 数算、计概 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】、【罗锐，25工学院，】、【海博治 城市与环境学院】、【刘思哲 25工学院】、【黄浩展 25工学院】、【江昊中 25数院】同学的CPP代码。
 >
 > 鉴于每学期都有同学偏好C++编程，也开始提供C++题解支持。
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                    
+>                                                                                                                                                       
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                    
+>                                                                                                                                                       
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                    
+>                                                                                                                                                       
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                    
+>                                                                                                                                                       
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                    
+>                                                                                                                                                       
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -1617,6 +1617,48 @@ int main()
 }
 
 ```
+
+
+
+思路：熟悉了cpp的OOP, 学会了怎么重载加法
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Fraction {
+public:
+    int numerator;
+    int denominator;
+
+    Fraction(int numerator, int denominator) : numerator(numerator), denominator(denominator) {
+        int common_divisor = gcd(numerator, denominator);
+        this->numerator /= common_divisor;
+        this->denominator /= common_divisor;
+    }
+
+    Fraction operator+(const Fraction& other) const {
+        int common_denominator = denominator * other.denominator;
+        int new_numerator = numerator * other.denominator + other.numerator * denominator;
+        return Fraction(new_numerator, common_denominator);
+    }
+
+    void print() const {
+        cout << numerator << "/" << denominator << endl;
+    }
+};
+
+int main() {
+    int a1, b1, a2, b2;
+    cin >> a1 >> b1 >> a2 >> b2;
+    Fraction f1(a1, b1), f2(a2, b2);
+    Fraction result = f1 + f2;
+    result.print();
+    return 0;
+}
+```
+
+> 用时10min
 
 
 
@@ -5602,6 +5644,72 @@ int main()
 
 
 
+思路：学习了cpp的正则表达式 (感觉没python的好用)
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+class Model {
+public:
+    string name;
+    double arg;
+    string raw_arg;
+
+    Model(string name, double arg, string raw_arg) : name(name), arg(arg), raw_arg(raw_arg) {}
+
+    // 重载小于运算符
+    bool operator<(const Model& other) const {
+        if (this->name != other.name) {
+            return this->name < other.name;
+        }
+        return this->arg < other.arg;
+    }
+
+    // 从字符串中解析出Model对象
+    static Model parse(const string& s) {
+        const regex pattern(R"(^(.+)-([\d.]+)([MB])$)");
+        smatch match;
+
+        if (regex_match(s, match, pattern)) {
+            string name = match.str(1);
+            double num = stod(match.str(2));
+            string unit = match.str(3);
+            string raw_arg = match.str(2) + unit;
+            double value = num * (unit == "B" ? 1e9 : (unit == "M" ? 1e6 : 1));
+            return Model(name, value, raw_arg);
+        }
+        throw invalid_argument("Invalid model format");
+    }
+};
+
+int main() {
+    int n;
+    cin >> n;
+    vector<Model> models;
+    for (int i = 0; i < n; i++) {
+        string s;
+        cin >> s;
+        models.push_back(Model::parse(s));
+    }
+    sort(models.begin(), models.end());
+
+    for (int i = 0; i < n; i++) {
+        cout << models[i].name << ": " << models[i].raw_arg;
+        while (i + 1 < n && models[i].name == models[i + 1].name) {
+            i++;
+            cout << ", " << models[i].raw_arg;
+        }
+        cout << endl;
+    }
+    return 0;
+}
+```
+
+> 用时30min
+
+
+
 ## M27306: 植物观察
 
 disjoint set, bfs, http://cs101.openjudge.cn/practice/27306/
@@ -6814,9 +6922,7 @@ int main() {
 
 dfs, matrices, http://cs101.openjudge.cn/pctbook/T20052/
 
-【黄浩展 25工学院】思路：
-
-先写最简单的左移操作，右移可直接翻转，上移对每列转化为数组进行左移操作，下移为上移翻转，之后递归搜索并更新最大值
+【黄浩展 25工学院】思路：先写最简单的左移操作，右移可直接翻转，上移对每列转化为数组进行左移操作，下移为上移翻转，之后递归搜索并更新最大值
 
 ```cpp
 #include<iostream>
@@ -6918,6 +7024,166 @@ int main() {
 ```
 
 
+
+【江昊中 25数院】思路：一开始觉得题里给的left函数不够优雅, 于是自己重写了一个, 并写了一个统一的滑动接口. 提交后WA, 以为是dfs出错了, 调了二十多分钟才意识到自己的left的移动算法写错了
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+using Board = vector<vector<int>>;
+
+// 左右反转矩阵
+void reverseRow(Board& board) {
+    for (auto& row : board) {
+        reverse(row.begin(), row.end());
+    }
+}
+
+// 转置矩阵
+void transpose(Board& board) {
+    int n = board.size();
+    int m = board[0].size();
+    Board tmp(m, vector<int>(n));
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            tmp[i][j] = board[j][i];
+        }
+    }
+    board = move(tmp);
+}
+
+bool left(Board& board) {
+    bool changed = false;
+    int n = board.size();
+    int m = board[0].size();
+    for (auto& row : board) {
+        // 使用快慢指针将非零元素移动到左侧
+        int blank_idx = 0;
+        for (int j = 0; j < m; j++) {
+            if (row[j]) {
+                if (blank_idx != j) {
+                    row[blank_idx] = row[j];
+                    row[j] = 0;
+                    changed = true;
+                }
+                blank_idx++;
+            }
+        }
+
+        for (int j = 0; j < m - 1; j++) {
+            if (row[j] && row[j + 1] == row[j]) {
+                row[j] <<= 1;
+                row[j + 1] = 0;
+                changed = true;
+            }
+        }
+
+        blank_idx = 0;
+        for (int j = 0; j < m; j++) {
+            if (row[j]) {
+                if (blank_idx != j) {
+                    row[blank_idx] = row[j];
+                    row[j] = 0;
+                    changed = true;
+                }
+                blank_idx++;
+            }
+        }
+    }
+    return changed;
+}
+
+bool right(Board& board) {
+    reverseRow(board);
+    bool changed = left(board);
+    reverseRow(board);
+    return changed;
+}
+
+bool up(Board& board) {
+    transpose(board);
+    bool changed = left(board);
+    transpose(board);
+    return changed;
+}
+
+bool down(Board& board) {
+    transpose(board);
+    bool changed = right(board);
+    transpose(board);
+    return changed;
+}
+
+enum class Direction {
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN
+};
+
+// 统一的滑动接口
+bool slide(Board& board, Direction dir) {
+    switch (dir) {
+        case Direction::LEFT:
+            return left(board);
+        case Direction::RIGHT:
+            return right(board);
+        case Direction::UP:
+            return up(board);
+        case Direction::DOWN:
+            return down(board);
+        default:
+            return false;
+    }
+}   
+
+int const max_num(const Board& board) {
+    int res = 0;
+    for (const auto& row : board) {
+        for (int num : row) {
+            res = max(res, num);
+        }
+    }
+    return res;
+}
+
+int global_max = 0;
+// 深度优先搜索枚举所有可能的操作序列,并记录最大值
+void dfs(Board& board, int p, int cur_step) {
+    if (cur_step == p) {
+        global_max = max(global_max, max_num(board));
+        return;
+    }
+
+    Direction dirs[] = {Direction::LEFT, Direction::RIGHT, Direction::UP, Direction::DOWN};
+    for (Direction dir : dirs) {
+        Board tmp = board;
+        if (slide(tmp, dir)) {
+            dfs(tmp, p, cur_step + 1);
+        } else {
+            global_max = max(global_max, max_num(tmp));
+        }
+    }
+}
+
+int main() {
+    int n, m, p;
+    cin >> n >> m >> p;
+    Board board(n, vector<int>(m));
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            cin >> board[i][j];
+        }
+    }
+
+    dfs(board, p, 0);
+    cout << global_max << endl;
+    return 0;
+}
+```
+
+> 用时60min
 
 
 
@@ -9165,6 +9431,30 @@ public:
 
 
 
+思路：简单的位运算
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int reverseBits(int n) {
+        int ans = 0;
+        for (int i = 0; i < 32; i++) {
+            ans <<= 1;
+            ans |= (n & 1);
+            n >>= 1;
+        }
+        return ans;
+    }
+};
+```
+
+> 用时5min
+
+
+
 ## E206.反转链表
 
 three pinters, recursion, https://leetcode.cn/problems/reverse-linked-list/
@@ -9409,6 +9699,36 @@ public:
 ```
 
 
+
+## E1356.根据数字二进制下 1 的数目排序
+
+bit manipulation, https://leetcode.cn/problems/sort-integers-by-the-number-of-1-bits/
+
+思路：学会了内置的 `__builtin_popcount` 用于计算二进制中 1 的个数
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> sortByBits(vector<int>& arr) {
+        sort(arr.begin(), arr.end(), [](int a, int b) {
+            // __builtin_popcount 用于计算一个整数的二进制表示中 1 的个数
+            // 可用 while(n) { if (n & 1) count++; n >>= 1; } 实现
+            int count_a = __builtin_popcount(a);
+            int count_b = __builtin_popcount(b);
+            if (count_a == count_b) {
+                return a < b;
+            }
+            return count_a < count_b;
+        });
+        return arr;
+    }
+};
+```
+
+> 用时5min
 
 
 
@@ -10217,6 +10537,53 @@ public:
 ```
 
  
+
+思路：简单的贪心, 统计每行的末尾0的个数即可
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int minSwaps(vector<vector<int>>& grid) {
+        int n = grid.size();
+        vector<int> count_zeros(n, 0);
+        for (int i = 0; i < n; i++) {
+            for (int j = n - 1; j >= 0; j--) {
+                if (grid[i][j] == 0) {
+                    count_zeros[i]++;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            int col = -1;
+            for (int j = i; j < n; j++) {
+                if (count_zeros[j] >= n - 1 - i) {
+                    col = j;
+                    ans += col - i;
+                    for (int k = col; k > i; k--) {
+                        swap(count_zeros[k], count_zeros[k - 1]);
+                    }
+                    break;
+                }
+            }
+            if (col == -1) {
+                return -1;
+            }
+        }
+        return ans;
+    }
+};
+```
+
+> 用时15min
+
+
 
 ## M1545. 找出第 N 个二进制字符串中的第 K 位
 

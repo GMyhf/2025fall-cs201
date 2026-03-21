@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-03-20 22:22 GMT+8*
+*Updated 2026-03-21 16:16 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                             
+>                                                                                                                                                                
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                             
+>                                                                                                                                                                
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                             
+>                                                                                                                                                                
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                             
+>                                                                                                                                                                
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                             
+>                                                                                                                                                                
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -1224,6 +1224,32 @@ auto main() -> int {
 
 
 
+
+
+```cpp
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n;
+    cin >> n;
+    vector<int> a(n + 1, 0);
+	a[1] = a[2] = 1;
+	for (int i = 3; i <= n; i++) {
+		a[i] = a[i-1] + a[i-2] + a[i-3];
+	}
+	cout << a[n] << endl;
+}
+```
+
+
+
+
+
 ## E02753:菲波那契数列
 
 http://cs101.openjudge.cn/pctbook/E02753
@@ -1835,6 +1861,46 @@ auto main() -> int {
 
 
 
+思路：双指针, 遇到重复字母, 就不断右移左指针, 直到弹出那个重复字母, 用 `mask` 的二进制第 `i` 记录第 `i` 个字母是否出现
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+int get(char c) {
+	return (1 << (c - 'a'));
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    string s;
+    cin >> s;
+    int l = 0, r = 0;
+    int max_len = 0, mask = 0;
+    while (r < s.length()) {
+    	if ((get(s[r]) & mask)) {
+    		while (s[l] != s[r]) {
+				mask -= get(s[l]);
+				l++;
+			}
+			mask -= get(s[l]);
+			l++;
+		}
+		mask += get(s[r]);
+    	max_len = max(max_len, r - l + 1);
+    	r++;
+	}
+	cout << max_len << '\n';
+	return 0;
+}
+```
+
+
+
+
+
 ## E29952 咒语序列
 
 思路：
@@ -1991,6 +2057,41 @@ auto main() -> int {
 ```
 
 >共用时10min
+
+
+
+简单的位运算
+
+```cpp
+#include<iostream>
+#include<vector>
+#include<string>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+
+int get(int n) {
+	if (n == 0) return 1;
+	int ans = 0;
+	while (n) {
+		n >>= 1;
+		ans++;
+	}
+	return (1 << ans) - 1;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n;
+    cin >> n;
+    cout << get(n) - n << endl;
+	return 0;
+}
+```
+
+
 
 
 
@@ -2700,6 +2801,73 @@ int main()
 
 
 ```
+
+
+
+思路：树状数组的模板题 (考试的时候把 `solve` 的返回值写成 `int` 了, 导致一直RE)
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+class BIT {
+private:
+	long long n;
+	vector<long long> tree;
+	long long lowbit(long long n) {
+		return n & -n;
+	}
+public:
+	BIT(long long n) : n(n), tree(n + 1, 0) {};
+
+	void update(long long idx, long long v=1) {
+		for (long long i = idx; i <= n; i += lowbit(i)) {
+			tree[i] += v;
+		}
+	}
+	
+	long long query(long long idx) {
+		long long sum = 0;
+		for (long long i = idx; i > 0; i -= lowbit(i)) {
+			sum += tree[i];
+		}
+		return sum;
+	}
+};
+
+void solve(long long n) {
+	vector<long long> a(n);
+	for (long long i = 0; i < n; i++) {
+		cin >> a[i];
+	}
+	vector<long long> b = a;
+	sort(b.begin(), b.end());
+	BIT bit(n);
+	
+	long long ans = 0;
+	for (long long i = 0; i < n; i++) {
+		long long rank = lower_bound(b.begin(), b.end(), a[i]) - b.begin() + 1;
+		ans += i - bit.query(rank);
+		bit.update(rank);
+	}
+	cout << ans << endl;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+	while (1) {
+		long long n;
+		cin >> n;
+		if (n == 0) break;
+		solve(n);
+	}
+	return 0;
+}
+```
+
+
 
 
 
@@ -6688,6 +6856,75 @@ auto main() -> int {
 
 
 
+思路：BFS, 队列里存储一个包含当前行, 列, 剩余能量的三元组, 用 `visited` 记录到达当前位置剩余能量的最大值
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int r, c, k, start_row, start_col;
+    cin >> r >> c >> k;
+    vector<string> maze;
+    for (int i = 0; i < r; i++) {
+        string s;
+        cin >> s;
+        maze.push_back(s);
+        for (int j = 0; j < c; j++) {
+            if (s[j] == 'S') {
+                start_row = i;
+                start_col = j;
+            }
+        }
+    }
+
+    int step = 0;
+    vector<vector<int>> visited(r, vector<int>(c, -1));  // remain k when visited[row][col] is reached
+    visited[start_row][start_col] = k;
+    queue<tuple<int, int, int>> q; // row, col, remain
+    q.push({start_row, start_col, k});
+    vector<pair<int, int>> directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    
+    while (!q.empty()) {
+        int sz = q.size();
+        for (int i = 0; i < sz; i++) {
+            auto [row, col, remain] = q.front();
+            q.pop();
+
+            if (maze[row][col] == 'E') {
+                cout << step << endl;
+                return 0;
+            }
+            
+            for (auto [dr, dc] : directions) {
+                int new_row = row + dr;
+                int new_col = col + dc;
+                if (new_row >= 0 && new_row < r && new_col >= 0 && new_col < c) {
+                    int new_remain = remain;  // Create a new variable to store the updated remain value, instead of modifying the original remain variable
+                    if (maze[new_row][new_col] == '#') {
+                        new_remain--;
+                    }
+
+                    if (new_remain >= 0 && visited[new_row][new_col] < new_remain) {
+                        visited[new_row][new_col] = new_remain;
+                        q.push({new_row, new_col, new_remain});
+                    }
+                }
+            }
+        }
+        step++;
+    }
+    cout << -1 << endl;
+    return 0;
+}
+```
+
+
+
+
+
+
+
 ## M30178:数字华容道（Easy Version）
 
 merge sort, binary indexed tree, http://cs101.openjudge.cn/practice/30178/
@@ -6995,6 +7232,60 @@ auto main() -> int {
 ```
 
 >共用时30min
+
+
+
+思路：简单的模拟, 维护两个栈即可. 被输出格式卡了一会, 一开始忘记输出存活总数了
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    vector<int> a(n);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+
+    deque<int> soldiers;
+    vector<int> monsters;
+    for (int i = 0; i < n; i++) {
+        if (a[i] < 0) {
+            int monster = -a[i];
+            while (!soldiers.empty()) {
+                int top = soldiers.back();
+                soldiers.pop_back();
+                if (top > monster) {
+                    soldiers.push_back(top - monster);
+                    break;
+                } else if (top == monster) {
+                    monster = 0;
+                    break;
+                } else {
+                    monster -= top;
+                }
+            }
+
+            if (soldiers.empty() && monster > 0) {
+                monsters.push_back(-monster);
+            }
+        } else {
+            soldiers.push_back(a[i]);
+        }
+    }
+
+    cout << monsters.size() + soldiers.size() << endl;
+    for (int monster : monsters) {
+        cout << monster << " ";
+    }
+    for (int soldier : soldiers) {
+        cout << soldier << " ";
+    }
+    return 0;
+}
+```
 
 
 

@@ -1,13 +1,13 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-03-21 16:16 GMT+8*
+*Updated 2026-03-24 20:09 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
 
 > Logs:
 >
-> 2025fall～2026spring: 加了些 数算、计概 【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【李沁遥25医学预科】、【罗锐，25工学院，】、【海博治 城市与环境学院】、【刘思哲 25工学院】、【黄浩展 25工学院】、【江昊中 25数院】、【姚博骞 25物院】同学的CPP代码。
+> 2025fall～2026spring:  【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【罗锐，25工学院，】、【海博治 城市与环境学院】、【刘思哲 25工学院】、【黄浩展 25工学院】、【江昊中 25数院】、【姚博骞 25物院】、【黄宇曦 地球与空间科学学院】、【竺景琦 25工学院】同学的CPP代码。
 >
 > 鉴于每学期都有同学偏好C++编程，也开始提供C++题解支持。
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                
+>                                                                                                                                                                      
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                
+>                                                                                                                                                                      
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                
+>                                                                                                                                                                      
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                
+>                                                                                                                                                                      
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                
+>                                                                                                                                                                      
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -5494,6 +5494,113 @@ int main() {
 
 
 
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define all(x) begin(x), end(x)
+#define sz(x) (int) (x).size()
+
+using i64 = long long;
+using u64 = unsigned long long;
+using i128 = __int128_t;
+using u128 = __uint128_t;
+using pii = pair<int, int>;
+using vi = vector<int>;
+using usi = unordered_set<int>;
+
+void solve() {
+    string str;
+    cin >> str;
+    stack<char> op;
+    stack<string> val;
+    vector<string> ans;
+    string cur = "";
+    for (auto ch : str) {
+        if (isdigit(ch) || ch == '.') {
+            cur.push_back(ch);
+            continue;
+        }
+        if (!cur.empty()) {
+            val.push(cur);
+            cur.clear();
+        }
+        if (ch == '(') {
+            op.push('(');
+        } else if (ch == '+' || ch == '-') {
+            while (!op.empty() &&
+                   (op.top() == '*' || op.top() == '/')) {
+                char tmp = op.top();
+                op.pop();
+                string val1 = val.top();
+                val.pop();
+                string val2 = val.top();
+                val.pop();
+                val.push(val2 + " " + val1 + " " + tmp);
+            }
+            while (!op.empty() &&
+                   (op.top() == '+' || op.top() == '-')) {
+                char tmp = op.top();
+                op.pop();
+                string val1 = val.top();
+                val.pop();
+                string val2 = val.top();
+                val.pop();
+                val.push(val2 + " " + val1 + " " + tmp);
+            }
+            op.push(ch);
+        } else if (ch == '*' || ch == '/') {
+            while (!op.empty() &&
+                   (op.top() == '*' || op.top() == '/')) {
+                char tmp = op.top();
+                op.pop();
+                string val1 = val.top();
+                val.pop();
+                string val2 = val.top();
+                val.pop();
+                val.push(val2 + " " + val1 + " " + tmp);
+            }
+            op.push(ch);
+        } else {
+            while (op.top() != '(') {
+                char tmp = op.top();
+                op.pop();
+                string val1 = val.top();
+                val.pop();
+                string val2 = val.top();
+                val.pop();
+                val.push(val2 + " " + val1 + " " + tmp);
+            }
+            op.pop();
+        }
+    }
+    if (!cur.empty()) { val.push(cur); }
+    while (!val.empty() && !op.empty()) {
+        char tmp = op.top();
+        op.pop();
+        string val1 = val.top();
+        val.pop();
+        string val2 = val.top();
+        val.pop();
+        val.push(val2 + " " + val1 + " " + tmp);
+    }
+    cout << val.top() << '\n';
+}
+
+int main() {
+    cin.tie(nullptr)->sync_with_stdio(false);
+    int t;
+    cin >> t;
+    while (t--) { solve(); }
+    return 0;
+}
+```
+
+
+
+
+
 ## M24684: 直播计票
 
 http://cs101.openjudge.cn/practice/24684/
@@ -10381,11 +10488,9 @@ public:
 
 
 
-
-
 ## E160.相交链表
 
-two pinters, https://leetcode.cn/problems/intersection-of-two-linked-lists/
+hash table, linked list, two pinters, https://leetcode.cn/problems/intersection-of-two-linked-lists/
 
 思路：一路存地址即可，用时约20min
 
@@ -10410,6 +10515,38 @@ public:
 		}
         return NULL;
 
+    }
+};
+```
+
+
+
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        unordered_set<ListNode *> visited;
+        ListNode *temp = headA;
+        while (temp != nullptr) {
+            visited.insert(temp);
+            temp = temp->next;
+        }
+        temp = headB;
+        while (temp != nullptr) {
+            if (visited.count(temp)) {
+                return temp;
+            }
+            temp = temp->next;
+        }
+        return nullptr;
     }
 };
 ```
@@ -11224,6 +11361,58 @@ public:
 
 
 
+```cpp
+class LRUCache {
+public:
+    int cap,sz=0;
+    list<int> l;
+    int mp[100005], pos[100005], cnt[100005];
+    LRUCache(int capacity) {
+        cap=capacity;
+        memset(mp,-1,sizeof(mp));
+    }
+    
+    int get(int key) {
+        if(mp[key]!=-1) {
+            l.push_back(key);
+            cnt[key]++;
+        }
+        return mp[key];
+    }
+    
+    void put(int key, int value) {
+        if(mp[key]!=-1) {
+            mp[key]=value;
+            cnt[key]++;
+            l.push_back(key);
+        }else {
+            sz++;
+            mp[key]=value;
+            cnt[key]++;
+            l.push_back(key);
+            while(sz>cap) {
+                if(--cnt[l.front()]==0) {
+                    mp[l.front()]=-1;
+                    sz--;
+                }
+                l.pop_front();
+            }
+        }
+    }
+};
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
+```
+
+
+
+
+
 ## M200.岛屿数量
 
 dfs, bfs, https://leetcode.cn/problems/number-of-islands/ 
@@ -11322,6 +11511,56 @@ public:
     }
 };
 ```
+
+
+
+## M234.回文链表
+
+linked list, two pointers, https://leetcode.cn/problems/palindrome-linked-list/
+
+<mark>请用快慢指针实现</mark> `O(1)` 空间复杂度。
+
+
+
+```cpp
+class Solution {
+    ListNode* middleNode(ListNode* head) {
+        ListNode* slow = head, *fast = head;
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return slow;
+    }
+
+    ListNode* reverseList(ListNode* head) {
+        ListNode* pre = nullptr, *cur = head;
+        while (cur) {
+            ListNode* nxt = cur->next;
+            cur->next = pre;
+            pre = cur;
+            cur = nxt;
+        }
+        return pre;
+    }
+
+public:
+    bool isPalindrome(ListNode* head) {
+        ListNode* mid = middleNode(head);
+        ListNode* head2 = reverseList(mid);
+        while (head2) {
+            if (head->val != head2->val) {
+                return false;
+            }
+            head = head->next;
+            head2 = head2->next;
+        }
+        return true;
+    }
+};
+```
+
+
 
 
 
@@ -12140,5 +12379,257 @@ if __name__ == "__main__":
 
 
 
+## P2698 [USACO12MAR] Flowerpot S
 
+monotonic queue, https://www.luogu.com.cn/problem/P2698
+
+思路：一眼顶针鉴定为二分答案。然后用 rust 写了下试试
+
+```rust
+// use std::collections::VecDeque;
+// use std::fs::read;
+use std::{
+    collections::VecDeque,
+    io::{self, BufWriter, Read, Write},
+};
+
+struct FastReader<R: Read> {
+    reader: R,
+    buffer: [u8; 65536],
+    pos: usize,
+    cap: usize,
+}
+
+impl<R: Read> FastReader<R> {
+    fn new(reader: R) -> Self {
+        Self {
+            reader,
+            buffer: [0; 65536],
+            pos: 0,
+            cap: 0,
+        }
+    }
+
+    fn read_byte(&mut self) -> Option<u8> {
+        if self.pos >= self.cap {
+            self.cap = self.reader.read(&mut self.buffer).ok()?;
+            self.pos = 0;
+            if self.cap == 0 {
+                return None;
+            }
+        }
+        let b = self.buffer[self.pos];
+        self.pos += 1;
+        Some(b)
+    }
+
+    fn next_int<T: FromIntegral>(&mut self) -> T {
+        let mut b = self.read_byte().unwrap();
+        while b <= b' ' {
+            b = self.read_byte().unwrap();
+        }
+
+        let mut neg = false;
+        if b == b'-' {
+            neg = true;
+            b = self.read_byte().unwrap();
+        }
+
+        let mut res = T::from_u8(b - b'0');
+        while let Some(c) = self.read_byte() {
+            if c <= b' ' {
+                break;
+            }
+            res = res * T::from_u8(10) + T::from_u8(c - b'0');
+        }
+
+        if neg { T::zero() - res } else { res }
+    }
+
+    fn next_string(&mut self) -> String {
+        let mut b = self.read_byte().unwrap();
+        while b <= b' ' {
+            b = self.read_byte().unwrap();
+        }
+
+        let mut res = String::new();
+        res.push(b as char);
+        while let Some(c) = self.read_byte() {
+            if c <= b' ' {
+                break;
+            }
+            res.push(c as char);
+        }
+        res
+    }
+}
+
+trait FromIntegral:
+    std::ops::Mul<Output = Self> + std::ops::Add<Output = Self> + std::ops::Sub<Output = Self> + Copy
+{
+    fn from_u8(v: u8) -> Self;
+    fn zero() -> Self;
+}
+
+macro_rules! impl_integral {
+    ($($t:ty)*) => { $( impl FromIntegral for $t {
+        fn from_u8(v: u8) -> Self { v as $t }
+        fn zero() -> Self { 0 }
+    } )* };
+}
+impl_integral!(i32 i64 isize usize i128 u8 u16 u32 u64 u128);
+
+type Point = (i32, i32);
+
+fn check(x: i32, a: &[Point], d: i32, q_min: &mut [usize], q_max: &mut [usize]) -> bool {
+    let mut head_min = 0;
+    let mut tail_min = 0;
+    let mut head_max = 0;
+    let mut tail_max = 0;
+    let mut l = 0;
+
+    for r in 0..a.len() {
+        while tail_min > head_min && a[q_min[tail_min - 1]].1 >= a[r].1 {
+            tail_min -= 1;
+        }
+        q_min[tail_min] = r;
+        tail_min += 1;
+        while tail_max > head_max && a[q_max[tail_max - 1]].1 <= a[r].1 {
+            tail_max -= 1;
+        }
+        q_max[tail_max] = r;
+        tail_max += 1;
+        while a[r].0 - a[l].0 > x {
+            l += 1;
+            if q_min[head_min] < l {
+                head_min += 1;
+            }
+            if q_max[head_max] < l {
+                head_max += 1;
+            }
+        }
+        if a[q_max[head_max]].1 - a[q_min[head_min]].1 >= d {
+            return true;
+        }
+    }
+    false
+}
+
+fn main() {
+    let mut reader = FastReader::new(io::stdin().lock());
+    let mut writer = BufWriter::new(io::stdout().lock());
+
+    let n: usize = reader.next_int();
+    let d: i32 = reader.next_int();
+
+    let mut a: Vec<Point> = Vec::with_capacity(n);
+    for _ in 0..n {
+        a.push((reader.next_int(), reader.next_int()));
+    }
+
+    a.sort_unstable_by_key(|p| p.0);
+
+    let mut q_min = vec![0; n];
+    let mut q_max = vec![0; n];
+
+    let mut l = 0;
+    let mut r = 1000001;
+    let mut ans = -1;
+
+    while l <= r {
+        let mid = (l + r) >> 1;
+        if check(mid, &a, d, &mut q_min, &mut q_max) {
+            ans = mid;
+            r = mid - 1;
+        } else {
+            l = mid + 1;
+        }
+    }
+    writeln!(writer, "{}", ans).unwrap();
+}
+```
+
+
+
+思路：按 x 排序，对于每个 (x,y) 为左端点，找到最靠左的右端点满足 y 坐标之差大于等于 d，单调队列实现。
+
+方法二：按 y 排序，找到符合要求的点钟与当前 (x,y) 横坐标差的绝对值最小的，平衡树实现（实则用 STL::set逃课）
+
+代码
+
+```python
+n,d = map(int,input().split())
+a = []
+for i in range(n):
+    a.append(tuple(map(int,input().split())))
+b = sorted(a,key = lambda x: x[0])
+
+d1,d2 = [0]*n,[0]*n
+h1,h2,t1,t2 = 0,0,-1,-1
+inf = 2e9
+ans = inf
+r = -1
+for l in range(n):
+    while(h1<=t1 and d1[h1]<l): h1 += 1
+    while(h2<=t2 and d2[h2]<l): h2 += 1
+    while(r<n-1 and b[d1[h1]][1]-b[d2[h2]][1]<d):
+        r += 1
+        while(h1<=t1 and b[d1[t1]][1]<=b[r][1]): t1 -= 1
+        while(h2<=t2 and b[d2[t2]][1]>=b[r][1]): t2 -= 1
+        t1 += 1
+        t2 += 1
+        d1[t1] = r
+        d2[t2] = r
+#    print(l,r)
+    if(r!=n-1):
+        ans = min(ans,b[r][0]-b[l][0])
+if(ans>=inf):
+    print(-1)
+else:
+    print(ans)
+
+```
+
+
+
+
+
+方法二：
+
+~~~cpp
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define For(i,l,r) for(ll i=(l),i##_=(r);i<=i##_;++i)
+#define FOR(i,l,r) for(ll i=(l),i##_=(r);i>=i##_;--i)
+#define Rep(i,l,r) for(ll i=(l),i##_=(r);i<i##_;++i)
+
+#define pr pair<ll,ll>
+pr a[100010];
+const ll inf = 1e9;
+set<ll> s;
+int main(){
+	
+	ll n,d;cin>>n>>d; 
+	For(i,1,n){
+		ll x,y;cin>>x>>y;
+		a[i] = make_pair(x,y);
+	}
+	
+	sort(a+1,a+n+1,[](pr a,pr b){return a.second<b.second;});
+	ll r = n,ans = inf;
+	FOR(l,n,1){
+//		if(a[r].second-a[l].second<d) continue;
+		while(a[r].second-a[l].second>=d)
+		    s.insert(a[r].first),--r;
+		auto it = s.lower_bound(a[l].first);
+		ll x1=-inf*2,x2=inf*2;
+		if(it!=s.end()) x2 = *it;
+		if(it!=s.begin()) --it,x1 = *it;
+		ans = min(ans,min(x2-a[l].first,a[l].first-x1));
+	}
+	cout<<(ans>=inf?-1ll:ans);
+	return 0;
+}
+~~~
 

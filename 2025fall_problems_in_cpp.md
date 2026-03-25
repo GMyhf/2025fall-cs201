@@ -7,7 +7,7 @@
 
 > Logs:
 >
-> 2025fall～2026spring:  【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【罗锐，25工学院，】、【海博治 城市与环境学院】、【刘思哲 25工学院】、【黄浩展 25工学院】、【江昊中 25数院】、【姚博骞 25物院】、【黄宇曦 地球与空间科学学院】、【竺景琦 25工学院】同学的CPP代码。
+> 2025fall～2026spring:  【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【罗锐，25工学院，】、【海博治 城市与环境学院】、【刘思哲 25工学院】、【黄浩展 25工学院】、【江昊中 25数院】、【姚博骞 25物院】、【黄宇曦 地球与空间科学学院】、【竺景琦 25工学院】、【郑志远 25数院】同学的CPP代码。
 >
 > 鉴于每学期都有同学偏好C++编程，也开始提供C++题解支持。
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                      
+>                                                                                                                                                                         
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                      
+>                                                                                                                                                                         
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                      
+>                                                                                                                                                                         
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                      
+>                                                                                                                                                                         
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                      
+>                                                                                                                                                                         
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -12382,6 +12382,52 @@ if __name__ == "__main__":
 ## P2698 [USACO12MAR] Flowerpot S
 
 monotonic queue, https://www.luogu.com.cn/problem/P2698
+
+
+
+思路：双指针+单调队列
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+int n, D;
+const int N = 1e5+20;
+pair<int, int> r[N];
+pair<int, int> ql[N], qr[N];
+int qlh, qlt, qrh, qrt;
+int main() {
+    unsigned W = -1;
+    cin >> n >> D;
+    for (int i=0; i<n; i++)
+        cin >> r[i].first >> r[i].second;
+    sort(r, r+n);
+    qlh = qlt = qrh = qrt = 0;
+    for (int i=0, j=0; i<n; i++) {
+        if (qlh != qlt and ql[qlh].first < i) qlh++;
+        if (qrh != qrt and qr[qrh].first < i) qrh++;
+        while (j<n and ql[qlh].second-qr[qrh].second < D) {
+            int y = r[j].second; // j, y
+            while (qlh != qlt and ql[qlt-1].second <= y) {
+                qlt--;
+            }
+            ql[qlt] = make_pair(j, y); qlt++;
+            while (qrh != qrt and qr[qrt-1].second >= y) {
+                qrt--;
+            }
+            qr[qrt] = make_pair(j, y); qrt++;
+            j++;
+        }
+        if (ql[qlh].second-qr[qrh].second >= D) {
+            //cout << i << ' ' << j << endl;
+            W = min(W, unsigned(r[j-1].first-r[i].first));
+        }
+    }
+    cout << int(W) << endl;
+    return 0;
+}
+```
+
+
 
 思路：一眼顶针鉴定为二分答案。然后用 rust 写了下试试
 

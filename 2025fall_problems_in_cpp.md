@@ -1,13 +1,13 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-03-24 20:09 GMT+8*
+*Updated 2026-03-27 12:51 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
 
 > Logs:
 >
-> 2025fall～2026spring:  【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【罗锐，25工学院，】、【海博治 城市与环境学院】、【刘思哲 25工学院】、【黄浩展 25工学院】、【江昊中 25数院】、【姚博骞 25物院】、【黄宇曦 地球与空间科学学院】、【竺景琦 25工学院】、【郑志远 25数院】同学的CPP代码。
+> 2025fall～2026spring:  【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【罗锐，25工学院，】、【海博治 城市与环境学院】、【黄浩展 25工学院】、【江昊中 25数院】、【姚博骞 25物院】、【黄宇曦 地球与空间科学学院】、【竺景琦 25工学院】、【郑志远 25数院】、【赵林 数院】等同学的CPP代码。
 >
 > 鉴于每学期都有同学偏好C++编程，也开始提供C++题解支持。
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                         
+>                                                                                                                                                                            
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                         
+>                                                                                                                                                                            
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                         
+>                                                                                                                                                                            
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                         
+>                                                                                                                                                                            
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                         
+>                                                                                                                                                                            
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -7293,6 +7293,48 @@ int main()
 
 
 
+思路：化归到标准情形，然后统计逆序对数．时间复杂度为 $O(n^{2}\log n)$．
+
+一般地，在二分图 $G=(L,R)$ 上可以利用逆序对给出（一个空位的）数字华容道可复原的一个必要条件：将左右部点交替排列 $l_{1},r_{1},l_{2},r_{2},\cdots,l_{n},r_{n}$（若 $|L|\ne|R|$，只需增加一些棋子为 $0$ 的孤点，使之参与逆序对数的统计），则忽略空位后长度为 $2n-1$ 的序列的逆序对数奇偶性是一个操作不变量，从而当前局面与目标局面逆序对数奇偶性相同是复原的必要条件．然而，充分性似乎没有统一的解法，只能根据 $G$ 的结构给出具体构造．
+
+> 充分性其实很好证，因为`n*n`的盘面可以被降阶成 `n-1*n-1`的盘面
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+const int N = 1000 * 1000 + 5;
+int a[N];
+struct BIT {
+    void modify(int n) {
+        for(; n < N; n += n & -n) c[n] ^= 1;
+    }
+    bool query(int n) {
+        bool ans = 0;
+        for(; n; n -= n & -n) ans ^= c[n];
+        return ans;
+    }
+    bool c[N];
+} B;
+int main() {
+    int n;
+    cin >> n;
+    bool ans = n % 2 == 0;
+    for(int i = 0; i < n * n; i++) {
+        int t;
+        cin >> t;
+        if(t == 0)
+            ans ^= (n % 2 == 0) && ((n - 1 - i / n) % 2);
+        else {
+            ans ^= B.query(t);
+            B.modify(t);
+        }
+    }
+    cout << (ans ? "no" : "yes") << '\n';
+    return 0;
+}
+```
+
 
 
 
@@ -9570,6 +9612,40 @@ int main()
 
 
 
+思路：即寻找有向图的最小哈密顿环．令 $f_{u,S}\ (u\in[n],\ S\in 2^{[n]\backslash\{ 1,u \}})$ 为自 $1$ 至 $u$、途径点集 $S$ 的最小路径长度，有 $f_{u,\varnothing}=w(1,u)$ 和 $f_{u,S}=\displaystyle\min_{v\in S}\{ f_{v,S\backslash\{ v \}} +w(v,u)\}\ (S\ne \varnothing)$，答案为 $f_{1,[n]\backslash\{ 1 \}}$．时间复杂度为 $O(2^{n}n^{2})$．
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+void tomin(auto& x, const auto& y) {
+    if(x > y) x = y;
+}
+const int N = 18;
+int G[N][N];
+int f[1 << N][N];
+int main() {
+    int n;
+    cin >> n;
+    for(int i = 0; i < n; i++)
+        for(int j = 0; j < n; j++) cin >> G[i][j];
+    for(int u = 1; u < n; u++) f[0u][u] = G[0][u];
+    for(unsigned S = 2u; S < (1u << n); S += 2u) {
+        for(int u = 0; u < n; u++) {
+            if(S & (1u << u)) continue;
+            f[S][u] = numeric_limits<int>::max();
+            for(int v = 0; v < n; v++)
+                if(S & (1u << v))
+                    tomin(f[S][u], f[S & ~(1u << v)][v] + G[v][u]);
+        }
+    }
+    cout << f[(1u << n) - 2u][0];
+    return 0;
+}
+```
+
+
+
 
 
 # Codeforces
@@ -11612,6 +11688,34 @@ int main()
 
 
 
+思路：预处理二维前缀和．时间复杂度：构造 $O(mn)$，单次查询 $O(1)$．
+
+```cpp
+class NumMatrix {
+   public:
+    vector<vector<int>> A;
+    NumMatrix(vector<vector<int>>& matrix) {
+        const int n = matrix.size(), m = matrix.front().size();
+        A.resize(n + 1);
+        A[0].resize(m + 1);
+        for(int i = 0; i < n; i++) {
+            A[i + 1].resize(m + 1);
+            partial_sum(matrix[i].begin(), matrix[i].end(),
+                        A[i + 1].begin() + 1);
+        }
+        for(int j = 1; j <= m; j++)
+            for(int i = 1; i <= n; i++) A[i][j] += A[i - 1][j];
+    }
+
+    int sumRegion(int row1, int col1, int row2, int col2) {
+        return A[row2 + 1][col2 + 1] - A[row2 + 1][col1] - A[row1][col2 + 1] +
+               A[row1][col1];
+    }
+};
+```
+
+
+
 
 
 
@@ -11835,6 +11939,30 @@ int main()
 ```
 
 >共用时20min
+
+
+
+思路：直接提取 $s$ 的所有长度为 $k$ 的子串．时间复杂度为 $O(|s|)$．
+
+```cpp
+class Solution {
+   public:
+    bool hasAllCodes(string s, int k) {
+        const int n = s.length();
+        if(n - k + 1 < (1 << k)) return false;
+        vector<bool> buc;
+        buc.resize(1 << k);
+        int x = 0;
+        for(int i = 0; i < n; i++) {
+            x <<= 1;
+            x |= s[i] - '0';
+            x &= (1 << k) - 1;
+            if(i >= k - 1) buc[x] = true;
+        }
+        return ranges::count(buc, false) == 0;
+    }
+};
+```
 
 
 

@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                               
+>                                                                                                                                                                                  
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                               
+>                                                                                                                                                                                  
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                               
+>                                                                                                                                                                                  
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                               
+>                                                                                                                                                                                  
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                               
+>                                                                                                                                                                                  
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -5335,6 +5335,53 @@ int main()
 
 
 
+### M20744: 土豪购物
+
+dp, greedy, http://cs101.openjudge.cn/pctbook/M20744/
+
+
+思路：很标准的dp题目，把两种可能的情况都考虑进取就行，练习从底向上的dp写法
+
+```cpp
+#include<vector>
+#include<stdio.h>
+using namespace std;
+int max(int a,int b){
+    return(a>b)?a:b;
+}
+int min(int a,int b){
+    return(a<b)?a:b;
+}
+int main(){
+    int p,q;
+    q=1;
+    char s=',';
+    vector<int> w;
+    while(q!=-1){
+        scanf("%d",&p);
+        w.push_back(p);
+        q=scanf("%c",&s);//最后会读到一个换行
+    }
+    int n=w.size();
+    vector<pair<int,int>>dp(n,{-100000,-100000});
+    dp[n-1].first=w[n-1];
+    dp[n-3].second=w[n-1]+w[n-3];
+    for(int i=n-2;i>=0;i--){
+        dp[i].first=max(w[i],dp[i+1].first+w[i]);
+        if(i<n-3){        dp[i].second=max(dp[i+2].first,dp[i+1].second)+w[i];
+        }
+    }
+    int ans=-100000;
+    for(int i=0;i<n;i++){
+        ans=max(ans,max(dp[i].first,dp[i].second));
+    }
+    printf("%d",ans);
+    return 0;
+}
+```
+
+
+
 
 
 
@@ -6564,6 +6611,81 @@ int main() {
     return 0;
 }
 ```
+
+
+
+思路：和LC886 可能的二分法一样，唯一不同的就是不仅要求某两个不在一组，还要求某两个在一组。
+
+```cpp
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+int find(vector<int>& parent,int i){
+    if(i!=parent[i]){
+        return find(parent,parent[i]);
+    }
+    return i;
+}
+void Union(vector<int>& parent,int i,int j){
+    parent[find(parent,i)]=find(parent,j);
+}
+int main(){
+    int n,m;
+    cin>>n>>m;
+    int flag=1;
+    vector<vector<int>>different(n);
+    vector<int>parent(n);
+    for(int i=0;i<n;i++){
+        parent[i]=i;
+    }
+    for(int i=0;i<m;i++){
+        int p,q,r;
+        cin>>p>>q>>r;
+        if(r==0){
+            Union(parent,p,q);
+        }
+        else{
+            different[p].push_back(q);
+            different[q].push_back(p);
+        }
+    }
+    for(int i=0;i<n;i++){
+        if(different[i].size()==0) 
+        {continue;}
+        int p=find(parent,i);
+        int q=find(parent,different[i][0]);
+        if(q==p)
+        {
+            flag=0;
+            break;
+        }
+        if(different[i].size()>=2)
+        {
+            for(int j=1;j<different[i].size();j++)
+            {
+                if(find(parent,i)==find(parent,different[i][j])) {
+                    flag=0;
+                    break;
+                }
+                Union(parent,different[i][0],different[i][j]);
+            } 
+            if(flag==0) break;  
+        }
+    }
+    if (flag==1){
+        cout<<"YES";
+    }
+    else{
+        cout<<"NO";
+    }
+    return 0;
+}
+  
+```
+
+### 
 
 
 
@@ -13848,6 +13970,56 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
+
+
+## P1776 宝物筛选
+
+bit manipulation,dp, https://www.luogu.com.cn/problem/P1776
+
+
+【姚博骞 物院】思路：多重背包可以把物品总数拆成若干二进制个数的和，这样加和可以模拟所有可能的选择个数。
+
+```cpp
+//将每个物品数量拆成二进制个数的01背包
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int max(int a,int b){
+    return (a>b)?a:b;
+}
+int min(int a,int b){
+    return (a<b)?a:b;
+}
+int main(){
+    int n,wmax;
+    cin>>n>>wmax;//n还未输入时不能用n初始化数组
+    vector<int> v(n);
+    vector<int> w(n);
+    vector<int> m(n);
+    vector<int>dp(wmax+1,0);
+    for(int i=0;i<n;i++){
+        cin>>v[i]>>w[i]>>m[i];   
+    }
+    for(int i=0;i<n;i++)//考虑要不要选这个物品
+    {
+        int num=min(wmax/w[i],m[i]);
+        for(int k=1;num>0;k<<=1){
+            int cnt=min(k,num);
+            int value=cnt*v[i];
+            int weight=cnt*w[i];
+            for(int j=wmax;j>=weight;j--){
+                dp[j]=max(dp[j-weight]+value,dp[j]);
+            }
+            num-=cnt;
+        }
+    }
+    cout<<dp[wmax];
+}
+```
+
+
 
 
 

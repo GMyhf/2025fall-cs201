@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-03-30 17:51 GMT+8*
+*Updated 2026-04-01 21:22 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                  
+>                                                                                                                                                                                     
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                  
+>                                                                                                                                                                                     
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                  
+>                                                                                                                                                                                     
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                  
+>                                                                                                                                                                                     
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                  
+>                                                                                                                                                                                     
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -229,6 +229,102 @@ int main() {
 > **总结：**
 >
 > `<iomanip>` 使得你可以灵活地控制 C++ 输出格式，常用的有设置浮点数精度、输出宽度、对齐方式、填充字符等功能。
+
+
+
+## E02039: 反反复复	
+
+matrix, http://cs101.openjudge.cn/practice/02039/
+
+【黄宇曦 地球与空间科学学院】思路：比较简单，没什么好说的。
+
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define all(x) begin(x), end(x)
+#define sz(x) (int) (x).size()
+
+using i64 = long long;
+using u64 = unsigned long long;
+using i128 = __int128_t;
+using u128 = __uint128_t;
+using pii = pair<int, int>;
+using vi = vector<int>;
+using usi = unordered_set<int>;
+
+int main() {
+    cin.tie(nullptr)->sync_with_stdio(false);
+    int n;
+    cin >> n;
+    string str;
+    cin >> str;
+    string ans = "";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j * n + i < str.size(); j++) {
+            // cout << (j * n + (j % 2 == 0 ? i : n - i - 1)) << '\n';
+            ans.push_back(str[j * n + (j % 2 == 0 ? i : n - i - 1)]);
+        }
+    }
+    cout << ans << '\n';
+    return 0;
+}
+```
+
+
+
+## E02092: Grandpa is Famous	
+
+implementation, http://cs101.openjudge.cn/practice/02092/
+
+
+【黄宇曦 地球与空间科学学院】思路：比较简单，感觉乱搞也能过。
+
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define all(x) begin(x), end(x)
+#define sz(x) (int) (x).size()
+
+using i64 = long long;
+using u64 = unsigned long long;
+using i128 = __int128_t;
+using u128 = __uint128_t;
+using pii = pair<int, int>;
+using vi = vector<int>;
+using usi = unordered_set<int>;
+
+int main() {
+    cin.tie(nullptr)->sync_with_stdio(false);
+    int n, m;
+    while (cin >> n >> m) {
+        if (!n && !m)
+            return 0;
+        vi cnt(10005, 0);
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                int t;
+                cin >> t;
+                cnt[t]++;
+            }
+        }
+        auto tmp = cnt;
+        sort(all(tmp), [](int a, int b) { return a > b; });
+
+        for (int i = 1; i <= 10000; i++) {
+            if (cnt[i] == tmp[1])
+                cout << i << ' ';
+        }
+        cout << '\n';
+    }
+    return 0;
+}
+```
+
+
 
 
 
@@ -3330,7 +3426,7 @@ int main()
 
 ## M02774: 木材加工
 
-http://cs101.openjudge.cn/practice/02774/
+binary search, http://cs101.openjudge.cn/practice/02774/
 
 
 
@@ -3366,6 +3462,63 @@ int main(){
 	return 0;
 }
 ```
+
+
+
+【黄宇曦 地球与空间科学学院】思路：直接二分解决，空间复杂度本来就是 $O(1)$。
+
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define all(x) begin(x), end(x)
+#define sz(x) (int) (x).size()
+
+using i64 = long long;
+using u64 = unsigned long long;
+using i128 = __int128_t;
+using u128 = __uint128_t;
+using pii = pair<int, int>;
+using vi = vector<int>;
+using usi = unordered_set<int>;
+
+int main() {
+    cin.tie(nullptr)->sync_with_stdio(false);
+    int n, k;
+    cin >> n >> k;
+    vi a(n);
+    for (int i = 0; i < n; i++)
+        cin >> a[i];
+    if (k > accumulate(all(a), 0ll)) {
+        cout << 0 << '\n';
+        return 0;
+    }
+    int l = 1, r = *max_element(all(a));
+    auto check = [&](int x) {
+        i64 ans = 0;
+        for (int t : a)
+            ans += t / x;
+        return ans >= k;
+    };
+    int ans = 0;
+    while (l <= r) {
+        int mid = l + r >> 1;
+        if (check(mid))
+            l = mid + 1, ans = mid;
+        else
+            r = mid - 1;
+    }
+    cout << ans << '\n';
+    return 0;
+}
+```
+
+
+
+
+
+
 
 
 ## M02783: Holiday Hotel
@@ -3846,6 +3999,48 @@ int main() {
 }
 
 ```
+
+
+
+## M04077: 出栈序列统计
+
+dp, dfs, math, http://cs101.openjudge.cn/practice/04077/
+
+【黄宇曦 地球与空间科学学院】思路：直接思考 dp。考虑第一个在什么时候被弹出不难发现转移方程。事实上这也是所谓的 Catalan 数。
+
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define all(x) begin(x), end(x)
+#define sz(x) (int) (x).size()
+
+using i64 = long long;
+using u64 = unsigned long long;
+using i128 = __int128_t;
+using u128 = __uint128_t;
+using pii = pair<int, int>;
+using vi = vector<int>;
+using usi = unordered_set<int>;
+
+int main() {
+    cin.tie(nullptr)->sync_with_stdio(false);
+    int n;
+    cin >> n;
+    vi dp(n + 1, 0);
+    dp[0] = dp[1] = 1;
+    for (int i = 2; i <= n; i++) {
+        for (int j = 0; j < i; j++) {
+            dp[i] += dp[j] * dp[i - 1 - j];
+        }
+    }
+    cout << dp[n] << '\n';
+    return 0;
+}
+```
+
+
 
 
 
@@ -7790,6 +7985,59 @@ int main() {
 
 
 
+## M30637: 合法出栈序列pub
+
+stack, http://cs101.openjudge.cn/practice/M30637/
+
+【黄宇曦 地球与空间科学学院】思路：贪心。直接模拟一下过程就行了。
+
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define all(x) begin(x), end(x)
+#define sz(x) (int) (x).size()
+
+using i64 = long long;
+using u64 = unsigned long long;
+using i128 = __int128_t;
+using u128 = __uint128_t;
+using pii = pair<int, int>;
+using vi = vector<int>;
+using usi = unordered_set<int>;
+
+int main() {
+    cin.tie(nullptr)->sync_with_stdio(false);
+    string str;
+    cin >> str;
+    cin.ignore();
+    string q;
+    while (getline(cin, q)) {
+        if (q.size() != str.size()) {
+            cout << "NO\n";
+            continue;
+        }
+        stack<char> st;
+        int i = 0;
+        for (auto ch : str) {
+            st.push(ch);
+            while (st.size() && i < q.size() && st.top() == q[i]) {
+                st.pop();
+                i++;
+            }
+        }
+        if (st.empty() && i == q.size())
+            cout << "YES\n";
+        else
+            cout << "NO\n";
+    }
+    return 0;
+}
+```
+
+
+
 
 
 # OJ挑战
@@ -10878,6 +11126,110 @@ int main(){
     return 0;
 }
 ```
+
+
+
+## T30102:完美交易窗口
+
+monotonic stack, http://cs101.openjudge.cn/practice/T30102/
+
+【黄宇曦 地球与空间科学学院】思路：叽里咕噜说什么呢，线段树秒了。
+
+首先考察到连续的一段肯定去思考用单调栈。假定我们通过单调栈得知了 $a_p$ 右侧第一个**小于等于** $a_p$ 的位置 $p'$，那么我们在这一段里面，以 $p$ 为左端点的最长区间肯定就是 $[p,p')$ 里面的所有最大值（若有多个）第一个出现的地方。考场上我想到这里就没想了于是首先敲了个 ST 表没过去。转念一想，$O(n\log n)$ 的内存确实会爆掉。所以转而敲一个线段树只用 $O(n)$ 的空间复杂度就过了。 
+
+整个过程的时间复杂度是 $O(n\log n)$，瓶颈在于线段树的询问处理。
+
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define all(x) begin(x), end(x)
+#define sz(x) (int) (x).size()
+
+using i64 = long long;
+using u64 = unsigned long long;
+using i128 = __int128_t;
+using u128 = __uint128_t;
+using pii = pair<int, int>;
+using vi = vector<int>;
+using usi = unordered_set<int>;
+
+const int MAXN = 1e6 + 5;
+
+int n;
+
+class SegTree {
+    int n;
+    vector<i64> s;
+    vector<i64> pos;
+
+    inline int lson(int x) { return x << 1; }
+    inline int rson(int x) { return x << 1 | 1; }
+
+    void push_up(int p) {
+        s[p] = max(s[lson(p)], s[rson(p)]);
+        pos[p] = s[lson(p)] >= s[rson(p)] ? pos[lson(p)] : pos[rson(p)];
+    }
+    void build(int l, int r, int p, const vector<i64> &a) {
+        if (l == r) {
+            s[p] = a[l];
+            pos[p] = l;
+            return;
+        }
+        int mid = l + r >> 1;
+        build(l, mid, lson(p), a);
+        build(mid + 1, r, rson(p), a);
+        push_up(p);
+    }
+    pii query(int ql, int qr, int l, int r, int p) {
+        if (ql <= l && r <= qr) {
+            return {pos[p], s[p]};
+        }
+        int mid = l + r >> 1, ret = 0, val = 0;
+        if (ql <= mid)
+            tie(ret, val) = query(ql, qr, l, mid, lson(p));
+        if (mid < qr) {
+            auto [rr, vv] = query(ql, qr, mid + 1, r, rson(p));
+            if (vv > val) {
+                val = vv;
+                ret = rr;
+            }
+        }
+        return {ret, val};
+    }
+
+  public:
+    SegTree(int n, const vector<i64> &a)
+        : n(n), s(n + 2 << 2, 0), pos(n + 2 << 2, 0) {
+        build(1, n, 1, a);
+    }
+    int query(int ql, int qr) { return query(ql, qr, 1, n, 1).first; }
+};
+
+int main() {
+    cin >> n;
+    vector<i64> a(n + 1);
+    for (int i = 1; i <= n; i++)
+        cin >> a[i];
+    SegTree st(n, a);
+    stack<int> stk;
+    int ans = 0;
+    for (int i = 1; i <= n + 1; i++) {
+        while (!stk.empty() && a[stk.top()] >= a[i]) {
+            int l = stk.top();
+            stk.pop();
+            int r = st.query(l, i - 1);
+            if (a[r] > a[l]) {
+                ans = max(ans, r - l + 1);
+            }
+        }
+        stk.push(i);
+    }
+    cout << ans << '\n';
+}
+```
+
 
 
 

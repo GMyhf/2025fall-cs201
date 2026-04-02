@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                     
+>                                                                                                                                                                                        
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                     
+>                                                                                                                                                                                        
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                     
+>                                                                                                                                                                                        
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                     
+>                                                                                                                                                                                        
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                     
+>                                                                                                                                                                                        
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -11132,6 +11132,51 @@ int main(){
 ## T30102:完美交易窗口
 
 monotonic stack, http://cs101.openjudge.cn/practice/T30102/
+
+【江昊中 数学科学学院】思路：对于每个元素, 最大的左边界 `l` 是上一个大于等于它的元素的下一位, 所以维护一个递减的单调栈 `st` , 购入点是左边界 `l` 到当前元素的最右侧的最小值, 因此我还需维护一个严格单调递减的单调栈 `purchase` , 它保存的是从右往左看的第一个严格最小值. 为了让区间长度最大, 我们每次找购入点都只要找 `purchase` 里第一个大于等于左边界 `l` 的位置
+
+```c++
+#include<bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+    vector<int> h(n);
+    for (int i = 0; i < n; i++) {
+        cin >> h[i];
+    }
+
+    int max_len = 0;
+    stack<int> st;
+    vector<int> purchase;
+    for (int i = 0; i < n; i++) {
+        while (!st.empty() && h[i] > h[st.top()]) {
+            st.pop();
+        }
+        
+        int l = (st.empty()) ? 0 : st.top() + 1;
+        for (int j = 0; j < purchase.size(); j++) {
+            if (purchase[j] >= l) {
+                max_len = max(max_len, i - purchase[j] + 1);
+            }
+        }
+        
+        while (!purchase.empty() && h[i] <= h[purchase.back()]) {
+            purchase.pop_back();
+        }
+        purchase.push_back(i);
+
+        st.push(i);
+    }
+    cout << max_len << endl;
+    return 0;
+}
+```
+
+
+
+
 
 【黄宇曦 地球与空间科学学院】思路：叽里咕噜说什么呢，线段树秒了。
 

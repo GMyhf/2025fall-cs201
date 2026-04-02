@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                        
+>                                                                                                                                                                                           
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                        
+>                                                                                                                                                                                           
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                        
+>                                                                                                                                                                                           
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                        
+>                                                                                                                                                                                           
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                        
+>                                                                                                                                                                                           
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -8031,6 +8031,59 @@ int main() {
             cout << "YES\n";
         else
             cout << "NO\n";
+    }
+    return 0;
+}
+```
+
+
+
+【江昊中 数学科学学院】思路：合法字符串的充要条件是每一字符后的所有比它序号更小的字符必须是降序排列的 (至于 `cin` 会跳过空行, 以及会出现原字符串里没有的字符的情况我是完全没考虑)
+
+```c++
+#include<bits/stdc++.h>
+using namespace std;
+const int M = 10005;
+
+int main() {
+    string s;
+    getline(cin, s);
+    int n = s.length();
+    unordered_map<char, int> mp;
+    for (int i = 0; i < n; i++) {
+        mp[s[i]] = i;
+    }
+
+    while (getline(cin, s)) {
+        if (s.length() != n) {
+            cout << "NO" << endl;
+            continue;
+        }
+        bool possible = true;
+        for (int i = 0; i < n; i++) {
+            if (!mp.count(s[i])) {
+                possible = false;
+                break;
+            }
+            int idx = mp[s[i]];
+            int last = idx;
+            for (int j = i + 1; j < n; j++) {
+                int cur_idx = mp[s[j]];
+                if (cur_idx < idx) {
+                    if (cur_idx > last) {
+                        possible = false;
+                        break;
+                    }
+                    last = cur_idx;
+                }
+            }
+
+        }
+        if (possible) {
+            cout << "YES" << endl;
+        } else {
+            cout << "NO" << endl;
+        }
     }
     return 0;
 }

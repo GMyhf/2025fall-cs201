@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-04-01 21:22 GMT+8*
+*Updated 2026-04-04 21:22 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                           
+>                                                                                                                                                                                              
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                           
+>                                                                                                                                                                                              
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                           
+>                                                                                                                                                                                              
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                           
+>                                                                                                                                                                                              
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                           
+>                                                                                                                                                                                              
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -11182,7 +11182,7 @@ int main(){
 
 
 
-## T30102:完美交易窗口
+## T30102: 完美交易窗口
 
 monotonic stack, http://cs101.openjudge.cn/practice/T30102/
 
@@ -11325,6 +11325,52 @@ int main() {
         stk.push(i);
     }
     cout << ans << '\n';
+}
+```
+
+
+
+【竺景琦、工学院】思路：单调栈。具体优化过程写在后面了。
+
+```python
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define For(i,l,r) for(ll i=(l),i##_=(r);i<=i##_;++i)
+#define Rep(i,l,r) for(ll i=(l),i##_=(r);i<i##_;++i)
+#define FOR(i,l,r) for(ll i=(l),i##_=(r);i>=i##_;--i)
+
+const ll N = 1e6+10;
+ll a[N],d[N],m[N];
+const ll inf = 2e18;
+ll read(){
+	char c=getchar();ll v=0;bool f=1;
+	for(;'0'>c||c>'9';c=getchar())
+	    if(c=='-') f = 0;
+	for(;'0'<=c&&c<='9';c=getchar())
+	    v = (v<<1)+(v<<3)+(c^48);
+	return f?v:-v;
+}
+int main(){
+	
+	ll n=read();
+	For(i,1,n) a[i]=read();
+	
+	ll dn = 0,now = 0,ans = 0;
+	a[0] = inf;
+	For(i,1,n){
+		while(dn!=0&&a[d[dn]]<a[i]){
+		    if(a[now]>a[m[dn]]) now = m[dn];
+			--dn;
+		}
+		if(now!=0) ans = max(ans,i-now+1);
+		if(a[now]>=a[i]) now = i;
+		d[++dn] = i;m[dn] = now;
+		now = 0;
+	}
+	
+	printf("%lld",ans);
+	return 0;
 }
 ```
 

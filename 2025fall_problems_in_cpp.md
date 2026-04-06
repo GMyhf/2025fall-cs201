@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                              
+>                                                                                                                                                                                                 
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                              
+>                                                                                                                                                                                                 
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                              
+>                                                                                                                                                                                                 
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                              
+>                                                                                                                                                                                                 
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                              
+>                                                                                                                                                                                                 
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -4037,6 +4037,48 @@ int main() {
     }
     cout << dp[n] << '\n';
     return 0;
+}
+```
+
+
+
+【张真铭 元培】思路：Catalan数 $𝐶_𝑛$ 的递推关系有着天然的递归结构：规模为 $𝑛$ 的计数问题 $𝐶_𝑛$ ，可以通过枚举分界点，分拆为两个规模分别为 $𝑖$ 和 $(𝑛−1-𝑖)$ 的子问题。这一递推关系使得Catalan数广泛出现于各类具有类似递归结构的问题中。
+
+**路径计数问题**：有一个大小为 $n\times n$ 的方格图，左下角为 $(0,0)(0, 0)$，右上角为 $(𝑛,𝑛)(n, n)$ 。从左下角开始，每次都只能向右或者向上走一单位，不走到对角线 $y=x$ 上方（但可以触碰）的情况下，到达右上角的路径总数为 $C_n$ 。
+
+**圆内不相交弦计数问题**：圆上有 $2n$ 个点，将这些点成对连接起来且使得所得到的 $n$ 条线段两两不交的方案数是 $C_n$。
+
+**三角剖分计数问题**：对角线不相交的情况下，将一个凸 $(n + 2)$ 边形区域分成三角形区域的方法数为 $C_n$ 。
+
+**二叉树计数问题**：含有 $n$ 个结点的形态不同的二叉树数目为 $C_n$ 。等价地，含有 $n$ 个非叶结点的形态不同的满二叉树数目为 $C_{n}$ 。
+
+**括号序列计数问题**：由 $n$ 对括号构成的合法括号序列数为 $C_n$ 。
+
+**出栈序列计数问题**：一个栈（无穷大）的进栈序列为 $1,2,3, \ldots ,n$ ，合法出栈序列的数目为 $C_n$ 。
+
+**数列计数问题**：由 $n$ 个 $+1$ 和 $n$ 个 $-1$ 组成的数列 $a_1,a_2, \ldots ,a_{2n}$ 中，部分和满足 $a_1+a_2+ \ldots +a_k \geq 0~(k=1,2,3, \ldots ,2n)$ 的数列数目为 $C_n$ 。
+
+
+$C_n = \frac{(4n - 2)}{n + 1} C_{n-1},\ n > 0,\ C_0 = 1.$
+
+
+代码：
+
+```cpp
+#include <iostream>
+
+auto main() -> int {
+  std::cin.tie(nullptr)->sync_with_stdio(false);
+
+  int n;
+  std::cin >> n;
+  int c_prev = 1;
+  int c_curr = 1;
+  for (int i = 1; i <= n; ++i) {
+    c_prev = c_curr;
+    c_curr = (4 * i - 2) * c_prev / (i + 1);
+  }
+  std::cout << c_curr << '\n';
 }
 ```
 
@@ -11375,6 +11417,49 @@ int main(){
 ```
 
 
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+auto main() -> int {
+  std::cin.tie(nullptr)->sync_with_stdio(false);
+
+  int n;
+  std::cin >> n;
+  std::vector<int> h(n);
+  for (auto &v : h)
+    std::cin >> v;
+
+  std::vector<int> st_max;
+  std::vector<int> st_min;
+
+  int ans = 0;
+  for (int j = 0; j < n; ++j) {
+    while (!st_max.empty() && h[st_max.back()] < h[j])
+      st_max.pop_back();
+
+    int left_border = st_max.empty() ? -1 : st_max.back();
+
+    while (!st_min.empty() && h[st_min.back()] >= h[j])
+      st_min.pop_back();
+
+    if (!st_min.empty()) {
+      auto it = std::upper_bound(st_min.begin(), st_min.end(), left_border);
+      if (it != st_min.end()) {
+        int min_l = *it;
+        ans = std::max(ans, j - min_l + 1);
+      }
+    }
+
+    st_max.emplace_back(j);
+    st_min.emplace_back(j);
+  }
+
+  std::cout << ans << '\n';
+}
+```
 
 
 

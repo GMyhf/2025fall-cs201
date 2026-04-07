@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-04-04 21:22 GMT+8*
+*Updated 2026-04-07 14:29 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                 
+>                                                                                                                                                                                                    
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                 
+>                                                                                                                                                                                                    
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                 
+>                                                                                                                                                                                                    
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                 
+>                                                                                                                                                                                                    
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                 
+>                                                                                                                                                                                                    
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -4961,6 +4961,7 @@ int main() {
 ```
 
 
+
 思路：读取每个测试用例的节点信息，利用队列构建树结构，然后进行后序遍历输出所有节点值。
 
 ```cpp
@@ -5043,6 +5044,73 @@ int main() {
     return 0;
 }
 ```
+
+
+
+思路：用队列读取数据建树再后序遍历即可
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+
+struct TreeNode {
+    char val;
+    vector<TreeNode*> children;
+    TreeNode(char c) : val(c) {}
+};
+
+void postOrder(TreeNode* root, string& res) {
+    if (!root) return;
+    for (TreeNode* child : root->children) {
+        postOrder(child, res);
+    }
+    res += root->val;
+    res += ' ';
+}
+
+void solve() {
+    char c;
+    int n;
+    cin >> c >> n;
+    queue<pair<TreeNode*, int>> q;
+    TreeNode* root = new TreeNode(c);
+    q.push({root, n});
+
+    while (!q.empty()) {
+        auto [node, n] = q.front();
+        q.pop();
+
+        for (int i = 0; i < n; i++) {
+            char ch;
+            int num;
+            cin >> ch >> num;
+            TreeNode* child = new TreeNode(ch);
+            node->children.push_back(child);
+            q.push({child, num});
+        }
+    }
+
+    string res = "";
+    postOrder(root, res);
+    cout << res;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int t;
+    cin >> t;
+    while (t--) {
+        solve();
+    }
+    cout << endl;
+    return 0;
+}
+```
+
+
+
 
 
 ## M08210: 河中跳房子
@@ -7121,6 +7189,67 @@ int main() {
     return 0;
 }
 ```
+
+
+
+思路：需要用 `getline` 一行行读取数据, 且题目没有给出根节点, 以及节点的顺序不固定, 因此用 `unordered_map` 邻接表存储树, 建树并找到根结点后遍历即可
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+// 用邻接表存储树结构
+unordered_map<int, vector<int>> tree;
+
+void dfs(int root) {
+    vector<int> children = tree[root];
+    children.push_back(root);
+    sort(children.begin(), children.end());
+
+    for (int child : children) {
+        if (child == root) {
+            cout << root << '\n';
+        } else {
+            dfs(child);
+        }
+    }
+}
+
+int main() {
+    int n;
+    cin >> n;
+    string line;
+    getline(cin, line); // 读取剩余的换行符
+    unordered_set<int> child;
+    unordered_set<int> all_nodes;
+    
+    for (int i = 0; i < n; i++) {
+        getline(cin, line);
+        stringstream ss(line);  // 初始化 stringstream 对象
+        int u, v;
+        ss >> u;
+        all_nodes.insert(u);
+    
+        while (ss >> v) {
+            tree[u].push_back(v);
+            child.insert(v);
+        }
+    }
+
+    // 找到根节点
+    int root = -1;
+    for (int node : all_nodes) {
+        if (child.count(node) == 0) {
+            root = node;
+            break;
+        }
+    }
+
+    dfs(root);
+}
+```
+
+
 
 
 
@@ -12518,6 +12647,32 @@ public:
 
 
 
+## E94.二叉树的中序遍历
+
+dfs, stack, https://leetcode.cn/problems/binary-tree-inorder-traversal/
+
+思路：简单的 dfs
+
+```cpp
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+        dfs(root, res);
+        return res;
+    }
+
+    void dfs(TreeNode* root, vector<int>& res) {
+        if (!root) return;
+        dfs(root->left, res);
+        res.push_back(root->val);
+        dfs(root->right, res);
+    }
+};
+```
+
+
+
 ## E108.将有序数组转换为二叉搜索树
 
 https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/
@@ -12546,6 +12701,30 @@ private:
     }
 };
 ```
+
+
+
+思路：将数组折半建树
+
+```cpp
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return dfs(nums, 0, nums.size());
+    }
+
+    TreeNode* dfs(vector<int>& nums, int l, int r) {
+        if (l >= r) return nullptr;
+        int mid = (r - l) / 2 + l;
+        TreeNode* left = dfs(nums, l, mid);
+        TreeNode* right = dfs(nums, mid + 1, r);
+        TreeNode* root = new TreeNode(nums[mid], left, right);
+        return root;
+    }
+};
+```
+
+
 
 
 
@@ -13210,6 +13389,37 @@ public:
 
 
 
+思路：bfs 遍历即可
+
+```cpp
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> res;
+        if (!root) return res;
+        queue<TreeNode*> q;
+        q.push(root);
+
+        while (!q.empty()) {
+            int sz = q.size();
+            vector<int> cur_level(sz);
+            for (int i = 0; i < sz; i++) {
+                TreeNode* node = q.front();
+                q.pop();
+                cur_level[i] = node->val;
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            res.push_back(cur_level);
+        }
+
+        return res;
+    }
+};
+```
+
+
+
 
 
 ## M129.求根节点到叶节点数字之和
@@ -13837,6 +14047,35 @@ public:
 
 
 
+思路：dfs 返回左右子树的最大深度和 lca , 选取深度最大的子树及其 lca, 如果深度相等, 则说明当前节点是 lca
+
+```cpp
+class Solution {
+public:
+    TreeNode* lcaDeepestLeaves(TreeNode* root) {
+        return dfs(root).first;
+    }
+
+    pair<TreeNode*, int> dfs(TreeNode* root) {
+        if (!root) return {nullptr, 0};
+
+        auto [left_lca, left_depth] = dfs(root->left);
+        auto [right_lca, right_depth] = dfs(root->right);
+        if (left_depth < right_depth) {
+            return {right_lca, right_depth + 1};
+        } else if (left_depth > right_depth) {
+            return {left_lca, left_depth + 1};
+        } else {
+            return {root, left_depth + 1};
+        }
+    }
+};
+```
+
+
+
+
+
 ## M1680.连接连续二进制数字
 
 bit manipulation, https://leetcode.cn/problems/concatenation-of-consecutive-binary-numbers/
@@ -14363,6 +14602,77 @@ backtracking, [https://leetcode.cn/problems/n-queens/](https://leetcode.cn/probl
      }  
      return 0;  
  }
+```
+
+
+
+
+
+## T3892 : 产生至少 K 个峰值的最少操作次数
+
+【江昊中 数学科学学院】做了力扣周赛, 周赛第四题除了用 dp , 问了 ai 后还学习到了反悔贪心的算法
+
+dp, greedy with regret, https://leetcode.cn/problems/minimum-operations-to-achieve-at-least-k-peaks/
+
+
+```cpp
+class Solution {
+public:
+    int minOperations(vector<int>& nums, int k) {
+        const int n = nums.size();
+        if (k > n / 2) return -1;
+
+        // 使用两个数组 prev 和 next 来模拟双向链表
+        vector<int> prev(n), next(n);
+        for (int i = 0; i < n; i++) {
+            prev[i] = (i + n - 1) % n;
+            next[i] = (i + 1) % n;
+        }
+
+        vector<int> cost(n);
+        for (int i = 0; i < n; i++) {
+            int prev_val = nums[prev[i]];
+            int next_val = nums[next[i]];
+            cost[i] = max(0, max(prev_val, next_val) + 1 - nums[i]);
+        }
+
+        // 最小堆, 存放 {代价, idx}
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+        for (int i = 0; i < n; i++) {
+            pq.push({cost[i], i});
+        }
+
+        vector<bool> visited(n, false);
+        int ans = 0;
+
+        // 贪心选取 k 次
+        for (int i = 0; i < k; i++) {
+            // 跳过已经被删除的节点
+            while (!pq.empty() && visited[pq.top().second]) {
+                pq.pop();
+            }
+
+            auto [val, idx] = pq.top();
+            pq.pop();
+
+            ans += val;
+            int l = prev[idx], r = next[idx];
+            visited[l] = visited[r] = true;
+
+            // 将具有反悔代价的节点加入优先队列
+            // 逻辑上等价于放弃当前节点 idx, 转而选取 l 和 r
+            cost[idx] = cost[l] + cost[r] - val;
+            pq.push({cost[idx], idx});
+
+            // 在链表中删除 l 和 r
+            prev[idx] = prev[l];
+            next[idx] = next[r];
+            next[prev[l]] = idx;
+            prev[next[r]] = idx;
+        }
+        return ans;
+    }
+};
 ```
 
 

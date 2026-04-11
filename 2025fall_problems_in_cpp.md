@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                    
+>                                                                                                                                                                                                       
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                    
+>                                                                                                                                                                                                       
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                    
+>                                                                                                                                                                                                       
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                    
+>                                                                                                                                                                                                       
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,14 +187,14 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                    
+>                                                                                                                                                                                                       
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
 >    }
 >    ```
 >
-> **常见的 `iomanip` 常量：**
+>    **常见的 `iomanip` 常量：**
 >
 > - **`fixed`**：强制以小数点形式输出浮点数。
 > - **`scientific`**：强制以科学计数法输出浮点数。
@@ -654,7 +654,7 @@ NO
 3. **直接翻转字符串**
    判断 `s == reversed(s)`。
 
-同时，本题需要处理**不定行输入**，在 C++ 中常用 `while (cin >> s)` 来逐行读取。
+   同时，本题需要处理**不定行输入**，在 C++ 中常用 `while (cin >> s)` 来逐行读取。
 
 
 
@@ -2291,7 +2291,7 @@ if __name__ == "__main__":
 > - `struct.unpack('f', …)[0]`
 >   再把 4 字节解析出来，转成 Python 的 `float`（C double），但精度已经丢失，只保留了单精度的部分。`'f'` 表示解析一个单精度浮点，所以返回的 tuple 里有 **1 个元素**；这里取 `[0]`，拿到里面唯一的那个值。
 >
-> 这样就可以 **模拟 C++ 里的 float 精度**。
+>   这样就可以 **模拟 C++ 里的 float 精度**。
 
 
 
@@ -2629,7 +2629,7 @@ int main() {
    - 读取输入，处理每一组测试数据。
    - 对于每组数据，调用`placePieces`函数来计算所有可能的摆放方案数。
 
-**时间复杂度：**
+   **时间复杂度：**
 
 - 由于最多有`n`行，每行最多有`n`个格子需要判断，递归过程中最多会遍历所有可能的放置方式。
 - 回溯的时间复杂度大致为`O(n^k)`，其中`k`是要摆放的棋子数。
@@ -14673,6 +14673,51 @@ public:
         return ans;
     }
 };
+```
+
+
+
+【姚博骞 物理学院】思路：循环条件下的“打家劫舍”，打家劫舍说的是不可以拿相邻的元素，这个题贪心地想，你没有必要对相邻地两个元素同时进行操作，因为相邻地两个元素最多只有一个峰。所以就变成了每个位置为了变成峰最小的增加数，用dp数组自底向上动态规划，记录遍历到点i处有j个峰的最小操作数dp[i][j],转移方程为：
+$$a=max(max(nums[(i+n+1)\%n],nums[(i+n-1)\%n]),0)$$
+
+$$dp[i][j]=min(dp[(i+n-1)\%n][j],dp[(i+n-2)\%n][j-1]+a);$$
+
+其中a是使得这个位置是峰的最小增加数。
+这里用取模避免了对越界的讨论。
+由于数组是环形的，有必要两个方向都做一遍然后取小者。
+总体还是很好的一个dp练习题
+
+```cpp
+class Solution {
+public:
+    int minOperations(vector<int>& nums, int k){//和打家劫舍是几乎一样的，相邻的不可能都是都是峰。最好的情况只对非相邻的元素操作。
+        int n=nums.size();
+        vector<vector<int>>dp(n,vector<int>(k+1,100000000000));
+        vector<vector<int>>dp2(n,vector<int>(k+1,100000000000));
+        for(int i=0;i<n;i++){
+            dp[i][0]=dp2[i][0]=0;
+        }
+        if(k>nums.size()/2){
+            return -1;
+        }
+        for(int i=0;i<n-1;i++){
+            int a=max(max(nums[(i+n+1)%n],nums[(i+n-1)%n])+1-nums[i],0);
+            for(int j=1;j<k+1;j++)
+            {
+                dp[i][j]=min(dp[(i+n-1)%n][j],dp[(i+n-2)%n][j-1]+a);
+            }
+        }
+        for(int i=n-1;i>0;i--){
+            int a=max(max(nums[(i+n+1)%n],nums[(i+n-1)%n])+1-nums[i],0);
+            for(int j=1;j<k+1;j++)
+            {
+                dp2[i][j]=min(dp2[(i+n+1)%n][j],dp2[(i+n+2)%n][j-1]+a);
+            }
+        }
+        return min(dp[n-2][k],dp2[1][k]);
+    }
+};
+
 ```
 
 

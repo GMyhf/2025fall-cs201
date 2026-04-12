@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-04-07 14:29 GMT+8*
+*Updated 2026-04-12 18:43 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                       
+>                                                                                                                                                                                                          
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                       
+>                                                                                                                                                                                                          
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                       
+>                                                                                                                                                                                                          
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                       
+>                                                                                                                                                                                                          
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                       
+>                                                                                                                                                                                                          
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -2779,6 +2779,121 @@ int main(){
 ```
 
 
+
+## M01577: Falling Leaves
+
+tree, http://cs101.openjudge.cn/practice/01577/
+
+
+
+```python
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define all(x) begin(x), end(x)
+#define sz(x) (int) (x).size()
+
+using i64 = long long;
+using u64 = unsigned long long;
+using i128 = __int128_t;
+using u128 = __uint128_t;
+using pii = pair<int, int>;
+using vi = vector<int>;
+using usi = unordered_set<int>;
+
+int read() {
+    int x = 0, f = 1;
+    char ch = getchar_unlocked();
+    while (!isdigit(ch)) {
+        if (ch == '-')
+            f *= -1;
+        ch = getchar_unlocked();
+    }
+    while (isdigit(ch)) {
+        x = x * 10 + ch - '0';
+        ch = getchar_unlocked();
+    }
+    return x * f;
+}
+
+class Tree {
+    struct Node {
+        int val;
+        Node *lson, *rson;
+        Node() {
+            val = -1;
+            lson = nullptr, rson = nullptr;
+        }
+        Node(int x) {
+            val = x;
+            lson = nullptr, rson = nullptr;
+        }
+    };
+    Node *root;
+
+    void traverse(Node *cur) {
+        if (!cur)
+            return;
+        cout << char(cur->val + 'A');
+        traverse(cur->lson);
+        traverse(cur->rson);
+    }
+
+  public:
+    Tree(char ch) { root = new Node(ch - 'A'); }
+    void insert(char ch) {
+        int val = ch - 'A';
+        Node *cur = root;
+        while (cur) {
+            if (val > cur->val) {
+                if (cur->rson)
+                    cur = cur->rson;
+                else {
+                    cur->rson = new Node(val);
+                    break;
+                }
+            } else {
+                if (cur->lson)
+                    cur = cur->lson;
+                else {
+                    cur->lson = new Node(val);
+                    break;
+                }
+            }
+        }
+    }
+    void traverse() { traverse(root); }
+};
+
+int main() {
+    cin.tie(nullptr)->sync_with_stdio(false);
+    bool is_end = false;
+    while (!is_end) {
+        string str;
+        vector<string> v;
+        while (getline(cin, str)) {
+            if (str == "*")
+                break;
+            if (str == "$") {
+                is_end = true;
+                break;
+            }
+            v.push_back(str);
+        }
+        reverse(all(v));
+        Tree t(v[0][0]);
+        for (int i = 1; i < sz(v); i++) {
+            for (char ch : v[i]) {
+                t.insert(ch);
+            }
+        }
+        t.traverse();
+        cout << '\n';
+    }
+    return 0;
+}
+```
 
 
 
@@ -5772,6 +5887,93 @@ int main(){
     return 0;
 }
 ```
+
+
+
+## M22158:根据二叉树前中序序列建树
+
+tree, http://cs101.openjudge.cn/practice/22158/
+
+
+
+```python
+#include <bits/stdc++.h>
+
+#define all(x) begin(x), end(x)
+#define sz(x) (int) (x).size()
+
+using namespace std;
+
+using i64 = long long;
+using u64 = unsigned long long;
+using i128 = __int128_t;
+using u128 = __uint128_t;
+using pii = std::pair<int, int>;
+using vi = std::vector<int>;
+using usi = std::unordered_set<int>;
+
+int read() {
+    int x = 0, f = 1;
+    char ch = getchar_unlocked();
+    while (!isdigit(ch)) {
+        if (ch == '-')
+            f *= -1;
+        ch = getchar_unlocked();
+    }
+    while (isdigit(ch)) {
+        x = x * 10 + ch - '0';
+        ch = getchar_unlocked();
+    }
+    return x * f;
+}
+
+struct Node {
+    char val;
+    Node *lson, *rson;
+    Node() : val(0), lson(nullptr), rson(nullptr) {}
+    Node(char ch) : val(ch), lson(nullptr), rson(nullptr) {}
+};
+
+Node *build(const string &s, const string &t, int sl, int sr, int tl, int tr) {
+    if (sl > sr || tl > tr) {
+        return nullptr;
+    }
+    if (sl == sr) {
+        return new Node(s[sl]);
+    }
+    Node *ret = new Node(s[sl]);
+    size_t pos = t.find(s[sl], tl);
+    int len = pos - tl;
+    ret->lson = build(s, t, sl + 1, sl + len, tl, tl + len - 1);
+    ret->rson = build(s, t, sl + len + 1, sr, tl + len + 1, tr);
+    return ret;
+}
+
+void traverse(Node *cur) {
+    if (!cur)
+        return;
+    traverse(cur->lson);
+    traverse(cur->rson);
+    cout << cur->val;
+}
+
+int main() {
+    string s, t;
+    while (cin >> s >> t) {
+        int n = sz(s);
+        auto ret = build(s, t, 0, n - 1, 0, n - 1);
+        traverse(ret);
+        cout << '\n';
+    }
+    return 0;
+}
+
+```
+
+
+
+
+
 
 
 
@@ -12494,6 +12696,90 @@ int main()
 
 
 
+## 1843D. Apple Tree
+
+ Combinatorics, dfs and similar, dp, math, trees, 1200,  https://codeforces.com/problemset/problem/1843/D
+
+
+
+```cpp
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define all(x) begin(x), end(x)
+#define sz(x) (int) (x).size()
+
+using i64 = long long;
+using u64 = unsigned long long;
+using i128 = __int128_t;
+using u128 = __uint128_t;
+using pii = pair<int, int>;
+using vi = vector<int>;
+using usi = unordered_set<int>;
+
+#ifdef _WIN32
+#define getchar_unlocked _getchar_nolock
+#endif
+
+int read() {
+    int x = 0, f = 1;
+    char ch = getchar_unlocked();
+    while (!isdigit(ch)) {
+        if (ch == '-')
+            f *= -1;
+        ch = getchar_unlocked();
+    }
+    while (isdigit(ch)) {
+        x = x * 10 + ch - '0';
+        ch = getchar_unlocked();
+    }
+    return x * f;
+}
+
+vector<i64> dp;
+vector<vi> graph;
+
+void dfs(int u, int fa) {
+    for (int v : graph[u]) {
+        if (v == fa)
+            continue;
+        dfs(v, u);
+        dp[u] += dp[v];
+    }
+    if (!dp[u])
+        dp[u] = 1;
+}
+
+void solve() {
+    int n = read();
+    dp.assign(n + 1, 0);
+    graph.assign(n + 1, vi());
+    for (int i = 1; i < n; i++) {
+        int u = read(), v = read();
+        graph[u].push_back(v);
+        graph[v].push_back(u);
+    }
+    dfs(1, 0);
+    int q = read();
+    while (q--) {
+        int x = read(), y = read();
+        cout << dp[x] * dp[y] << '\n';
+    }
+}
+
+int main() {
+    // cin.tie(nullptr)->sync_with_stdio(false);
+    int t = read();
+    while (t--) {
+        solve();
+    }
+    return 0;
+}
+```
+
+
+
 
 
 ## 1868A. Fill in the Matrix
@@ -13867,6 +14153,76 @@ public:
 
 
 
+## M297.二叉树的序列化与反序列化
+
+dfs, bfs, https://leetcode.cn/problems/serialize-and-deserialize-binary-tree/
+
+
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Codec {
+public:
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        string ret = "";
+        queue<TreeNode*> q;
+        q.push(root);
+        while (!q.empty()) {
+            auto u = q.front();
+            q.pop();
+            if (!u)
+                ret += "-100000";
+            else
+                ret += to_string(u->val);
+            if (u) {
+                q.push(u->left);
+                q.push(u->right);
+            }
+            ret += ' ';
+        }
+        return ret;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        // cout << data;
+        stringstream ss(data);
+        TreeNode* ret = nullptr;
+        queue<TreeNode**> q;
+        q.push(&ret);
+        int u = 0;
+        while (ss >> u) {
+            auto cur = q.front();
+            q.pop();
+            if (u == -100000) {
+                *cur = nullptr;
+            } else {
+                *cur = new TreeNode;
+                (*cur)->val = u;
+                q.push(&((*cur)->left));
+                q.push(&((*cur)->right));
+            }
+        }
+        return ret;
+    }
+};
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser, deser;
+// TreeNode* ans = deser.deserialize(ser.serialize(root));
+```
+
+
+
 
 
 ## M304.二维区域和检索 - 矩阵不可变
@@ -14718,6 +15074,229 @@ public:
     }
 };
 
+```
+
+
+
+## M3900.一次交换后的最长平衡子串
+
+https://leetcode.cn/problems/longest-balanced-substring-after-one-swap/
+
+【黄宇曦 地球与空间科学学院】第一反应是滑动窗口，结果发现过不去，这不毁了？！
+
+转念一想去思考前缀和 / 哈希。我们去思考合法的 $l$ 要满足什么样的性质。首先区间内 $\#1=\#0$ 肯定满足要求。我们去思考 $\#0-\#1=2$ 的情况。这要求区间外的 $\#0\ge 1$。那么考虑 $[l,r]$ 这个范围内的数，必然有 $\#0=\frac{r-l}{2}+1$。于是 $$\#0_{\text{out}}\geq 1\implies S_0-\# 0\geq 1\implies  2S_0-r+l+2\geq 1\implies l\gt r-2-2S_0.$$另外一边完全同理。所以写两个二分查找就解决了。时间复杂度 $O(n\log n)$。
+
+```cpp
+class Solution {
+public:
+    int longestBalanced(string str) {
+        unordered_map<int, vector<int>> mp;
+        int s = 0, ans = 0, cnt[2]{};
+        for (int i = 0; i < str.size(); i++) {
+            cnt[0] += str[i] == '0';
+            cnt[1] += str[i] == '1';
+        }
+        mp[0].push_back(-1);
+        for (int i = 0; i < str.size(); i++) {
+            s += str[i] == '1' ? 1 : -1;
+            if (mp.count(s)) {
+                ans = max(ans, i - mp[s].front());
+            }
+            if (mp.count(s - 2)) {
+                auto it = upper_bound(mp[s - 2].begin(), mp[s - 2].end(),
+                                      i - 2 - 2 * cnt[0]);
+                if (it != mp[s - 2].end()) {
+                    ans = max(ans, i - *it);
+                }
+            }
+            if (mp.count(s + 2)) {
+                auto it = upper_bound(mp[s + 2].begin(), mp[s + 2].end(),
+                                      i - 2 - 2 * cnt[1]);
+                if (it != mp[s + 2].end()) {
+                    ans = max(ans, i - *it);
+                }
+            }
+            mp[s].push_back(i);
+        }
+        return ans;
+    }
+};
+```
+
+
+
+## T3901.好子序列查询
+
+https://leetcode.cn/problems/good-subsequence-queries/
+
+【黄宇曦 地球与空间科学学院】这集神了。
+
+首先看到维护 $\gcd$ 信息第一反应当然是 ST 表 / 线段树，然后发现带修，所以只能思考线段树怎么弄了。
+
+我们把所有能被 $p$ 整除的扔进来，然后如果最后满足题目条件，那么必然有
+$$
+\gcd_{p\mid a_i}(a_i)=p.
+$$
+然后我们思考两种情况。
+
+ - 第一种情况是被 $p$ 整除的不是整个数组，那么直接就解决了。
+
+ - 第二种情况是被 $p$ 整除的是整个数组。那这个时候我们要考虑删一个数之后还能不能符合条件。
+
+   问题来了，如果对每一个第二种情况我们都扫一遍，那么时间复杂度将会是 $O(qn)$，这是非常不好的。所以我们思考优化。
+
+   一个朴素直觉是，这个数组如果不满足要求，那么长度不能太长。我们接下来加以论证。翻译一下条件，这说明我踢掉任何一个数，最后的 $\gcd$ 都会变大。这说明每个数都有一个没有被公用的质因子 $p'$。那么因为最后的 $\gcd=p$ 并且踢掉之后 $\gcd$ 会变大，这说明存在一个下标 $i$（不妨令为 1）使得 $a_1=p\prod p'$。而注意到 $p\prod p'>p\cdot 2^{n-1}\geq 2^n$，这意味着 $n\leq 30$（更严谨地，$n\leq\log V$）。这个证明是不甚严谨的，但是通过完全类似的想法可以证明结论是正确的。
+
+   因此这意味着任何 $n>30$ 都直接满足条件了。而对 $n\leq 30$ 的情况我们去直接枚举删掉每一个数之后会怎么样就可以了。
+
+   最后的时间复杂度是 $O(q\log n+n+q\min\{n,30\})\sim O(q\log n+n)$。
+
+
+```cpp
+class SegTree {
+    int n;
+    vector<int> s;
+    int k;
+    int lson(int x) { return x << 1; }
+    int rson(int x) { return x << 1 | 1; }
+    void push_up(int p) { s[p] = __gcd(s[lson(p)], s[rson(p)]); }
+    void build(int l, int r, int p, const vector<int>& a) {
+        if (l == r) {
+            if (a[l] % k == 0)
+                s[p] = a[l];
+            return;
+        }
+        int mid = l + r >> 1;
+        build(l, mid, lson(p), a);
+        build(mid + 1, r, rson(p), a);
+        push_up(p);
+    }
+    void modify(int pos, int val, int l, int r, int p) {
+        if (l == r) {
+            if (val % k == 0)
+                s[p] = val;
+            else
+                s[p] = 0;
+            return;
+        }
+        int mid = l + r >> 1;
+        if (pos <= mid)
+            modify(pos, val, l, mid, lson(p));
+        else
+            modify(pos, val, mid + 1, r, rson(p));
+        push_up(p);
+    }
+
+public:
+    SegTree(int _n, const vector<int>& a, int k) : n(_n), s(_n << 2, 0), k(k) {
+        build(0, _n - 1, 1, a);
+    }
+    void modify(int pos, int val) { modify(pos, val, 0, n - 1, 1); }
+    int get() { return s[1]; }
+};
+
+class Solution {
+public:
+    int countGoodSubseq(vector<int>& nums, int p,
+                        vector<vector<int>>& queries) {
+        SegTree st(nums.size(), nums, p);
+        int n = nums.size();
+        int cnt = 0, ans = 0;
+        for (int x : nums) {
+            if (x % p == 0)
+                cnt++;
+        }
+        for (auto q : queries) {
+            int id = q[0], val = q[1];
+            if (nums[id] % p != 0 && val % p == 0)
+                cnt++;
+            else if (nums[id] % p == 0 && val % p != 0)
+                cnt--;
+            nums[id] = val;
+            st.modify(id, val);
+            int cur = st.get();
+            if (cur == p) {
+                if (cnt < n)
+                    ans++;
+                else {
+                    if (n > 30)
+                        ans++;
+                    else {
+                        vector<int> pref(n + 1, 0), suf(n + 1, 0);
+                        for (int i = 0; i < n; i++) {
+                            pref[i + 1] = __gcd(pref[i], nums[i]);
+                        }
+                        for (int i = n - 1; i >= 0; i--) {
+                            suf[i] = __gcd(suf[i + 1], nums[i]);
+                        }
+                        for (int i = 0; i < n; i++) {
+                            if (__gcd(pref[i], suf[i + 1]) == p) {
+                                ans++;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return ans;
+    }
+};
+```
+
+
+
+
+
+## T101040.连接二进制片段得到的最大值
+
+https://leetcode.cn/problems/maximum-value-of-concatenated-binary-segments/
+
+【黄宇曦 地球与空间科学学院】一个比较显著的贪心是 `a+b>b+a`，但是极限情况下可能超时，等价翻译为 nums1 和 nums2 的版本即可。
+
+时间复杂度 $O(n\log n+\sum n_i)$。
+
+```cpp
+const int MOD = 1e9 + 7;
+
+class Solution {
+
+public:
+    int maxValue(vector<int>& nums1, vector<int>& nums0) {
+        vector<string> ret;
+        int n = nums1.size();
+        // for (int i = 0; i < n; i++) {
+        //     ret.push_back(string(nums1[i], '1') + string(nums0[i], '0'));
+        // }
+        // sort(ret.begin(), ret.end(),
+        //      [](auto& a, auto& b) { return a + b > b + a; });
+        vector<int> tmp(n);
+        iota(tmp.begin(), tmp.end(), 0);
+        sort(tmp.begin(), tmp.end(), [&](int a, int b) {
+            if (nums0[a] == 0 || nums0[b] == 0) {
+                return nums0[a] < nums0[b];
+            }
+            return nums1[a] != nums1[b] ? nums1[a] > nums1[b]
+                                        : nums0[a] < nums0[b];
+        });
+        for (int i = 0; i < n; i++) {
+            ret.push_back(string(nums1[tmp[i]], '1') +
+                          string(nums0[tmp[i]], '0'));
+        }
+        string s;
+        s.reserve(200005);
+        for (auto& str : ret)
+            s += str;
+        reverse(s.begin(), s.end());
+        int ans = 0, qpow = 1;
+        for (int i = 0; i < s.size(); i++, qpow = (1ll * qpow * 2) % MOD) {
+            if (s[i] == '1') {
+                ans = (1ll * ans + qpow) % MOD;
+            }
+        }
+        return ans;
+    }
+};
 ```
 
 

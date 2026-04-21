@@ -1,13 +1,13 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-04-12 18:43 GMT+8*
+*Updated 2026-04-21 12:16 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
 
 > Logs:
 >
-> 2025fall～2026spring:  【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元陪】、【李傲挺 物院】、【罗锐，25工学院，】、【海博治 城市与环境学院】、【黄浩展 25工学院】、【江昊中 25数院】、【姚博骞 25物院】、【黄宇曦 地球与空间科学学院】、【竺景琦 25工学院】、【郑志远 25数院】、【赵林 数院】等同学的CPP代码。
+> 2025fall～2026spring:  【张梓康 元培】、【潘彦璋 物院】、【李沁遥25医学预科办】、【王乾旭 信科】、【刘思哲 25工学院】、【张真铭25元培】、【李傲挺 物院】、【罗锐，25工学院】、【海博治 城市与环境学院】、【黄浩展 25工学院】、【江昊中 25数院】、【姚博骞 25物院】、【黄宇曦 地球与空间科学学院】、【竺景琦 25工学院】、【郑志远 25数院】、【赵林 数院】等同学的CPP代码。
 >
 > 鉴于每学期都有同学偏好C++编程，也开始提供C++题解支持。
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                          
+>                                                                                                                                                                                                             
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                          
+>                                                                                                                                                                                                             
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                          
+>                                                                                                                                                                                                             
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                          
+>                                                                                                                                                                                                             
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                          
+>                                                                                                                                                                                                             
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -8688,6 +8688,153 @@ int main()
 ## T02488: A Knight's Journey
 
 backtracking, http://cs101.openjudge.cn/practice/02488/
+
+【张真铭25元培】
+
+**1. 题目概述**
+
+骑士巡游问题（Knight's Tour）是图论中汉密尔顿路径（Hamiltonian Path）的一个特例。本题要求在 $P \times Q$ 的棋盘上寻找一条不重不漏经过所有格子的路径，并要求输出**字典序最小**的解。
+
+**2. 核心算法分析**
+
+**2.1 字典序剪枝与起点策略**
+
+题目要求输出字典序最小的路径。在国际象棋坐标系中，列由字母（A, B, C...）表示，行由数字（1, 2, 3...）表示。
+
+*   **策略**：为了确保字典序最小，搜索必须从 $A1$ 坐标（即索引 `0`）开始。
+*   **数学特性**：在 $P \times Q \le 26$ 的约束下，由于骑士图（Knight's Graph）的高度对称性与角点（Corner cells）的拓扑度数瓶颈（度数仅为 2），若棋盘存在解，则必然存在以角点为起点的路径。
+*   **优化**：直接舍弃对其他起点的遍历，若从 $A1$ 出发无法完成巡游，则判定为 `impossible`。此举将搜索规模从 $O(N \cdot 8^N)$ 降至 $O(8^N)$。
+
+**2.2 31 位单整数状态压缩**
+
+本题给出的关键约束为格子总数 $N \le 26$。这为位运算优化提供了空间：
+
+*   **状态编码**：一个 32 位有符号整数（`int`）足以容纳整个搜索现场的状态。
+    *   **低 5 位（Position）**：存储当前骑士所在的格子索引（$0 \le index < 26$），$2^5=32$ 足以覆盖。
+    *   **高 26 位（Remain Mask）**：使用位掩码（Bitmask）记录棋盘各格子的访问情况。`1` 表示尚未访问，`0` 表示已访问。
+*   **状态转换公式**：
+    *   编码：`state = (remain_mask << 5) | current_pos`
+    *   解码：`pos = state & 31; remain = state >> 5;`
+
+**2.3 无状态回溯的递归设计**
+
+通过将状态封装在单个数值参数中传递，程序利用了函数调用的**值传递特性**。在递归返回时，上一层的状态自然恢复，无需手动重置访问标记（如 `visited[x][y] = false`）。这种设计减少了内存写操作，且对 CPU 寄存器更加友好。
+
+**3. 实现细节**
+
+**3.1 方向数组的顺序**
+
+为保证搜索顺序符合字典序，骑士的 8 个跳跃方向必须严格按列偏移量（A-Z）升序排列，列相同时按行偏移量（1-n）升序排列。
+
+**3.2 性能表现**
+
+该实现完全避开了二维数组寻址与动态内存分配，核心逻辑仅包含位运算与基本算术运算。在 $P \times Q \le 26$ 范围内，其时间复杂度虽然理论上限仍为指数级，但实际运行常数极低，通常在 OJ 环境下表现为 0ms。
+
+> 可以实现十分极致的内存和时间优化，可以说是双赢了。
+
+**4. 核心代码**
+
+```cpp
+#include <array>
+#include <iostream>
+#include <vector>
+
+class Solution {
+  int p, q;
+  int cells;
+  int all;
+  std::vector<int> path;
+
+  // 严格按照字典序定义的骑士跳跃方向
+  constexpr static std::array<std::array<int, 2>, 8> dist = {{{{-2, -1}},
+                                                              {{-2, 1}},
+                                                              {{-1, -2}},
+                                                              {{-1, 2}},
+                                                              {{1, -2}},
+                                                              {{1, 2}},
+                                                              {{2, -1}},
+                                                              {{2, 1}}}};
+
+  inline auto dfs(const int state) -> bool {
+    int pos = state & 31;      // 解码：提取位置
+    int remain = state >> 5;   // 解码：提取掩码
+
+    if (!remain) {
+      return true; // 掩码为0，表示全图已遍历
+    }
+
+    const int curra = pos / q + 1;
+    const int currb = pos % q;
+    for (int i = 0; i < 8; ++i) {
+      const int nxta = curra + dist[i][1];
+      const int nxtb = currb + dist[i][0];
+      const int nxt = (nxta - 1) * q + nxtb;
+      
+      // 越界判定与位掩码检查
+      if (nxta >= 1 && nxta <= p && nxtb >= 0 && nxtb < q &&
+          (remain & (1 << nxt))) {
+        path.push_back(nxt);
+        // 编码新状态并进入下一层递归
+        if (dfs((remain & ~(1 << nxt)) << 5 | nxt)) {
+          return true;
+        }
+        path.pop_back(); // 回溯路径序列
+      }
+    }
+
+    return false;
+  }
+
+public:
+  auto input() -> void {
+    std::cin >> p >> q;
+    cells = p * q;
+    all = (1 << cells) - 1;
+  }
+
+  auto output() -> void {
+    int start_pos = 0; // 固定 A1 为起点
+    path.clear();
+    path.push_back(start_pos);
+
+    // 初始状态构造：(全掩码去除起点) 左移 5 位拼接起点索引
+    if (dfs(((all & ~(1 << start_pos)) << 5) | start_pos)) {
+      for (int pos : path) {
+        int a = pos / q + 1;
+        int b = pos % q;
+        std::cout << char('A' + b) << a;
+      }
+      std::cout << "\n\n";
+    } else {
+      std::cout << "impossible\n\n";
+    }
+  }
+};
+
+auto main() -> int {
+  std::cin.tie(nullptr)->sync_with_stdio(false);
+
+  int n;
+  std::cin >> n;
+
+  Solution sol;
+  for (int i = 1; i <= n; ++i) {
+    sol.input();
+    std::cout << "Scenario #" << i << ":\n";
+    sol.output();
+  }
+}
+```
+
+**5. 结论**
+
+本题通过对搜索空间进行数学剪枝（锁定起点），并利用 $P \times Q$ 的范围限制将棋盘建模为单个寄存器可处理的整数状态，极大地降低了算法的常数开销。这种方法不仅展示了位运算在状态压缩中的强大能力，也体现了图论属性在搜索优化中的关键作用。
+
+
+
+
+
+
 
 思路：dfs暴力求解，没有一点剪枝，一遍ac，用时约30min
 

@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-04-21 12:16 GMT+8*
+*Updated 2026-05-18 23:01 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                             
+>                                                                                                                                                                                                                
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                             
+>                                                                                                                                                                                                                
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                             
+>                                                                                                                                                                                                                
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                             
+>                                                                                                                                                                                                                
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                             
+>                                                                                                                                                                                                                
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -15447,6 +15447,3276 @@ public:
 ```
 
 
+
+
+
+
+
+# PKUCPC 2006
+
+## http://poj.openjudge.cn/practice/C26A/
+
+
+
+```c++
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MAXN = 100000 + 5;
+const int ROOT[9] = {9, 1, 2, 3, 4, 5, 6, 7, 8};
+
+struct Info {
+    long long ans;
+    int suf[9];   // suf[r]: product mod 9 == r 的后缀数量
+    int pre[9];   // pre[k]: 所有前缀 P 的 sum rt(k * product(P))
+    int prod;     // 整段乘积 mod 9
+};
+
+struct Node {
+    Info f[9];    // f[t]: 整段每个元素额外乘以 t 后的信息
+    int lazy;     // 懒标记：整段待乘的值 mod 9
+};
+
+static Node seg[MAXN * 4];
+static int a[MAXN];
+
+inline Info mergeInfo(const Info &L, const Info &R) {
+    Info C;
+
+    C.ans = L.ans + R.ans;
+
+    // 跨越左右两段的子数组
+    for (int s = 0; s < 9; ++s) {
+        C.ans += 1LL * L.suf[s] * R.pre[s];
+    }
+
+    C.prod = L.prod * R.prod % 9;
+
+    // 合并前缀打分函数
+    for (int k = 0; k < 9; ++k) {
+        C.pre[k] = L.pre[k] + R.pre[k * L.prod % 9];
+    }
+
+    // 合并后缀数量
+    for (int r = 0; r < 9; ++r) {
+        C.suf[r] = R.suf[r];
+    }
+
+    for (int r = 0; r < 9; ++r) {
+        C.suf[r * R.prod % 9] += L.suf[r];
+    }
+
+    return C;
+}
+
+inline void makeLeaf(Info &x, int residue) {
+    x.ans = ROOT[residue];
+    x.prod = residue;
+
+    for (int i = 0; i < 9; ++i) {
+        x.suf[i] = 0;
+    }
+
+    x.suf[residue] = 1;
+
+    for (int k = 0; k < 9; ++k) {
+        x.pre[k] = ROOT[k * residue % 9];
+    }
+}
+
+inline void pull(int p) {
+    for (int t = 0; t < 9; ++t) {
+        seg[p].f[t] = mergeInfo(seg[p << 1].f[t], seg[p << 1 | 1].f[t]);
+    }
+
+    seg[p].lazy = 1;
+}
+
+void build(int p, int l, int r) {
+    seg[p].lazy = 1;
+
+    if (l == r) {
+        for (int t = 0; t < 9; ++t) {
+            makeLeaf(seg[p].f[t], a[l] * t % 9);
+        }
+        return;
+    }
+
+    int mid = (l + r) >> 1;
+    build(p << 1, l, mid);
+    build(p << 1 | 1, mid + 1, r);
+    pull(p);
+}
+
+inline void applyMul(int p, int mul) {
+    if (mul == 1) return;
+
+    Info tmp[9];
+
+    for (int t = 0; t < 9; ++t) {
+        tmp[t] = seg[p].f[t * mul % 9];
+    }
+
+    for (int t = 0; t < 9; ++t) {
+        seg[p].f[t] = tmp[t];
+    }
+
+    seg[p].lazy = seg[p].lazy * mul % 9;
+}
+
+inline void push(int p) {
+    int z = seg[p].lazy;
+
+    if (z != 1) {
+        applyMul(p << 1, z);
+        applyMul(p << 1 | 1, z);
+        seg[p].lazy = 1;
+    }
+}
+
+void update(int p, int l, int r, int ql, int qr, int mul) {
+    if (ql <= l && r <= qr) {
+        applyMul(p, mul);
+        return;
+    }
+
+    push(p);
+
+    int mid = (l + r) >> 1;
+
+    if (ql <= mid) {
+        update(p << 1, l, mid, ql, qr, mul);
+    }
+
+    if (qr > mid) {
+        update(p << 1 | 1, mid + 1, r, ql, qr, mul);
+    }
+
+    pull(p);
+}
+
+Info query(int p, int l, int r, int ql, int qr) {
+    if (ql <= l && r <= qr) {
+        return seg[p].f[1];
+    }
+
+    push(p);
+
+    int mid = (l + r) >> 1;
+
+    if (qr <= mid) {
+        return query(p << 1, l, mid, ql, qr);
+    }
+
+    if (ql > mid) {
+        return query(p << 1 | 1, mid + 1, r, ql, qr);
+    }
+
+    Info L = query(p << 1, l, mid, ql, qr);
+    Info R = query(p << 1 | 1, mid + 1, r, ql, qr);
+
+    return mergeInfo(L, R);
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n, q;
+    cin >> n >> q;
+
+    for (int i = 1; i <= n; ++i) {
+        long long x;
+        cin >> x;
+        a[i] = int(x % 9);
+    }
+
+    build(1, 1, n);
+
+    while (q--) {
+        int op, l, r;
+        cin >> op >> l >> r;
+
+        if (op == 1) {
+            long long x;
+            cin >> x;
+            update(1, 1, n, l, r, int(x % 9));
+        } else {
+            cout << query(1, 1, n, l, r).ans << '\n';
+        }
+    }
+
+    return 0;
+}
+```
+
+
+
+## C26B:Doomsday Cumulonimbus
+
+http://poj.openjudge.cn/practice/C26B/
+
+
+
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+
+static const int MOD = 998244353;
+static const int G = 3;
+
+static const int MAXA = 60000;
+static const int MAXM = 10000000;
+
+static const int B = 1500;
+static const int NB = MAXA / B;
+
+int mod_pow(long long a, long long e) {
+    long long r = 1;
+    while (e > 0) {
+        if (e & 1) r = r * a % MOD;
+        a = a * a % MOD;
+        e >>= 1;
+    }
+    return (int)r;
+}
+
+void ntt(vector<int>& a, bool invert) {
+    int n = (int)a.size();
+
+    for (int i = 1, j = 0; i < n; ++i) {
+        int bit = n >> 1;
+        for (; j & bit; bit >>= 1) j ^= bit;
+        j ^= bit;
+        if (i < j) swap(a[i], a[j]);
+    }
+
+    for (int len = 2; len <= n; len <<= 1) {
+        int wlen = mod_pow(G, (MOD - 1) / len);
+        if (invert) wlen = mod_pow(wlen, MOD - 2);
+
+        for (int i = 0; i < n; i += len) {
+            long long w = 1;
+            int half = len >> 1;
+
+            for (int j = 0; j < half; ++j) {
+                int u = a[i + j];
+                int v = (int)(a[i + j + half] * w % MOD);
+
+                int x = u + v;
+                if (x >= MOD) x -= MOD;
+
+                int y = u - v;
+                if (y < 0) y += MOD;
+
+                a[i + j] = x;
+                a[i + j + half] = y;
+
+                w = w * wlen % MOD;
+            }
+        }
+    }
+
+    if (invert) {
+        int inv_n = mod_pow(n, MOD - 2);
+        for (int &x : a) {
+            x = (int)(1LL * x * inv_n % MOD);
+        }
+    }
+}
+
+vector<int> multiply_trunc(const vector<int>& A, const vector<int>& Bv, int need) {
+    vector<int> c(need, 0);
+    if (need <= 0 || A.empty() || Bv.empty()) return c;
+
+    int nA = min((int)A.size(), need);
+    int nB = min((int)Bv.size(), need);
+    if (nA == 0 || nB == 0) return c;
+
+    if (nA == 1) {
+        long long s = A[0];
+        for (int i = 0; i < nB && i < need; ++i) {
+            c[i] = (int)(s * Bv[i] % MOD);
+        }
+        return c;
+    }
+
+    if (nB == 1) {
+        long long s = Bv[0];
+        for (int i = 0; i < nA && i < need; ++i) {
+            c[i] = (int)(s * A[i] % MOD);
+        }
+        return c;
+    }
+
+    if (1LL * nA * nB <= 20000) {
+        for (int i = 0; i < nA; ++i) {
+            long long ai = A[i];
+            int lim = min(nB, need - i);
+            for (int j = 0; j < lim; ++j) {
+                c[i + j] = (c[i + j] + ai * Bv[j]) % MOD;
+            }
+        }
+        return c;
+    }
+
+    int sz = 1;
+    while (sz < nA + nB - 1) sz <<= 1;
+
+    vector<int> a(sz, 0), b(sz, 0);
+    for (int i = 0; i < nA; ++i) a[i] = A[i];
+    for (int i = 0; i < nB; ++i) b[i] = Bv[i];
+
+    ntt(a, false);
+    ntt(b, false);
+
+    for (int i = 0; i < sz; ++i) {
+        a[i] = (int)(1LL * a[i] * b[i] % MOD);
+    }
+
+    ntt(a, true);
+
+    int lim = min(need, nA + nB - 1);
+    for (int i = 0; i < lim; ++i) c[i] = a[i];
+
+    return c;
+}
+
+vector<int> poly_inv(const vector<int>& f, int n) {
+    vector<int> g(1, mod_pow(f[0], MOD - 2));
+
+    for (int len = 1; len < n; len <<= 1) {
+        int m = min(len << 1, n);
+
+        int sz = 1;
+        while (sz < 2 * m) sz <<= 1;
+
+        vector<int> F(sz, 0), Gv(sz, 0);
+
+        int flen = min((int)f.size(), m);
+        for (int i = 0; i < flen; ++i) F[i] = f[i];
+        for (int i = 0; i < (int)g.size(); ++i) Gv[i] = g[i];
+
+        ntt(F, false);
+        ntt(Gv, false);
+
+        for (int i = 0; i < sz; ++i) {
+            int fg = (int)(1LL * F[i] * Gv[i] % MOD);
+            int val = 2 - fg;
+            if (val < 0) val += MOD;
+            Gv[i] = (int)(1LL * Gv[i] * val % MOD);
+        }
+
+        ntt(Gv, true);
+        g.assign(Gv.begin(), Gv.begin() + m);
+    }
+
+    return g;
+}
+
+vector<vector<int>> suffixPoly;
+vector<vector<int>> blockPoly;
+vector<vector<int>> baseSeries;
+
+vector<int> fact, ifact;
+
+void build_suffix_and_block_poly() {
+    suffixPoly.assign(NB + 1, {});
+    blockPoly.assign(NB + 1, {});
+
+    for (int b = 1; b <= NB; ++b) {
+        int K0 = b * B;
+        int C = B;
+
+        int total = C * (C + 1) / 2;
+        suffixPoly[b].resize(total);
+
+        vector<int> poly(C + 1, 0);
+        poly[0] = 1;
+
+        int pos = 0;
+
+        for (int r = 0; r < C; ++r) {
+            if (r > 0) {
+                int factor = K0 - r + 1;
+                poly[r] = 0;
+
+                for (int e = r; e >= 1; --e) {
+                    int v = poly[e] - (int)(1LL * factor * poly[e - 1] % MOD);
+                    if (v < 0) v += MOD;
+                    poly[e] = v;
+                }
+            }
+
+            for (int e = 0; e <= r; ++e) {
+                suffixPoly[b][pos++] = poly[e];
+            }
+        }
+
+        int factor = K0 - C + 1;
+
+        vector<int> R(C + 1, 0);
+        for (int e = 0; e < C; ++e) R[e] = poly[e];
+
+        R[C] = 0;
+
+        for (int e = C; e >= 1; --e) {
+            int v = R[e] - (int)(1LL * factor * R[e - 1] % MOD);
+            if (v < 0) v += MOD;
+            R[e] = v;
+        }
+
+        blockPoly[b] = move(R);
+    }
+}
+
+void build_base_series() {
+    baseSeries.assign(NB + 1, {});
+
+    vector<int> H(1, 1);
+
+    for (int b = 1; b <= NB; ++b) {
+        int K0 = b * B;
+        int L = MAXA - K0 + B;
+        int need = L + 1;
+
+        vector<int> invR = poly_inv(blockPoly[b], need);
+
+        vector<int> Hcut(min((int)H.size(), need));
+        for (int i = 0; i < (int)Hcut.size(); ++i) {
+            Hcut[i] = H[i];
+        }
+
+        H = multiply_trunc(Hcut, invR, need);
+        baseSeries[b] = H;
+    }
+
+    vector<vector<int>>().swap(blockPoly);
+}
+
+void build_factorials() {
+    fact.assign(MAXM + 1, 1);
+    ifact.assign(MAXM + 1, 1);
+
+    for (int i = 1; i <= MAXM; ++i) {
+        fact[i] = (int)(1LL * fact[i - 1] * i % MOD);
+    }
+
+    ifact[MAXM] = mod_pow(fact[MAXM], MOD - 2);
+
+    for (int i = MAXM; i >= 1; --i) {
+        ifact[i - 1] = (int)(1LL * ifact[i] * i % MOD);
+    }
+}
+
+int stirling2(int N, int K) {
+    if (K < 0 || K > N) return 0;
+    if (K == 0) return N == 0 ? 1 : 0;
+
+    int b = (K + B - 1) / B;
+    int K0 = b * B;
+
+    int r = K0 - K;
+    int d = N - K;
+
+    const vector<int>& F = baseSeries[b];
+    const vector<int>& C = suffixPoly[b];
+
+    int start = r * (r + 1) / 2;
+    int lim = min(r, d);
+
+    const int* cp = C.data() + start;
+
+    long long res = 0;
+
+    for (int e = 0; e <= lim; ++e) {
+        res += 1LL * cp[e] * F[d - e] % MOD;
+    }
+
+    return (int)(res % MOD);
+}
+
+int solve_one(int n, int m, int k) {
+    int N = n - 1;
+    int K = k - 1;
+    int M = m - 1;
+
+    if (K < 0 || K > N || K > M) return 0;
+
+    int s = stirling2(N, K);
+    if (s == 0) return 0;
+
+    int falling = (int)(1LL * fact[M] * ifact[M - K] % MOD);
+
+    int invPow = N == 0 ? 1 : mod_pow(M, MOD - 1 - N);
+
+    return (int)(1LL * s * falling % MOD * invPow % MOD);
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int q;
+    cin >> q;
+
+    build_suffix_and_block_poly();
+    build_base_series();
+    build_factorials();
+
+    int last = 0;
+
+    while (q--) {
+        long long a, b, c;
+        cin >> a >> b >> c;
+
+        int n = (int)(a ^ last);
+        int m = (int)(b ^ last);
+        int k = (int)(c ^ last);
+
+        int ans = solve_one(n, m, k);
+
+        cout << ans << '\n';
+        last = ans;
+    }
+
+    return 0;
+}
+```
+
+
+
+针对 POJ/OpenJudge C26B 题目的 C++ 代码，该程序利用了 **NTT (数论变换)**、**多项式求逆** 以及 **分块 (Square Root Decomposition)** 技术来高效计算大范围的第二类斯特林数 $S(n, k)$。
+
+由于 Python 的执行速度远低于 C++，直接翻译 NTT 可能在 $N=60,000$ 的规模下超时。为了在 Python 中尽可能提高效率，我们需要：
+
+1. 使用 `sys.stdin.read().split()` 快速读取所有输入。
+2. 使用 `array.array` 替代列表以节省大量内存。
+3. 对 NTT 的核心循环进行优化（虽然 Python 的 NTT 仍然较慢）。
+4. 在计算 $10^7$ 级别的阶乘时使用紧凑的循环。
+
+以下是转换后的 Python 代码：
+
+```python
+import sys
+from array import array
+
+# 设置递归深度
+sys.setrecursionlimit(200000)
+
+def solve():
+    # 参数设置
+    MOD = 998244353
+    G = 3
+    MAXA = 60000
+    MAXM = 10000000
+    B = 1500  # 分块大小
+    NB = MAXA // B
+
+    # 快速读入
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    q_idx = 0
+    num_queries = int(input_data[q_idx])
+    q_idx += 1
+
+    # 预处理阶乘
+    fact = array('I', [1]) * (MAXM + 1)
+    for i in range(1, MAXM + 1):
+        fact[i] = (fact[i - 1] * i) % MOD
+    
+    # 逆元计算辅助函数
+    def mod_pow(a, e):
+        return pow(a, e, MOD)
+
+    ifact = array('I', [1]) * (MAXM + 1)
+    ifact[MAXM] = mod_pow(fact[MAXM], MOD - 2)
+    for i in range(MAXM, 0, -1):
+        ifact[i - 1] = (ifact[i] * i) % MOD
+
+    # NTT 实现
+    def ntt(a, invert):
+        n = len(a)
+        j = 0
+        for i in range(1, n):
+            bit = n >> 1
+            while j & bit:
+                j ^= bit
+                bit >>= 1
+            j ^= bit
+            if i < j:
+                a[i], a[j] = a[j], a[i]
+        
+        length = 2
+        while length <= n:
+            wlen = pow(G, (MOD - 1) // length, MOD)
+            if invert:
+                wlen = pow(wlen, MOD - 2, MOD)
+            
+            half = length >> 1
+            # 预计算当前层的 w 幂
+            w_powers = [1] * half
+            for k in range(1, half):
+                w_powers[k] = (w_powers[k - 1] * wlen) % MOD
+                
+            for i in range(0, n, length):
+                for k in range(half):
+                    u = a[i + k]
+                    v = (a[i + k + half] * w_powers[k]) % MOD
+                    a[i + k] = (u + v) % MOD
+                    a[i + k + half] = (u - v + MOD) % MOD
+            length <<= 1
+
+        if invert:
+            inv_n = mod_pow(n, MOD - 2)
+            for i in range(n):
+                a[i] = (a[i] * inv_n) % MOD
+
+    def multiply_trunc(A, Bv, need):
+        if need <= 0 or not A or not Bv:
+            return array('I', [0] * need)
+        
+        nA, nB = min(len(A), need), min(len(Bv), need)
+        if nA * nB <= 2000: # 小规模使用朴素卷积
+            res = [0] * need
+            for i in range(nA):
+                ai = A[i]
+                for j in range(min(nB, need - i)):
+                    res[i + j] = (res[i + j] + ai * Bv[j]) % MOD
+            return array('I', res)
+
+        sz = 1
+        while sz < nA + nB - 1: sz <<= 1
+        fa = list(A[:nA]) + [0] * (sz - nA)
+        fb = list(Bv[:nB]) + [0] * (sz - nB)
+        ntt(fa, False)
+        ntt(fb, False)
+        for i in range(sz):
+            fa[i] = (fa[i] * fb[i]) % MOD
+        ntt(fa, True)
+        return array('I', fa[:need])
+
+    def poly_inv(f, n):
+        g = [mod_pow(f[0], MOD - 2)]
+        length = 1
+        while length < n:
+            length <<= 1
+            sz = length << 1
+            F = list(f[:min(len(f), length)]) + [0] * (sz - min(len(f), length))
+            Gv = g + [0] * (sz - len(g))
+            ntt(F, False)
+            ntt(Gv, False)
+            for i in range(sz):
+                F[i] = Gv[i] * (2 - F[i] * Gv[i] % MOD + MOD) % MOD
+            ntt(F, True)
+            g = F[:min(length, n)]
+        return array('I', g)
+
+    # 预处理分块多项式
+    suffixPoly = [] # 将存储 array
+    blockPoly = []
+    
+    for b in range(NB + 1):
+        if b == 0:
+            suffixPoly.append(array('I'))
+            blockPoly.append(array('I'))
+            continue
+        
+        K0, C = b * B, B
+        poly = [0] * (C + 1)
+        poly[0] = 1
+        current_suffix = array('I')
+        
+        for r in range(C):
+            if r > 0:
+                factor = (K0 - r + 1) % MOD
+                for e in range(r, 0, -1):
+                    poly[e] = (poly[e] - factor * poly[e - 1]) % MOD
+            for e in range(r + 1):
+                current_suffix.append(poly[e] % MOD)
+        
+        suffixPoly.append(current_suffix)
+        
+        factor = (K0 - C + 1) % MOD
+        R = list(poly[:C]) + [0]
+        for e in range(C, 0, -1):
+            R[e] = (R[e] - factor * R[e - 1]) % MOD
+        blockPoly.append(array('I', [x % MOD for x in R]))
+
+    # 建立基础序列
+    baseSeries = [array('I')] * (NB + 1)
+    H = array('I', [1])
+    for b in range(1, NB + 1):
+        K0 = b * B
+        need = MAXA - K0 + B + 1
+        invR = poly_inv(blockPoly[b], need)
+        H = multiply_trunc(H[:min(len(H), need)], invR, need)
+        baseSeries[b] = H
+
+    def get_stirling2(N, K):
+        if K < 0 or K > N: return 0
+        if K == 0: return 1 if N == 0 else 0
+        b = (K + B - 1) // B
+        K0 = b * B
+        r, d = K0 - K, N - K
+        F = baseSeries[b]
+        C = suffixPoly[b]
+        start = r * (r + 1) // 2
+        res = 0
+        lim = min(r, d)
+        for e in range(lim + 1):
+            res = (res + C[start + e] * F[d - e]) % MOD
+        return res
+
+    # 在线查询
+    last = 0
+    results = []
+    for _ in range(num_queries):
+        a = int(input_data[q_idx]) ^ last
+        b = int(input_data[q_idx + 1]) ^ last
+        c = int(input_data[q_idx + 2]) ^ last
+        q_idx += 3
+        
+        N, M, K = a - 1, b - 1, c - 1
+        if K < 0 or K > N or K > M:
+            ans = 0
+        else:
+            s = get_stirling2(N, K)
+            if s == 0:
+                ans = 0
+            else:
+                falling = (fact[M] * ifact[M - K]) % MOD
+                invPow = 1 if N == 0 else mod_pow(M, MOD - 1 - N)
+                ans = (s * falling % MOD * invPow) % MOD
+        
+        results.append(str(ans))
+        last = ans
+
+    sys.stdout.write('\n'.join(results) + '\n')
+
+if __name__ == '__main__':
+    solve()
+```
+
+### 关键点说明：
+
+1.  **分块斯特林数计算**：
+    *   该算法核心在于：$S(n, k) = [x^{n-k}] \prod_{i=1}^k \frac{1}{1-ix}$。
+    *   利用分块，将 $k$ 靠近某个预计算好的块终点 $k_0 = b \cdot B$。
+    *   通过 $\frac{1}{\prod_{i=1}^k (1-ix)} = \frac{1}{\prod_{i=1}^{k_0} (1-ix)} \cdot \prod_{j=k+1}^{k_0} (1-jx)$，将求大范围斯特林数转化为一个基础多项式（`baseSeries`）与一个低次多项式（`suffixPoly`，次数不超过 $B$）的乘积。
+
+2.  **内存优化**：
+    *   `array.array('I', ...)` 使用 4 字节无符号整数，比 Python 列表（每个元素至少 28 字节）节省约 7 倍内存。这对于存储 $10^7$ 规模的阶乘和大量的分块多项式至关重要。
+
+3.  **性能瓶颈**：
+    *   **阶乘循环**：Python 的 `for` 循环处理 $10^7$ 次计算约需 1-1.5 秒。
+    *   **NTT**：Python 无法像 C++ 那样高效利用 NTT，但好在 `poly_inv` 只在预处理执行约 40 次。
+    *   **在线解码**：通过 `last` 变量记录上一次答案，符合题目强制在线的要求。
+
+4.  **分块大小 (B)**：
+    *   代码中设 $B=1500$。如果遇到超时，可尝试调小 $B$（如 800-1000）以平衡预处理和查询的时间，但注意这会增加 `NB`，从而增加 `baseSeries` 的 NTT 处理次数。
+
+
+
+## C26C:Equal Sequence
+
+http://poj.openjudge.cn/practice/C26C/
+
+
+
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+
+using int64 = long long;
+
+int64 calc(const vector<int64>& a, int64 target) {
+    int64 ans = 0;
+
+    for (int64 x : a) {
+        int64 d = target - x;
+
+        if (d <= 0) {
+            ans += -d;
+        } else {
+            if (d % 2 == 0) {
+                ans += d / 2;
+            } else {
+                ans += (d + 3) / 2;
+            }
+        }
+    }
+
+    return ans;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n;
+    cin >> n;
+
+    vector<int64> a(n);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+
+    sort(a.begin(), a.end());
+
+    int k = (2 * n + 2) / 3; 
+    // k = ceil(2n / 3), 1-indexed
+
+    int64 q = a[k - 1];
+
+    cout << min(calc(a, q - 1), calc(a, q)) << '\n';
+
+    return 0;
+}
+```
+
+
+
+这道题目是一道典型的**贪心算法题**，其核心在于找到一个目标值 $q$，使得所有数字变换到 $q$ 的总代价最小。
+
+由于增加数值和减少数值的代价不对等（减少 1 的代价是 1，增加 1 的代价大约是 0.5），最优解不再是传统意义上的中位数（$1/2$ 处），而是偏移到了序列的 **$2/3$** 处。
+
+### Python 代码实现
+
+```python
+import sys
+
+def calc(a, target):
+    """
+    计算将数组 a 中所有元素变换到 target 的总代价
+    """
+    ans = 0
+    for x in a:
+        d = target - x
+        if d <= 0:
+            # 情况 1: x >= target
+            # 数值需要变小，每减少 1 单位代价为 1
+            ans += -d
+        else:
+            # 情况 2: x < target
+            # 数值需要变大。根据题目逻辑：
+            # 如果差值 d 是偶数，代价为 d / 2
+            # 如果差值 d 是奇数，代价为 (d + 3) / 2
+            if d % 2 == 0:
+                ans += d // 2
+            else:
+                ans += (d + 3) // 2
+    return ans
+
+def main():
+    # 使用 sys.stdin.read().split() 快速读取大规模数据
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    
+    n = int(input_data[0])
+    a = list(map(int, input_data[1:n+1]))
+    
+    # 第一步：排序。为了通过中位数性质找到最优解
+    a.sort()
+    
+    # 第二步：确定目标值 q
+    # 在代价不对等的情况下，最优解会向代价高的方向偏移
+    # 这里的 k 经过数学推导约为 (2n)/3 的位置
+    k = (2 * n + 2) // 3 
+    
+    # 取排序后第 k 个数作为基准
+    q = a[k - 1]
+    
+    # 第三步：计算 q 和 q-1 两种情况下的代价，取最小值
+    # 因为代价函数在 q 附近可能有波动，检查相邻点更稳妥
+    res = min(calc(a, q - 1), calc(a, q))
+    
+    print(res)
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+### 代码解读
+
+#### 1. 代价函数 `calc` 的逻辑
+
+题目定义的变换规则隐含在 `calc` 函数中：
+
+*   **减小数值** ($x > target$)：代价是线性的，即 `x - target`。
+*   **增大数值** ($x < target$)：代价是非线性的。
+    *   例如：差 2 的代价是 1，差 4 的代价是 2。这说明增加数值时，每 2 个单位才花费 1 个单位的代价。
+    *   奇数时的 `(d+3)//2` 是为了处理特定的补偿逻辑。
+
+#### 2. 为什么取 $2/3$ 处的值？
+
+在经典的“货仓选址”问题中，如果移动代价是对称的（上升 1 和下降 1 代价一样），最优解是中位数（$1/2$ 处）。
+本题中：
+
+*   下降代价系数为 $1$。
+*   上升代价系数约为 $1/2$（增加 2 耗费 1）。
+*   根据**加权中位数理论**，最优解 $q$ 应该满足：小于 $q$ 的元素权重之和与大于 $q$ 的元素权重之和大致相等。
+*   这里的比例大约是 $1 : 0.5$，即 $2 : 1$。因此在总数 $n$ 中，划分点大约在 $2n/(2+1) = 2/3$ 处。
+
+#### 3. Python 性能优化
+
+*   使用 `sys.stdin.read().split()`：比多次调用 `input()` 快得多，适用于处理 POJ 或 OpenJudge 上万级别的数据输入。
+*   `//` 运算符：Python 中的整除运算符，确保结果为整数。
+*   `if __name__ == "__main__":`：标准的 Python 程序入口写法。
+
+
+
+## http://poj.openjudge.cn/practice/C26D/
+
+
+
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+
+static inline void appendInt(string &out, int x) {
+    char buf[20];
+    int len = 0;
+    if (x == 0) {
+        buf[len++] = '0';
+    } else {
+        while (x > 0) {
+            buf[len++] = char('0' + x % 10);
+            x /= 10;
+        }
+        reverse(buf, buf + len);
+    }
+    out.append(buf, buf + len);
+}
+
+struct Solver {
+    int n, q;
+    int P, R;
+    bool powerOfTwo;
+
+    vector<int> a, pos;
+
+    // trans[0]: low -> high
+    // trans[1]: high -> low
+    set<int> trans[2];
+
+    bool good(int x, int y) const {
+        return (x ^ y) < n;
+    }
+
+    int type(int x) const {
+        return x >= P;
+    }
+
+    bool validK(int k) const {
+        return 2 <= k && k <= n - 2;
+    }
+
+    void addK(int k) {
+        if (powerOfTwo || !validK(k)) return;
+
+        int t1 = type(a[k]);
+        int t2 = type(a[k + 1]);
+
+        if (t1 != t2) {
+            trans[t1].insert(k);
+        }
+    }
+
+    void delK(int k) {
+        if (powerOfTwo || !validK(k)) return;
+
+        int t1 = type(a[k]);
+        int t2 = type(a[k + 1]);
+
+        if (t1 != t2) {
+            trans[t1].erase(k);
+        }
+    }
+
+    void init(int n_, int q_, const vector<int> &arr) {
+        n = n_;
+        q = q_;
+
+        a.assign(n + 1, 0);
+        pos.assign(n, 0);
+
+        for (int i = 1; i <= n; i++) {
+            a[i] = arr[i];
+            pos[a[i]] = i;
+        }
+
+        powerOfTwo = (n & (n - 1)) == 0;
+
+        trans[0].clear();
+        trans[1].clear();
+
+        if (powerOfTwo) {
+            P = n;
+            R = 0;
+            return;
+        }
+
+        P = 1;
+        while ((P << 1) < n) P <<= 1;
+        R = n - P;
+
+        for (int k = 2; k <= n - 2; k++) {
+            addK(k);
+        }
+    }
+
+    void doSwap(int u, int v) {
+        if (u == v) return;
+
+        vector<int> ks = {u - 1, u, v - 1, v};
+        sort(ks.begin(), ks.end());
+        ks.erase(unique(ks.begin(), ks.end()), ks.end());
+
+        for (int k : ks) delK(k);
+
+        int x = a[u];
+        int y = a[v];
+
+        swap(a[u], a[v]);
+        pos[x] = v;
+        pos[y] = u;
+
+        for (int k : ks) addK(k);
+    }
+
+    void outputOne(string &out) const {
+        out += "1\n\n";
+    }
+
+    void outputTwo(string &out, int k) const {
+        out += "2\n";
+        appendInt(out, k);
+        out.push_back('\n');
+    }
+
+    void outputZero(string &out) const {
+        out += "0\n";
+    }
+
+    void answer(string &out) const {
+        if (powerOfTwo || good(a[1], a[n])) {
+            outputOne(out);
+            return;
+        }
+
+        int firstType = type(a[1]);
+
+        // If there is an inner adjacent pair with type:
+        // type(a1) -> type(an), it is a valid split.
+        if (!trans[firstType].empty()) {
+            outputTwo(out, *trans[firstType].begin());
+            return;
+        }
+
+        // No such type transition exists.
+        // Let h be the high endpoint, h = P + z.
+        int highEndpoint = firstType ? a[1] : a[n];
+        int z = highEndpoint - P;
+
+        if (R >= 2) {
+            // z and z^1 are two different low values compatible with highEndpoint.
+            int c1 = z;
+            int c2 = z ^ 1;
+
+            int k;
+
+            if (firstType == 1) {
+                // a1 is high, an is low.
+                // Interior order is low...low high...high.
+                // Low positions are 2..P.
+                // We need a compatible low value not at position P.
+                int val = (pos[c1] != P ? c1 : c2);
+                k = pos[val];
+            } else {
+                // a1 is low, an is high.
+                // Interior order is high...high low...low.
+                // Low positions start at R+1.
+                // We need a compatible low value not at position R+1.
+                int val = (pos[c1] != R + 1 ? c1 : c2);
+                k = pos[val] - 1;
+            }
+
+            outputTwo(out, k);
+            return;
+        }
+
+        // R == 1.
+        // The only low value compatible with the high endpoint is 0.
+        int pos0 = pos[0];
+
+        if (firstType == 1) {
+            // a1 high, an low.
+            // Need 0 not to be the last low position P.
+            if (pos0 == P) {
+                outputZero(out);
+            } else {
+                outputTwo(out, pos0);
+            }
+        } else {
+            // a1 low, an high.
+            // Need 0 not to be the first low position R+1 = 2.
+            if (pos0 == R + 1) {
+                outputZero(out);
+            } else {
+                outputTwo(out, pos0 - 1);
+            }
+        }
+    }
+};
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int T;
+    cin >> T;
+
+    string out;
+    out.reserve(1 << 22);
+
+    while (T--) {
+        int n, q;
+        cin >> n >> q;
+
+        vector<int> arr(n + 1);
+        for (int i = 1; i <= n; i++) {
+            cin >> arr[i];
+        }
+
+        Solver solver;
+        solver.init(n, q, arr);
+
+        solver.answer(out);
+
+        for (int i = 0; i < q; i++) {
+            int u, v;
+            cin >> u >> v;
+
+            solver.doSwap(u, v);
+            solver.answer(out);
+        }
+    }
+
+    cout << out;
+    return 0;
+}
+```
+
+
+
+## http://poj.openjudge.cn/practice/C26E/
+
+
+
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+
+using ll = long long;
+using u64 = unsigned long long;
+using u128 = __uint128_t;
+
+const ll INF = (ll)4e18;
+
+const int SIEVE_MAX = 5000000;
+const int PHI_X = 100000;
+const int PHI_A = 100;
+
+vector<int> primes;
+vector<int> pi_pref;
+vector<unsigned char> comp;
+
+static int phi_tbl[PHI_A + 1][PHI_X + 1];
+
+void sieve() {
+    comp.assign(SIEVE_MAX + 1, 0);
+    pi_pref.assign(SIEVE_MAX + 1, 0);
+
+    for (int i = 2; i <= SIEVE_MAX; ++i) {
+        if (!comp[i]) primes.push_back(i);
+
+        for (int p : primes) {
+            long long v = 1LL * i * p;
+            if (v > SIEVE_MAX) break;
+
+            comp[(int)v] = 1;
+            if (i % p == 0) break;
+        }
+    }
+
+    int cnt = 0;
+    for (int i = 0; i <= SIEVE_MAX; ++i) {
+        if (i >= 2 && !comp[i]) ++cnt;
+        pi_pref[i] = cnt;
+    }
+}
+
+void init_phi_table() {
+    for (int x = 0; x <= PHI_X; ++x) phi_tbl[0][x] = x;
+
+    for (int a = 1; a <= PHI_A; ++a) {
+        int p = primes[a - 1];
+        for (int x = 0; x <= PHI_X; ++x) {
+            phi_tbl[a][x] = phi_tbl[a - 1][x] - phi_tbl[a - 1][x / p];
+        }
+    }
+}
+
+ll isqrt_ll(ll x) {
+    ll r = sqrt((long double)x);
+    while ((r + 1) <= x / (r + 1)) ++r;
+    while (r > x / r) --r;
+    return r;
+}
+
+ll icbrt_ll(ll x) {
+    ll r = cbrt((long double)x);
+    while ((u128)(r + 1) * (r + 1) * (r + 1) <= (u64)x) ++r;
+    while ((u128)r * r * r > (u64)x) --r;
+    return r;
+}
+
+ll i4rt_ll(ll x) {
+    ll r = sqrt(sqrt((long double)x));
+
+    auto fourth = [](ll v) -> u128 {
+        return (u128)v * v * v * v;
+    };
+
+    while (fourth(r + 1) <= (u64)x) ++r;
+    while (fourth(r) > (u64)x) --r;
+    return r;
+}
+
+ll prime_pi(ll x);
+
+ll phi_count(ll x, int a) {
+    if (x == 0) return 0;
+    if (a == 0) return x;
+
+    if (a <= PHI_A && x <= PHI_X) {
+        return phi_tbl[a][(int)x];
+    }
+
+    if (a - 1 < (int)primes.size() && primes[a - 1] >= x) {
+        return 1;
+    }
+
+    if (a < (int)primes.size() && 1LL * primes[a] * primes[a] > x) {
+        return prime_pi(x) - a + 1;
+    }
+
+    ll res = x;
+    for (int i = 0; i < a; ++i) {
+        res -= phi_count(x / primes[i], i);
+    }
+
+    return res;
+}
+
+unordered_map<ll, ll> pi_cache;
+
+ll prime_pi(ll x) {
+    if (x <= SIEVE_MAX) return pi_pref[(int)x];
+
+    auto it = pi_cache.find(x);
+    if (it != pi_cache.end()) return it->second;
+
+    ll a = prime_pi(i4rt_ll(x));
+    ll b = prime_pi(isqrt_ll(x));
+    ll c = prime_pi(icbrt_ll(x));
+
+    ll sum = phi_count(x, (int)a) + (b + a - 2) * (b - a + 1) / 2;
+
+    for (ll i = a; i < b; ++i) {
+        ll w = x / primes[(size_t)i];
+
+        sum -= prime_pi(w);
+
+        if (i < c) {
+            ll lim = prime_pi(isqrt_ll(w));
+            for (ll j = i; j < lim; ++j) {
+                sum -= prime_pi(w / primes[(size_t)j]) - j;
+            }
+        }
+    }
+
+    pi_cache[x] = sum;
+    return sum;
+}
+
+ll mod_pow(ll a, ll d, ll mod) {
+    u128 res = 1;
+    u128 base = (u64)a % (u64)mod;
+
+    while (d) {
+        if (d & 1) res = res * base % (u64)mod;
+        base = base * base % (u64)mod;
+        d >>= 1;
+    }
+
+    return (ll)res;
+}
+
+bool is_prime64(ll n) {
+    if (n < 2) return false;
+
+    for (ll p : {2LL, 3LL, 5LL, 7LL, 11LL, 13LL, 17LL, 19LL, 23LL, 29LL, 31LL, 37LL}) {
+        if (n % p == 0) return n == p;
+    }
+
+    ll d = n - 1;
+    ll s = 0;
+
+    while ((d & 1) == 0) {
+        d >>= 1;
+        ++s;
+    }
+
+    for (ll a : {2LL, 3LL, 5LL, 7LL, 11LL, 13LL, 17LL, 19LL, 23LL, 29LL, 31LL, 37LL}) {
+        if (a >= n) continue;
+
+        ll x = mod_pow(a, d, n);
+        if (x == 1 || x == n - 1) continue;
+
+        bool composite = true;
+
+        for (int r = 1; r < s; ++r) {
+            x = (ll)((u128)x * x % (u64)n);
+            if (x == n - 1) {
+                composite = false;
+                break;
+            }
+        }
+
+        if (composite) return false;
+    }
+
+    return true;
+}
+
+ll next_prime_gt_half(ll x) {
+    ll v = x / 2 + 1;
+
+    if (v <= 2) return 2;
+    if ((v & 1) == 0) ++v;
+
+    while (!is_prime64(v)) v += 2;
+
+    return v;
+}
+
+unordered_map<ll, ll> g_cache;
+
+ll get_g(ll x) {
+    if (x == 1) return INF;
+
+    auto it = g_cache.find(x);
+    if (it != g_cache.end()) return it->second;
+
+    for (int p : primes) {
+        if (1LL * p * p > x) break;
+
+        if ((ll)p < get_g(x / p)) {
+            g_cache[x] = p;
+            return p;
+        }
+    }
+
+    ll ret = next_prime_gt_half(x);
+    g_cache[x] = ret;
+    return ret;
+}
+
+ll count_spf_less(ll m, ll t) {
+    if (m <= 1 || t <= 2) return 0;
+
+    if (t >= INF / 2 || t > m) {
+        return m - 1;
+    }
+
+    int a;
+
+    if (t - 1 <= SIEVE_MAX) {
+        a = pi_pref[(int)(t - 1)];
+    } else {
+        a = (int)prime_pi(t - 1);
+    }
+
+    return m - phi_count(m, a);
+}
+
+ll solve(ll n) {
+    if (n == 1) return 1;
+
+    g_cache.clear();
+    g_cache.reserve(1 << 20);
+
+    ll ans = 0;
+
+    for (ll l = 1; l <= n; ) {
+        ll x = n / l;
+        ll r = n / x;
+
+        ll t = get_g(x);
+
+        ans += count_spf_less(r, t) - count_spf_less(l - 1, t);
+
+        l = r + 1;
+    }
+
+    return ans;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    sieve();
+    init_phi_table();
+
+    pi_cache.reserve(1 << 16);
+
+    ll n;
+    cin >> n;
+
+    cout << solve(n) << '\n';
+
+    return 0;
+}
+```
+
+
+
+## C26F:Phigros Rating
+
+http://poj.openjudge.cn/practice/C26F/
+
+
+
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int N, B;
+    cin >> N >> B;
+
+    vector<double> scores;
+    scores.reserve(N);
+
+    for (int i = 0; i < N; i++) {
+        int d, acc;
+        cin >> d >> acc;
+
+        double contribution = 0.0;
+
+        if (acc == 100) {
+            contribution = d * 1.0;
+        } else if (acc >= 95) {
+            contribution = d * (0.5 + acc / 200.0);
+        } else if (acc >= 70) {
+            contribution = d * (acc / 150.0 - 1.0 / 6.0);
+        } else {
+            contribution = 0.0;
+        }
+
+        scores.push_back(contribution);
+    }
+
+    sort(scores.begin(), scores.end(), greater<double>());
+
+    int k = min(N, B);
+    double sum = 0.0;
+
+    for (int i = 0; i < k; i++) {
+        sum += scores[i];
+    }
+
+    cout << fixed << setprecision(6) << sum / k << '\n';
+
+    return 0;
+}
+```
+
+
+
+这道题目是一个典型的**贪心算法**应用题。题目要求根据给定的难度系数 $d$ 和正确率 $acc$ 计算每项得分，最后选取表现最好的 $B$ 项计算平均分。
+
+### Python 代码实现
+
+```python
+import sys
+
+def solve():
+    # 使用 sys.stdin.read().split() 一次性读取所有数据，处理速度最快
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    
+    # N 是总条目数，B 是计算平均分时考虑的最大条目数
+    n = int(input_data[0])
+    b = int(input_data[1])
+    
+    scores = []
+    current_idx = 2
+    
+    for _ in range(n):
+        d = int(input_data[current_idx])
+        acc = int(input_data[current_idx + 1])
+        current_idx += 2
+        
+        # 根据题目给出的公式计算单项贡献分
+        contribution = 0.0
+        
+        if acc == 100:
+            contribution = float(d)
+        elif acc >= 95:
+            # 公式 1: d * (0.5 + acc / 200)
+            contribution = d * (0.5 + acc / 200.0)
+        elif acc >= 70:
+            # 公式 2: d * (acc / 150 - 1/6)
+            contribution = d * (acc / 150.0 - 1.0 / 6.0)
+        else:
+            # 低于 70 分不计分
+            contribution = 0.0
+            
+        scores.append(contribution)
+    
+    # 贪心策略：将计算出的贡献分从大到小排序
+    scores.sort(reverse=True)
+    
+    # 取前 B 个得分（如果总数不足 B，则取全部 N 个）
+    k = min(n, b)
+    
+    if k == 0:
+        print(f"{0.0:.6f}")
+        return
+    
+    # 计算前 k 项的和
+    top_sum = sum(scores[:k])
+    
+    # 计算平均分并保留 6 位小数
+    result = top_sum / k
+    print(f"{result:.6f}")
+
+if __name__ == "__main__":
+    solve()
+```
+
+---
+
+### 代码解读
+
+#### 1. 分段得分逻辑
+
+题目根据正确率 $acc$ 的不同，设定了不同的权重系数：
+
+*   **满分 ($100$)**：全额计分。
+*   **优秀 ($95 \le acc < 100$)**：系数在 $0.975$ 到 $1.0$ 之间波动。
+*   **及格 ($70 \le acc < 95$)**：系数在 $0.3$ 到 $0.466$ 之间波动。
+*   **不及格 ($< 70$)**：不计分。
+
+在 Python 中，直接使用浮点数除法（`/`）即可精确还原 C++ 中的 `double` 运算。
+
+#### 2. 贪心策略
+
+题目要求最终的平均分最高。由于分母 $k$ 是固定的（即 $min(N, B)$），要使平均分最大，分子（总得分）就必须最大。因此，我们将所有计算出的得分进行**从大到小排序**，并截取前 $B$ 个。
+
+#### 3. 性能优化
+
+*   **输入**：`sys.stdin.read().split()` 将整个输入流读入并切分成列表，比循环调用 `input()` 处理几万行数据时速度快得多。
+*   **排序**：Python 内置的 `sort(reverse=True)` 使用的是 Timsort 算法，处理这种规模的排序非常高效。
+*   **输出**：使用 `f-string` 的 `:.6f` 格式化，可以精确控制输出 6 位小数，满足题目精度要求。
+
+
+
+
+
+## http://poj.openjudge.cn/practice/C26G/
+
+
+
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+
+int query(vector<int> S);
+
+int leaf(int n) {
+    // 题目通常保证 n >= 2。
+    // n == 2 时两个点都是叶子。
+    if (n <= 2) return 1;
+
+    vector<int> cur(n);
+    iota(cur.begin(), cur.end(), 1);
+
+    vector<int> mark(n + 1, 0);
+    int timer = 0;
+
+    auto calcF = [&](const vector<int>& S) -> int {
+        int cS;
+
+        if ((int)S.size() == 1) {
+            cS = 1;
+        } else {
+            cS = query(S);
+        }
+
+        ++timer;
+        for (int x : S) mark[x] = timer;
+
+        vector<int> comp;
+        comp.reserve(n - S.size());
+
+        for (int i = 1; i <= n; i++) {
+            if (mark[i] != timer) {
+                comp.push_back(i);
+            }
+        }
+
+        int cComp;
+        if ((int)comp.size() == 1) {
+            cComp = 1;
+        } else {
+            cComp = query(comp);
+        }
+
+        return cS - cComp + 1;
+    };
+
+    while ((int)cur.size() > 1) {
+        int m = (int)cur.size() / 2;
+
+        vector<int> A(cur.begin(), cur.begin() + m);
+
+        int fA = calcF(A);
+
+        if (fA > 0) {
+            cur.swap(A);
+        } else {
+            vector<int> B(cur.begin() + m, cur.end());
+            cur.swap(B);
+        }
+    }
+
+    return cur[0];
+}
+```
+
+
+
+
+
+## C26H:Register Allocation
+
+http://poj.openjudge.cn/practice/C26H/
+
+
+
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n;
+    cin >> n;
+
+    vector<int> leftChild(n + 1, 0), rightChild(n + 1, 0);
+
+    string a, b;
+    cin >> a >> b; // root placeholder: "- -"
+
+    for (int i = 2; i <= n; i++) {
+        int p;
+        char d;
+        cin >> p >> d;
+
+        if (d == 'L') {
+            leftChild[p] = i;
+        } else {
+            rightChild[p] = i;
+        }
+    }
+
+    vector<int> dp(n + 1, 0);
+
+    for (int u = n; u >= 1; u--) {
+        int l = leftChild[u];
+        int r = rightChild[u];
+
+        if (l == 0 && r == 0) {
+            dp[u] = 1;
+        } else if (l != 0 && r == 0) {
+            dp[u] = dp[l];
+        } else if (l == 0 && r != 0) {
+            dp[u] = dp[r];
+        } else {
+            int x = dp[l];
+            int y = dp[r];
+
+            if (x == y) {
+                dp[u] = x + 1;
+            } else {
+                dp[u] = max(x, y);
+            }
+        }
+    }
+
+    cout << dp[1] << '\n';
+
+    return 0;
+}
+```
+
+
+
+这道题目要求计算一棵二叉树的特定“阶数”或“维度”（逻辑类似于斯特拉勒阶数 Strahler Stream Order）。
+
+### Python 代码实现
+
+```python
+import sys
+
+def solve():
+    # 使用 sys.stdin.read().split() 一次性读取所有输入，提高在大数据量下的性能
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    
+    n = int(input_data[0])
+    if n == 0:
+        return
+
+    # 初始化左孩子和右孩子数组，0 表示没有孩子
+    left_child = [0] * (n + 1)
+    right_child = [0] * (n + 1)
+
+    # 跳过根节点的占位符（即输入中的 "- -"）
+    # input_data[1] 和 input_data[2] 分别是根节点的占位信息
+    
+    # 从第 3 个元素开始，每两个一组表示 parent 和 direction
+    idx = 3
+    for i in range(2, n + 1):
+        p = int(input_data[idx])
+        direction = input_data[idx + 1]
+        idx += 2
+        
+        if direction == 'L':
+            left_child[p] = i
+        else:
+            right_child[p] = i
+
+    # dp[u] 表示以 u 为根的子树的计算值
+    dp = [0] * (n + 1)
+
+    # 按照节点编号从大到小遍历。
+    # 这种遍历方式的前提是：父节点的编号一定小于子节点的编号（题目输入逻辑通常满足此点）。
+    # 如果不满足，则需要使用后序遍历（DFS）。
+    for u in range(n, 0, -1):
+        l = left_child[u]
+        r = right_child[u]
+
+        if l == 0 and r == 0:
+            # 情况 1：叶子节点，初始值为 1
+            dp[u] = 1
+        elif l != 0 and r == 0:
+            # 情况 2：只有左孩子，继承左孩子的值
+            dp[u] = dp[l]
+        elif l == 0 and r != 0:
+            # 情况 3：只有右孩子，继承右孩子的值
+            dp[u] = dp[r]
+        else:
+            # 情况 4：左右孩子都有
+            x = dp[l]
+            y = dp[r]
+            if x == y:
+                # 如果两个孩子值相等，当前节点值加 1
+                dp[u] = x + 1
+            else:
+                # 如果不等，取较大的那个值
+                dp[u] = max(x, y)
+
+    # 输出根节点（1号节点）的计算结果
+    print(dp[1])
+
+if __name__ == "__main__":
+    solve()
+```
+
+---
+
+### 代码解读
+
+#### 1. 核心 DP 逻辑
+
+这道题的核心在于处理节点合并时的规则：
+
+*   **叶子节点**：基础权重为 $1$。
+*   **单分支节点**：权重不增加，直接传递子节点的值。
+*   **双分支节点**：
+    *   如果两个子树的“复杂度”相同（`x == y`），说明当前节点需要更高一阶的复杂度来协调，因此 `+1`。
+    *   如果不同，则当前节点的复杂度由那个较复杂的子树决定。
+
+#### 2. 遍历顺序
+
+C++ 代码中使用 `for (int u = n; u >= 1; u--)` 是为了模拟**从叶向根**的计算过程。
+
+*   在二叉树问题中，如果节点 $i$ 的父节点编号总是小于 $i$，那么从 $n$ 到 $1$ 的逆序遍历就等同于**拓扑排序的逆序**，也就是保证了在计算父节点时，子节点已经计算完毕。
+
+#### 3. 性能处理
+
+*   **数据读取**：`sys.stdin.read().split()` 在处理 POJ 这种输入行数非常多的题目时，比 `input()` 快很多，因为它减少了系统调用的次数。
+*   **空间复杂度**：使用了三个长度为 $n+1$ 的数组，空间复杂度为 $O(n)$，符合题目要求。
+
+#### 4. 树的表示
+
+代码没有使用复杂的类结构（如 `Node` 对象），而是使用了**静态数组**（`left_child`, `right_child`）来表示树。这种方法在算法竞赛中非常流行，因为它在 Python 中比对象引用更省内存，运行也更快。
+
+
+
+## C26I:Relaxing Bounds
+
+http://poj.openjudge.cn/practice/C26I/
+
+
+
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+
+struct RangeMaxPointQuery {
+    int base;
+    vector<int> tree;
+
+    RangeMaxPointQuery(int n = 0) {
+        init(n);
+    }
+
+    void init(int n) {
+        base = 1;
+        while (base < n) base <<= 1;
+        tree.assign(base * 2, 0);
+    }
+
+    // range [l, r], chmax with val
+    void update(int l, int r, int val) {
+        if (l > r) return;
+
+        l += base;
+        r += base;
+
+        while (l <= r) {
+            if (l & 1) {
+                tree[l] = max(tree[l], val);
+                ++l;
+            }
+            if (!(r & 1)) {
+                tree[r] = max(tree[r], val);
+                --r;
+            }
+            l >>= 1;
+            r >>= 1;
+        }
+    }
+
+    // max value covering point pos
+    int query(int pos) const {
+        int res = 0;
+        pos += base;
+
+        while (pos > 0) {
+            res = max(res, tree[pos]);
+            pos >>= 1;
+        }
+
+        return res;
+    }
+};
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int n;
+        cin >> n;
+
+        vector<long long> a(n);
+        vector<long long> xs;
+
+        for (int i = 0; i < n; ++i) {
+            cin >> a[i];
+            xs.push_back(a[i]);
+        }
+
+        sort(xs.begin(), xs.end());
+        xs.erase(unique(xs.begin(), xs.end()), xs.end());
+
+        RangeMaxPointQuery seg((int)xs.size());
+
+        int ans = 0;
+
+        for (int i = 0; i < n; ++i) {
+            long long x = a[i];
+
+            int pos = lower_bound(xs.begin(), xs.end(), x) - xs.begin();
+
+            int best = seg.query(pos);
+            int dp = best + 1;
+
+            ans = max(ans, dp);
+
+            long long L = x - dp;
+            long long R = x + dp;
+
+            int l = lower_bound(xs.begin(), xs.end(), L) - xs.begin();
+            int r = upper_bound(xs.begin(), xs.end(), R) - xs.begin() - 1;
+
+            seg.update(l, r, dp);
+        }
+
+        cout << ans << '\n';
+    }
+
+    return 0;
+}
+```
+
+
+
+这是一个使用**离散化**与**线段树优化动态规划（DP）**的问题。
+
+### 题目逻辑解读
+
+1.  **核心 DP 转移**：
+    *   对于序列中的每一个数 $a[i]$，我们要找到一个最优的 $dp$ 值（代表以当前元素结尾或经过当前元素的最长序列长度）。
+    *   $dp[i] = \text{query}(a[i]) + 1$。这里的 `query(a[i])` 是查询当前所有已经生效的区间中，包含点 $a[i]$ 的区间的最大权值。
+    *   更新操作：计算出 $dp[i]$ 后，该元素会产生一个影响范围，即区间 $[a[i] - dp[i], a[i] + dp[i]]$。我们将线段树中对应这一段范围的所有点与 $dp[i]$ 取 $max$。
+
+2.  **线段树类型（标记永久化/对偶线段树）**：
+    *   代码实现的是一种**区间修改、点查询**的线段树。
+    *   `update(l, r, val)`：区间修改，使用 `tree[p] = max(tree[p], val)`。
+    *   `query(pos)`：点查询，从叶子节点到根节点的路径上取所有标记的最大值。
+
+3.  **坐标离散化**：
+    *   由于 $a[i]$ 的数值可能很大，但 $n$ 的规模在 $10^5$ 左右，因此先将所有出现的 $a[i]$ 进行排序去重，映射到 $[0, \text{size}-1]$ 的索引空间。
+
+---
+
+### Python 代码实现
+
+为了在 Python 中达到较好的性能，我们使用**迭代式线段树**（zkw 线段树风格），并利用 `bisect` 模块进行快速检索。
+
+```python
+import sys
+from bisect import bisect_left, bisect_right
+
+class RangeMaxPointQuery:
+    def __init__(self, n):
+        self.base = 1
+        while self.base < n:
+            self.base <<= 1
+        self.tree = [0] * (self.base * 2)
+
+    def update(self, l, r, val):
+        """区间 [l, r] 与 val 取 max"""
+        if l > r:
+            return
+        l += self.base
+        r += self.base
+        while l <= r:
+            if l % 2 == 1:
+                if val > self.tree[l]: self.tree[l] = val
+                l += 1
+            if r % 2 == 0:
+                if val > self.tree[r]: self.tree[r] = val
+                r -= 1
+            l >>= 1
+            r >>= 1
+
+    def query(self, pos):
+        """点查询：返回覆盖该点的所有区间的最大标记"""
+        res = 0
+        pos += self.base
+        while pos > 0:
+            if self.tree[pos] > res:
+                res = self.tree[pos]
+            pos >>= 1
+        return res
+
+def solve():
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    
+    it = iter(input_data)
+    t_cases = int(next(it))
+    
+    output = []
+    for _ in range(t_cases):
+        n = int(next(it))
+        a = [int(next(it)) for _ in range(n)]
+        
+        # 离散化
+        xs = sorted(list(set(a)))
+        m = len(xs)
+        
+        seg = RangeMaxPointQuery(m)
+        ans = 0
+        
+        for x in a:
+            # 找到 x 在离散化后的位置
+            pos = bisect_left(xs, x)
+            
+            # 查询点查询最大值
+            best = seg.query(pos)
+            dp = best + 1
+            
+            if dp > ans:
+                ans = dp
+                
+            # 计算更新范围 [x - dp, x + dp]
+            left_val = x - dp
+            right_val = x + dp
+            
+            # 找到范围内对应离散化索引的边界
+            l_idx = bisect_left(xs, left_val)
+            r_idx = bisect_right(xs, right_val) - 1
+            
+            # 区间更新
+            seg.update(l_idx, r_idx, dp)
+            
+        output.append(str(ans))
+    
+    sys.stdout.write("\n".join(output) + "\n")
+
+if __name__ == "__main__":
+    solve()
+```
+
+---
+
+### 关键优化与解读
+
+1.  **迭代式线段树**：
+    *   在 Python 中，传统的递归线段树开销极大。迭代式线段树通过 `while l <= r` 循环实现区间定位，通过 `pos >>= 1` 实现点查询，避开了递归深度限制，速度提升显著。
+    *   `self.tree` 数组存储的是该节点代表的区间被更新过的最大 $dp$ 值。
+
+2.  **离散化查找**：
+    *   `bisect_left(xs, x)`：相当于 C++ 的 `lower_bound`。
+    *   `bisect_right(xs, x + dp) - 1`：相当于查找小于等于 `x + dp` 的最大元素的索引。
+
+3.  **时间复杂度分析**：
+    *   坐标离散化：$O(N \log N)$。
+    *   单次 DP 转移：包含两次二分查找 $O(\log N)$ 和一次线段树操作 $O(\log N)$。
+    *   总复杂度：$O(T \cdot N \log N)$。对于 $N=10^5$ 的规模，Python 在 $2 \sim 3$ 秒内通常可以完成。
+
+4.  **内存优化**：
+    *   使用了 `sys.stdin.read().split()` 配合生成器/迭代器，这比逐行读取更能有效利用内存并加快速度。
+    *   `sys.stdout.write` 用于一次性输出结果，减少了 I/O 次数。
+
+
+
+## http://poj.openjudge.cn/practice/C26J/
+
+
+
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+
+static const int MOD = 167772161;
+
+inline void addmod(int &x, int y) {
+    x += y;
+    if (x >= MOD) x -= MOD;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n, m, k;
+    cin >> n >> m >> k;
+
+    vector<int> b(n + 1);
+    vector<int> missPos;
+    vector<int> seen(n, 0);
+
+    for (int i = 1; i <= n; ++i) {
+        cin >> b[i];
+        if (b[i] == -1) {
+            missPos.push_back(i);
+        } else {
+            seen[b[i]] = 1;
+        }
+    }
+
+    vector<int> missVal;
+    for (int v = 0; v < n; ++v) {
+        if (!seen[v]) missVal.push_back(v);
+    }
+
+    const int INF = 1e9;
+
+    vector<int> pref(n + 1, INF), suff(n + 2, INF);
+
+    for (int i = 1; i <= n; ++i) {
+        pref[i] = pref[i - 1];
+        if (b[i] >= 0) pref[i] = min(pref[i], b[i]);
+    }
+
+    for (int i = n; i >= 1; --i) {
+        suff[i] = suff[i + 1];
+        if (b[i] >= 0) suff[i] = min(suff[i], b[i]);
+    }
+
+    vector<vector<int>> maxp(k + 2, vector<int>(k + 2, 0));
+
+    for (int qi = 0; qi < m; ++qi) {
+        int l, r;
+        cin >> l >> r;
+
+        int alpha = int(lower_bound(missPos.begin(), missPos.end(), l) - missPos.begin());
+        int beta = int(upper_bound(missPos.begin(), missPos.end(), r) - missPos.begin());
+
+        int len = beta - alpha;
+
+        int c = min(pref[l - 1], suff[r + 1]);
+        if (c >= INF) c = n;
+
+        int p = int(lower_bound(missVal.begin(), missVal.end(), c) - missVal.begin());
+
+        if (p == 0 || len == 0 || len == k) continue;
+
+        int L = alpha + 1;
+        int R = beta;
+
+        maxp[L][R] = max(maxp[L][R], p);
+    }
+
+    vector<vector<int>> mx(k + 2, vector<int>(k + 3));
+    vector<vector<int>> mn(k + 2, vector<int>(k + 3));
+
+    vector<vector<int>> clL(k + 2, vector<int>(k + 2));
+    vector<vector<int>> clR(k + 2, vector<int>(k + 2));
+
+    auto build_closure = [&](int t) {
+        for (int i = 0; i <= k + 1; ++i) {
+            fill(mx[i].begin(), mx[i].end(), 0);
+            fill(mn[i].begin(), mn[i].end(), k + 1);
+        }
+
+        for (int l = 1; l <= k; ++l) {
+            for (int r = l; r <= k; ++r) {
+                if (maxp[l][r] >= t) {
+                    mx[l][r] = l;
+                    mn[l][r] = r;
+                }
+            }
+        }
+
+        for (int L = 1; L <= k; ++L) {
+            for (int R = k; R >= 1; --R) {
+                mx[L][R] = max(mx[L][R], mx[L - 1][R]);
+                mx[L][R] = max(mx[L][R], mx[L][R + 1]);
+
+                mn[L][R] = min(mn[L][R], mn[L - 1][R]);
+                mn[L][R] = min(mn[L][R], mn[L][R + 1]);
+            }
+        }
+
+        for (int L = 1; L <= k; ++L) {
+            for (int R = L; R <= k; ++R) {
+                if (mx[L][R] == 0) {
+                    clL[L][R] = 1;
+                    clR[L][R] = k;
+                } else {
+                    clL[L][R] = mx[L][R];
+                    clR[L][R] = mn[L][R];
+                }
+            }
+        }
+    };
+
+    vector<vector<int>> dp(k + 2, vector<int>(k + 2, 0));
+    vector<vector<int>> temp(k + 2, vector<int>(k + 2, 0));
+    vector<vector<int>> ndp(k + 2, vector<int>(k + 2, 0));
+
+    vector<vector<int>> rowPref(k + 2, vector<int>(k + 2, 0));
+    vector<vector<int>> colSuf(k + 2, vector<int>(k + 2, 0));
+    vector<vector<int>> start(k + 2, vector<int>(k + 2, 0));
+
+    build_closure(1);
+
+    for (int q = 1; q <= k; ++q) {
+        dp[clL[q][q]][clR[q][q]] = 1;
+    }
+
+    for (int t = 2; t <= k; ++t) {
+        build_closure(t);
+
+        for (int i = 0; i <= k + 1; ++i) {
+            fill(temp[i].begin(), temp[i].end(), 0);
+            fill(ndp[i].begin(), ndp[i].end(), 0);
+            fill(rowPref[i].begin(), rowPref[i].end(), 0);
+            fill(colSuf[i].begin(), colSuf[i].end(), 0);
+            fill(start[i].begin(), start[i].end(), 0);
+        }
+
+        for (int L = 1; L <= k; ++L) {
+            for (int R = L; R <= k; ++R) {
+                int val = dp[L][R];
+                if (!val) continue;
+
+                int a = clL[L][R];
+                int b2 = clR[L][R];
+
+                addmod(temp[a][b2], val);
+            }
+        }
+
+        for (int a = 1; a <= k; ++a) {
+            int s = 0;
+            for (int b2 = a; b2 <= k; ++b2) {
+                addmod(s, temp[a][b2]);
+                rowPref[a][b2] = s;
+            }
+        }
+
+        for (int b2 = 1; b2 <= k; ++b2) {
+            int s = 0;
+            for (int a = b2; a >= 1; --a) {
+                addmod(s, temp[a][b2]);
+                colSuf[b2][a] = s;
+            }
+        }
+
+        for (int x = 1; x <= k; ++x) {
+            int b2 = x;
+
+            while (b2 <= k) {
+                int L = clL[x][b2];
+                int R = clR[x][b2];
+                int s = b2;
+
+                while (b2 + 1 <= k &&
+                       clL[x][b2 + 1] == L &&
+                       clR[x][b2 + 1] == R) {
+                    ++b2;
+                }
+
+                if (L == x) {
+                    start[x][R] = s;
+                }
+
+                ++b2;
+            }
+        }
+
+        for (int L = 1; L <= k; ++L) {
+            for (int R = L; R <= k; ++R) {
+                int val = temp[L][R];
+                if (val && R - L + 1 >= t) {
+                    addmod(ndp[L][R], val);
+                }
+            }
+        }
+
+        for (int b2 = 1; b2 <= k; ++b2) {
+            for (int q = 1; q < b2; ++q) {
+                int L = clL[q][b2];
+                int R = clR[q][b2];
+
+                if (L == q) {
+                    int add = colSuf[b2][q + 1];
+                    if (add) addmod(ndp[L][R], add);
+                }
+            }
+        }
+
+        for (int a = 1; a <= k; ++a) {
+            for (int q = a + 1; q <= k; ++q) {
+                int L = clL[a][q];
+                int R = clR[a][q];
+
+                if (R != q) continue;
+
+                int add = 0;
+
+                if (L < a) {
+                    int s = start[L][R];
+
+                    if (s > a) {
+                        add = rowPref[a][s - 1];
+                    }
+                } else {
+                    add = rowPref[a][q - 1];
+                }
+
+                if (add) addmod(ndp[L][R], add);
+            }
+        }
+
+        dp.swap(ndp);
+    }
+
+    int ans = 0;
+
+    for (int L = 1; L <= k; ++L) {
+        for (int R = L; R <= k; ++R) {
+            addmod(ans, dp[L][R]);
+        }
+    }
+
+    cout << ans << '\n';
+    return 0;
+}
+```
+
+
+
+## C26K:Serial
+
+http://poj.openjudge.cn/practice/C26K/
+
+
+
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+
+struct DSU {
+    vector<int> fa, sz;
+    vector<int> mxOdd, mxEven;
+    vector<unsigned char> active;
+    priority_queue<pair<int,int>> pq; // {score, root}
+
+    DSU(int n = 0) {
+        init(n);
+    }
+
+    void init(int n) {
+        fa.assign(n, -1);
+        sz.assign(n, 0);
+        mxOdd.assign(n, 0);
+        mxEven.assign(n, 0);
+        active.assign(n, 0);
+        while (!pq.empty()) pq.pop();
+    }
+
+    int find(int x) {
+        while (fa[x] != x) {
+            fa[x] = fa[fa[x]];
+            x = fa[x];
+        }
+        return x;
+    }
+
+    void pushRoot(int r) {
+        int score = min(mxOdd[r], mxEven[r]);
+        pq.push({score, r});
+    }
+
+    void activate(int i, int val) {
+        active[i] = 1;
+        fa[i] = i;
+        sz[i] = 1;
+        mxOdd[i] = mxEven[i] = 0;
+
+        // i 是 0-based；原题位置 i+1。
+        if (i % 2 == 0) mxOdd[i] = val;
+        else mxEven[i] = val;
+
+        pushRoot(i);
+    }
+
+    void unite(int a, int b) {
+        int ra = find(a);
+        int rb = find(b);
+        if (ra == rb) return;
+
+        if (sz[ra] < sz[rb]) swap(ra, rb);
+
+        fa[rb] = ra;
+        sz[ra] += sz[rb];
+        mxOdd[ra] = max(mxOdd[ra], mxOdd[rb]);
+        mxEven[ra] = max(mxEven[ra], mxEven[rb]);
+
+        pushRoot(ra);
+    }
+
+    int getMaxScore() {
+        while (!pq.empty()) {
+            auto [score, r] = pq.top();
+            if (active[r]) {
+                int rr = find(r);
+                if (rr == r && min(mxOdd[r], mxEven[r]) == score) {
+                    return score;
+                }
+            }
+            pq.pop();
+        }
+        return 0;
+    }
+};
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int n;
+        cin >> n;
+
+        vector<int> a(n);
+        int M = 0;
+
+        long long oddMax = 0, evenMax = 0;
+
+        vector<pair<int,int>> vp;
+        vp.reserve(n);
+
+        for (int i = 0; i < n; i++) {
+            cin >> a[i];
+            M = max(M, a[i]);
+
+            if (i % 2 == 0) oddMax = max(oddMax, (long long)a[i]);
+            else evenMax = max(evenMax, (long long)a[i]);
+
+            vp.push_back({a[i], i});
+        }
+
+        // 2 块盘
+        long long cost2 = oddMax + evenMax;
+
+        // 3 块盘
+        sort(vp.begin(), vp.end(), [](const auto& p1, const auto& p2) {
+            if (p1.first != p2.first) return p1.first > p2.first;
+            return p1.second < p2.second;
+        });
+
+        DSU dsu(n);
+
+        long long best3 = (1LL << 60);
+        long long cnt3 = 0;
+
+        int ptr = 0;
+        while (ptr < n) {
+            int v = vp[ptr].first;
+
+            // 此时已经激活的是 ai > v 的位置，所以对应 x = v。
+            int g = dsu.getMaxScore();
+            long long y = max((long long)v, (long long)g);
+            long long cost = (long long)M + v + y;
+
+            if (cost < best3) {
+                best3 = cost;
+                cnt3 = 1;
+            } else if (cost == best3) {
+                cnt3++;
+            }
+
+            int nxt = ptr;
+            while (nxt < n && vp[nxt].first == v) nxt++;
+
+            // 激活 ai == v 的位置，供更小的 x 使用。
+            for (int k = ptr; k < nxt; k++) {
+                int pos = vp[k].second;
+                dsu.activate(pos, v);
+
+                if (pos > 0 && dsu.active[pos - 1]) {
+                    dsu.unite(pos, pos - 1);
+                }
+                if (pos + 1 < n && dsu.active[pos + 1]) {
+                    dsu.unite(pos, pos + 1);
+                }
+            }
+
+            ptr = nxt;
+        }
+
+        long long ans = min(cost2, best3);
+        long long ways = 0;
+
+        if (cost2 == ans) ways++;
+        if (best3 == ans) ways += cnt3;
+
+        cout << ans << ' ' << ways << '\n';
+    }
+
+    return 0;
+}
+```
+
+
+
+这道题目涉及到两个主要策略的比较：使用 2 块硬盘和使用 3 块硬盘的最小代价。
+
+### 题目逻辑解读
+
+1.  **2 块硬盘的代价**：
+    *   代价 = (奇数下标位置的最大值) + (偶数下标位置的最大值)。
+    *   这是最基础的情况，直接遍历一次数组即可得到。
+
+2.  **3 块硬盘的代价 (核心难点)**：
+    *   代价公式为：$M + x + y$，其中 $M$ 是整个数组的最大值，$x$ 和 $y$ 是另外两个选定的值。
+    *   算法通过**并查集（DSU）**和**优先队列（堆）**来动态维护连通分量。
+    *   **排序与激活**：将数组元素按数值从大到小排序。依次遍历这些值，将其作为 $x$。
+    *   **连通分量属性**：对于并查集中的每个连通分量，维护两个值：`mxOdd`（该分量中奇数位置的最大值）和 `mxEven`（该分量中偶数位置的最大值）。
+    *   **得分定义**：一个连通分量的“得分”定义为 `min(mxOdd, mxEven)`。这意味着在该连通段内，我们可以同时选出一个奇数位的值和一个偶数位的值，且两者中较小的那个至少是这个“得分”。
+    *   **贪心过程**：
+        1. 遍历到数值 $v$ 时，先计算当前的 $g = \max(\text{所有分量的得分})$。
+        2. 此时的 $x = v$，$y = \max(v, g)$。
+        3. 计算 $cost = M + x + y$ 并更新最小值。
+        4. 然后将所有等于 $v$ 的位置“激活”并合并相邻的已激活位置，更新并查集。
+
+---
+
+### Python 代码实现
+
+由于 Python 的 `heapq` 是小顶堆，我们需要存入负值来模拟大顶堆。同时，为了提高效率，建议使用 PyPy 3 运行。
+
+```python
+import sys
+import heapq
+
+def solve():
+    # 使用快速读入
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    it = iter(input_data)
+    
+    t_cases = int(next(it))
+    
+    for _ in range(t_cases):
+        n = int(next(it))
+        a = []
+        m_val = 0
+        odd_max = 0
+        even_max = 0
+        
+        # 记录数值和位置，用于后续从大到小激活
+        vp = []
+        for i in range(n):
+            val = int(next(it))
+            a.append(val)
+            if val > m_val: m_val = val
+            
+            # 计算 2 块硬盘的情况
+            if i % 2 == 0:
+                if val > odd_max: odd_max = val
+            else:
+                if val > even_max: even_max = val
+            
+            vp.append((val, i))
+            
+        cost2 = odd_max + even_max
+        
+        # 3 块硬盘的情况
+        # 按数值降序排列
+        vp.sort(key=lambda x: x[0], reverse=True)
+        
+        # 并查集初始化
+        fa = list(range(n))
+        sz = [0] * n
+        mx_odd = [0] * n
+        mx_even = [0] * n
+        active = [False] * n
+        pq = [] # 大顶堆 (存储负值): (-score, root)
+        
+        def find(x):
+            while fa[x] != x:
+                fa[x] = fa[fa[x]]
+                x = fa[x]
+            return x
+
+        def get_max_score():
+            """获取当前所有连通分量中的最大得分"""
+            while pq:
+                neg_score, r = pq[0]
+                score = -neg_score
+                # 懒惰删除：检查 r 是否仍是根，且得分是否未改变
+                if active[r] and find(r) == r:
+                    current_score = min(mx_odd[r], mx_even[r])
+                    if current_score == score:
+                        return score
+                heapq.heappop(pq)
+            return 0
+
+        best3 = float('inf')
+        cnt3 = 0
+        
+        ptr = 0
+        while ptr < n:
+            v = vp[ptr][0]
+            
+            # 在激活等于 v 的元素之前，计算当前最优的 y
+            g = get_max_score()
+            y = max(v, g)
+            cost = m_val + v + y
+            
+            if cost < best3:
+                best3 = cost
+                cnt3 = 1
+            elif cost == best3:
+                cnt3 += 1
+            
+            # 激活所有数值等于 v 的位置
+            nxt = ptr
+            while nxt < n and vp[nxt][0] == v:
+                pos = vp[nxt][1]
+                active[pos] = True
+                sz[pos] = 1
+                if pos % 2 == 0:
+                    mx_odd[pos] = v
+                    mx_even[pos] = 0
+                else:
+                    mx_even[pos] = v
+                    mx_odd[pos] = 0
+                
+                # 检查左右邻居并合并
+                for neighbor in [pos - 1, pos + 1]:
+                    if 0 <= neighbor < n and active[neighbor]:
+                        ra = find(pos)
+                        rb = find(neighbor)
+                        if ra != rb:
+                            # 按大小合并
+                            if sz[ra] < sz[rb]: ra, rb = rb, ra
+                            fa[rb] = ra
+                            sz[ra] += sz[rb]
+                            if mx_odd[rb] > mx_odd[ra]: mx_odd[ra] = mx_odd[rb]
+                            if mx_even[rb] > mx_even[ra]: mx_even[ra] = mx_even[rb]
+                            pos = ra # 更新当前根
+                
+                # 更新根节点的得分到堆
+                root = find(pos)
+                score = min(mx_odd[root], mx_even[root])
+                heapq.heappush(pq, (-score, root))
+                nxt += 1
+            ptr = nxt
+            
+        # 最终比较两种方案
+        ans = min(cost2, best3)
+        ways = 0
+        if ans == cost2: ways += 1
+        if ans == best3: ways += cnt3
+        
+        sys.stdout.write(f"{ans} {ways}\n")
+
+if __name__ == "__main__":
+    solve()
+```
+
+---
+
+### 解读与要点
+
+1.  **并查集的动态维护**：
+    该算法之所以有效，是因为它将问题转化为了“寻找满足条件的连续子段”。并查集可以动态地合并相邻节点，并在 $O(\alpha(n))$ 时间内维护子段内奇偶位置的最大值。
+
+2.  **堆的懒惰删除 (Lazy Deletion)**：
+    当两个集合合并时，旧的根节点的得分信息依然留在堆中。我们不需要手动去堆里寻找并删除它，而是在 `get_max_score` 时，通过检查 `find(r) == r` 和 `score` 的一致性来剔除失效的信息。这是处理动态优先级问题的常见高效手段。
+
+3.  **计算 y 的逻辑**：
+    $y = \max(v, g)$。这里 $v$ 是当前遍历到的值（作为 $x$），而 $g$ 是之前已经激活（比 $v$ 更大或相等）的元素所形成的连通分量中，能够提供的最大“奇偶对”中的较小值。
+
+4.  **Python 性能提示**：
+    *   在处理 $N=10^5$ 规模且包含大量堆操作和并查集操作的题目时，CPython 可能会超时。建议使用 **PyPy 3**，它对这类循环和对象操作有极大的加速。
+    *   使用 `sys.stdin.read().split()` 是一次性读取所有数据的最高效方式。
+
+
+
+## C26L:Stack Sort
+
+http://poj.openjudge.cn/practice/C26L/
+
+
+
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int n;
+        cin >> n;
+
+        vector<vector<int>> st(n + 1);
+        vector<int> pos(n + 1);
+
+        for (int x = 1; x <= n; x++) {
+            int a;
+            cin >> a;
+            st[a].push_back(x);
+            pos[x] = a;
+        }
+
+        vector<int> ans;
+        ans.reserve(6 * n + 5);
+
+        auto operate = [&](int i) {
+            int k = (int)st[i].size();
+            int x = st[i].back();
+            st[i].pop_back();
+            st[k].push_back(x);
+            pos[x] = k;
+            ans.push_back(i);
+        };
+
+        auto make_room = [&](int k) {
+            if (k <= 1) return;
+
+            if ((int)st[k].size() <= k - 2) return;
+
+            int j = k;
+            while (j >= 2 && (int)st[j].size() == j - 1) {
+                j--;
+            }
+
+            // 对有解数据，j 一定不会降到 1。
+            // 否则意味着在 1 进栈 1 之前必须先把别的元素放进栈 1，最终无解。
+            for (int x = j + 1; x <= k; x++) {
+                operate(x);
+            }
+        };
+
+        // Phase 1: 如果元素 1 不在栈 1，先安全地把它送到栈 1。
+        if (pos[1] != 1) {
+            int p = pos[1];
+
+            while (pos[1] != 1) {
+                int k = (int)st[p].size();
+
+                if (k > 1) {
+                    make_room(k);
+                }
+
+                operate(p);
+            }
+        }
+
+        // Phase 2: 把所有非 1 号栈的元素收集到栈 1。
+        // 此时栈 1 的底部一定是元素 1。
+        for (int i = 2; i <= n; i++) {
+            while (!st[i].empty()) {
+                int k = (int)st[i].size();
+
+                operate(i);
+
+                if (k > 1) {
+                    operate(k);
+                }
+            }
+        }
+
+        // Phase 3: 当前所有元素都在栈 1，且元素 1 在栈底。
+        // 先把除 1 外的元素弹出去，记录每个元素去了哪个栈。
+        vector<int> where(n + 1, 0);
+
+        while ((int)st[1].size() > 1) {
+            int k = (int)st[1].size();
+            int x = st[1].back();
+
+            operate(1);
+            where[x] = k;
+        }
+
+        // 按 2,3,...,n 的顺序把它们放回栈 1。
+        // 这样栈 1 从底到顶变成 1,2,3,...,n。
+        for (int x = 2; x <= n; x++) {
+            operate(where[x]);
+        }
+
+        // 最后从栈 1 分发到对应编号的栈。
+        while ((int)st[1].size() > 1) {
+            operate(1);
+        }
+
+        cout << ans.size() << '\n';
+        for (int i = 0; i < (int)ans.size(); i++) {
+            if (i) cout << ' ';
+            cout << ans[i];
+        }
+        cout << '\n';
+    }
+
+    return 0;
+}
+```
+
+
+
+这是一个关于**栈排序（Stack Sorting）**的构造算法题。题目给定 $n$ 个栈，初始时每个栈中可能有一些元素。我们的目标是通过特定的移动操作，使得最终元素 $i$ 位于栈 $i$ 中。
+
+### 题目逻辑与算法步骤解读
+
+这道题的操作规则非常特殊：调用 `operate(i)` 时，会将栈 $i$ 顶部的元素弹出，并压入栈 $k$ 中，其中 **$k$ 是弹出前栈 $i$ 的高度**。
+
+代码通过三个阶段（Phases）构造解：
+
+1.  **第一阶段：送 1 归位**
+    *   我们要把元素 1 送到栈 1 的底部。
+    *   如果元素 1 当前在栈 $p$ 且不在底部（高度 $>1$），我们需要腾出空间（`make_room`），然后不断执行 `operate(p)`。
+    *   根据规则，当栈 $p$ 的高度为 1 时，弹出的元素会进入栈 1。
+
+2.  **第二阶段：全员集合到栈 1**
+    *   通过巧妙的二次移动，将所有非 1 元素都收集到栈 1。
+    *   如果元素在高度为 $k$ 的栈 $i$ 顶部：
+        *   若 $k=1$，执行 `operate(i)`，元素直接去栈 1。
+        *   若 $k>1$，执行 `operate(i)` 元素去栈 $k$；此时栈 $k$ 的高度变为 1，紧接着执行 `operate(k)`，元素就会去栈 1。
+
+3.  **第三阶段：栈内排序与分发**
+    *   现在所有元素都在栈 1，底部是 1。
+    *   由于栈 1 的高度在不断变化，我们先将元素 $2 \sim n$ 依次弹出到临时栈中，并记录它们去的栈编号 `where[x]`。
+    *   按照 $2, 3, \dots, n$ 的顺序将它们导回栈 1，此时栈 1 从底到顶变为 $1, 2, 3, \dots, n$。
+    *   最后，再次依次弹出栈 1 顶部的元素。由于弹出元素 $i$ 时，栈 1 的高度正好是 $i$，所以元素 $i$ 会准确进入栈 $i$。
+
+---
+
+### Python 代码实现
+
+```python
+import sys
+
+def solve():
+    # 使用 sys.stdin.read().split() 快速读取大数据
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    it = iter(input_data)
+    
+    t_cases = int(next(it))
+    for _ in range(t_cases):
+        n = int(next(it))
+        # st[i] 存储第 i 个栈的元素
+        st = [[] for _ in range(n + 1)]
+        # pos[x] 存储元素 x 当前所在的栈编号
+        pos = [0] * (n + 1)
+        
+        for x in range(1, n + 1):
+            a_idx = int(next(it))
+            st[a_idx].append(x)
+            pos[x] = a_idx
+            
+        ans = []
+        
+        def operate(i):
+            """执行题目定义的移动操作"""
+            k = len(st[i])
+            if k == 0: return # 防护
+            x = st[i].pop()
+            # 移动到高度为 k 的栈
+            st[k].append(x)
+            pos[x] = k
+            ans.append(i)
+
+        def make_room(k):
+            """当栈 k 太满时，通过循环移动腾出空间"""
+            if k <= 1: return
+            # 如果栈 k 还有多余位置，不需要操作
+            if len(st[k]) <= k - 2: return
+            
+            j = k
+            # 寻找下方第一个没满的栈
+            while j >= 2 and len(st[j]) == j - 1:
+                j -= 1
+            # 依次向下挪动一位
+            for x in range(j + 1, k + 1):
+                operate(x)
+
+        # Phase 1: 确保元素 1 在栈 1 的最底部
+        if pos[1] != 1:
+            p = pos[1]
+            while pos[1] != 1:
+                k_size = len(st[p])
+                if k_size > 1:
+                    make_room(k_size)
+                operate(p)
+
+        # Phase 2: 将所有其他元素收集到栈 1
+        for i in range(2, n + 1):
+            while st[i]:
+                k_size = len(st[i])
+                operate(i)
+                if k_size > 1:
+                    operate(k_size)
+
+        # Phase 3: 在栈 1 内部实现 1,2,3...n 的排序
+        where = [0] * (n + 1)
+        while len(st[1]) > 1:
+            k_size = len(st[1])
+            top_val = st[1][-1]
+            operate(1)
+            where[top_val] = k_size
+        
+        # 按照 2..n 的顺序导回栈 1
+        for x in range(2, n + 1):
+            operate(where[x])
+            
+        # 最后分发：依次弹出，高度为 i 的元素会进入栈 i
+        while len(st[1]) > 1:
+            operate(1)
+            
+        # 输出操作总数和具体步骤
+        sys.stdout.write(f"{len(ans)}\n")
+        if ans:
+            sys.stdout.write(" ".join(map(str, ans)) + "\n")
+        else:
+            sys.stdout.write("\n")
+
+if __name__ == "__main__":
+    solve()
+```
+
+---
+
+### 关键点总结
+
+1.  **规则利用**：本题的关键是意识到“弹出位置取决于当前栈的高度”。Phase 2 的双跳（`operate(i)` 然后 `operate(k)`）是核心技巧。
+2.  **构造思想**：当直接移动很困难时，先将所有元素汇聚到一个中转站（栈 1），在已知顺序的情况下再分发。
+3.  **Python 效率**：
+    *   使用 `sys.stdin.read().split()` 避免频繁的 IO 阻塞。
+    *   使用 `sys.stdout.write` 代替 `print` 以加快输出。
+    *   虽然 Python 性能不如 C++，但由于该算法的时间复杂度是线性的 $O(N)$，且操作步数限制在 $6N$ 左右，因此在合理的时限内完全可以运行。
+4.  **边界处理**：`make_room` 函数保证了在移动过程中不会因为目标栈已满而导致死锁或非法操作。
+
+
+
+## C26M:Zuma 2
+
+http://poj.openjudge.cn/practice/C26M/
+
+
+
+```C++
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int n;
+        cin >> n;
+
+        int N = 2 * n;
+
+        vector<int> a(N + 1), pos(N + 1);
+
+        for (int i = 1; i <= N; i++) {
+            cin >> a[i];
+            pos[a[i]] = i;
+        }
+
+        int E = N - 1;
+
+        vector<int> head(N + 1, -1);
+        vector<int> to(2 * E), nxt(2 * E);
+        int ec = 0;
+
+        auto add_edge = [&](int u, int v) {
+            to[ec] = v;
+            nxt[ec] = head[u];
+            head[u] = ec++;
+        };
+
+        for (int i = 0; i < E; i++) {
+            int u, v;
+            cin >> u >> v;
+            add_edge(u, v);
+            add_edge(v, u);
+        }
+
+        bool ok = true;
+
+        vector<int> parent(N + 1, 0);
+        vector<int> order;
+        order.reserve(N);
+
+        vector<int> st;
+        st.reserve(N);
+
+        parent[1] = -1;
+        st.push_back(1);
+
+        while (!st.empty()) {
+            int u = st.back();
+            st.pop_back();
+
+            order.push_back(u);
+
+            for (int e = head[u]; e != -1; e = nxt[e]) {
+                int v = to[e];
+
+                if (v == parent[u]) continue;
+                if (parent[v] != 0) continue;
+
+                parent[v] = u;
+                st.push_back(v);
+            }
+        }
+
+        if ((int)order.size() != N) {
+            ok = false;
+        }
+
+        vector<unsigned char> need(N + 1, 0);
+        vector<int> mate(N + 1, 0);
+
+        if (ok) {
+            for (int idx = N - 1; idx >= 0 && ok; idx--) {
+                int u = order[idx];
+
+                int cnt = 0;
+                int child = 0;
+
+                for (int e = head[u]; e != -1; e = nxt[e]) {
+                    int v = to[e];
+
+                    if (parent[v] == u && need[v]) {
+                        cnt++;
+                        child = v;
+
+                        if (cnt > 1) break;
+                    }
+                }
+
+                if (cnt > 1) {
+                    ok = false;
+                } else if (cnt == 1) {
+                    mate[u] = child;
+                    mate[child] = u;
+                    need[u] = 0;
+                } else {
+                    need[u] = 1;
+                }
+            }
+
+            if (need[1]) {
+                ok = false;
+            }
+        }
+
+        if (ok) {
+            vector<int> stk;
+            stk.reserve(N);
+
+            for (int i = 1; i <= N && ok; i++) {
+                int x = a[i];
+                int y = mate[x];
+
+                int j = pos[y];
+
+                if (j > i) {
+                    stk.push_back(j);
+                } else {
+                    if (stk.empty() || stk.back() != i) {
+                        ok = false;
+                    } else {
+                        stk.pop_back();
+                    }
+                }
+            }
+
+            if (!stk.empty()) {
+                ok = false;
+            }
+        }
+
+        cout << (ok ? "Yes" : "No") << '\n';
+    }
+
+    return 0;
+}
+```
+
+
+
+这是一个关于**树的完美匹配（Perfect Matching）**与**括号序列验证**的综合算法题。
+
+### 题目逻辑解读
+
+1.  **树的完美匹配**：
+    *   题目给出了一个拥有 $2n$ 个节点的树。在树中，如果存在完美匹配，那么这个匹配是**唯一**的。
+    *   代码通过“自底向上”的贪心策略寻找匹配：从叶子节点开始，如果一个节点没有被匹配，它必须与其父节点匹配。如果一个节点有多个未匹配的子节点，或者根节点最后未被匹配，则该树不存在完美匹配。
+
+2.  **序列合法性验证**：
+    *   题目给出了一个全排列序列 $a$。
+    *   如果树存在唯一完美匹配，我们将每一对匹配的节点 $(u, v)$ 看作是一对**括号**。
+    *   合法的序列必须满足：匹配的两个节点在序列中的排布必须符合**括号嵌套规则**。例如，如果节点 $1$ 和 $2$ 匹配，$3$ 和 $4$ 匹配，序列 `[1, 3, 4, 2]` 是合法的（嵌套），而 `[1, 3, 2, 4]` 是不合法的（交叉）。
+    *   代码使用一个**栈（Stack）**来验证这种嵌套关系。
+
+---
+
+### Python 代码实现
+
+Python 处理大规模树结构时，需要注意递归深度。这里采用迭代（栈）方式模拟 DFS。
+
+```python
+import sys
+
+def solve():
+    # 使用 generator 快速读取输入，应对大数据量
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    it = iter(input_data)
+    
+    T_str = next(it, None)
+    if T_str is None: return
+    T = int(T_str)
+    
+    for _ in range(T):
+        n = int(next(it))
+        N = 2 * n
+        
+        # 读取排列 a，并记录每个值出现的位置 pos
+        a = [0] * (N + 1)
+        pos = [0] * (N + 1)
+        for i in range(1, N + 1):
+            val = int(next(it))
+            a[i] = val
+            pos[val] = i
+            
+        # 构建邻接表
+        adj = [[] for _ in range(N + 1)]
+        for _ in range(N - 1):
+            u, v = int(next(it)), int(next(it))
+            adj[u].append(v)
+            adj[v].append(u)
+            
+        # 1. 迭代 DFS 获取树的遍历顺序 (order) 和父节点关系
+        parent = [0] * (N + 1)
+        order = []
+        stack = [1]
+        parent[1] = -1 # 根节点的父节点标记
+        
+        while stack:
+            u = stack.pop()
+            order.append(u)
+            for v in adj[u]:
+                if parent[v] == 0:
+                    parent[v] = u
+                    stack.append(v)
+        
+        if len(order) != N:
+            print("No")
+            continue
+
+        # 2. 自底向上贪心寻找唯一完美匹配
+        ok = True
+        need = [False] * (N + 1)
+        mate = [0] * (N + 1)
+        
+        # 逆序遍历 order 即为从叶子向根的方向
+        for i in range(N - 1, -1, -1):
+            u = order[i]
+            unmatched_children = []
+            for v in adj[u]:
+                if parent[v] == u and need[v]:
+                    unmatched_children.append(v)
+            
+            if len(unmatched_children) > 1:
+                ok = False
+                break
+            elif len(unmatched_children) == 1:
+                v = unmatched_children[0]
+                mate[u] = v
+                mate[v] = u
+                need[u] = False # u 已经匹配，不需要父节点了
+            else:
+                need[u] = True # u 没被子节点匹配，需要父节点来匹配
+        
+        # 如果根节点 1 还需要匹配，说明匹配失败
+        if need[1]:
+            ok = False
+            
+        # 3. 使用栈验证匹配对在序列 a 中的嵌套关系
+        if ok:
+            stk = []
+            for i in range(1, N + 1):
+                u = a[i]
+                v = mate[u]
+                
+                # 如果 mate 的位置在后面，说明 u 是左括号
+                if pos[v] > i:
+                    stk.append(pos[v])
+                else:
+                    # 如果 mate 的位置在前面，u 是右括号，必须匹配栈顶
+                    if not stk or stk[-1] != i:
+                        ok = False
+                        break
+                    stk.pop()
+            
+            if stk:
+                ok = False
+                
+        print("Yes" if ok else "No")
+
+if __name__ == "__main__":
+    solve()
+```
+
+---
+
+### 关键点解析
+
+1.  **输入效率**：
+    *   使用了 `sys.stdin.read().split()` 和 `iter()`。在处理包含大量整数（如 $2 \times 10^5$ 个）的题目时，这种方式比多次 `input()` 快得多。
+
+2.  **树的遍历 (Order)**：
+    *   代码先通过一个 DFS 栈得到 `order` 数组。`order` 是从根向下的。
+    *   通过 `reversed(order)`，我们能确保在处理节点 `u` 时，它的所有子节点 `v` 已经处理完毕。这是典型的**树形动态规划**或**贪心算法**的预处理方式。
+
+3.  **匹配逻辑**：
+    *   `need[v]` 表示节点 `v` 还没找到匹配的对象。
+    *   如果节点 `u` 有一个需要匹配的子节点 `v`，那么 `u` 和 `v` 必须凑成一对。
+    *   如果有两个以上的子节点都需要 `u` 匹配，根据“一个节点只能匹配一个”的规则，这棵树就没救了，直接 `ok = False`。
+
+4.  **括号嵌套验证**：
+    *   我们将匹配对 $(u, v)$ 中先出现的那个记为“左括号”，后出现的记为“右括号”。
+    *   左括号入栈，存储它期望的右括号位置。
+    *   当遇到右括号时，它必须正好对应当前的栈顶。如果不是（说明发生了交叉），则序列不合法。
+
+### 复杂度分析
+
+*   **时间复杂度**：$O(N)$。构图、DFS 遍历、贪心匹配、栈验证全都是线性时间的。
+*   **空间复杂度**：$O(N)$。用于存储邻接表、父节点关系、匹配信息和验证栈。
 
 
 

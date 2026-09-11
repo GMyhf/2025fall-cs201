@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                   
+>                                                                                                                                                                                                                      
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                   
+>                                                                                                                                                                                                                      
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                   
+>                                                                                                                                                                                                                      
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                   
+>                                                                                                                                                                                                                      
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                   
+>                                                                                                                                                                                                                      
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -4113,6 +4113,392 @@ int main() {
     return 0;
 }
 
+```
+
+
+
+增加两个题目
+
+05444:堆栈基本操作
+
+http://cs101.openjudge.cn/practice/05444/
+
+
+
+## M03882:中缀表达式的值
+
+http://cs101.openjudge.cn/practice/03882/
+
+人们熟悉的四则运算表达式称为中缀表达式，例如(23+34*45/(5+6+7))。在程序设计语言中，可以利用堆栈的方法把中缀表达式转换成保值的后缀表达式（又称逆波兰表示法），并最终变为计算机可以直接执行的指令，得到表达式的值。
+
+给定一个中缀表达式，编写程序，利用堆栈的方法，计算表达式的值。
+
+**输入**
+
+第一行为测试数据的组数N
+接下来的N行，每行是一个中缀表达式。表达式中只含数字、四则运算符和圆括号，操作数都是正整数，数和运算符、括号之间没有空格。中缀表达式的字符串长度不超过600。
+
+**输出**
+
+对每一组测试数据输出一行，为表达式的值
+
+样例输入
+
+```
+3
+3+5*8
+(3+5)*8
+(23+34*45/(5+6+7))
+```
+
+样例输出
+
+```
+43
+64
+108
+```
+
+提示
+
+注意：运算过程均为整数运算（除法运算'/'即按照C++定义的int除以int的结果，测试数据不会出现除数为0的情况），输出结果也为整数（可能为负）。
+中间计算结果可能为负。
+
+
+
+这是一道经典的使用**栈（Stack）**求解中缀表达式的问题。
+
+**算法思路（双栈法）**
+
+我们可以维护两个栈：
+
+1. **操作数栈（Numbers Stack）**：存放数值。
+2. **运算符栈（Operators Stack）**：存放运算符 `+`、`-`、`*`、`/` 以及左括号 `(`。
+
+**处理逻辑：**
+
+1. **遇到数字**：连续读取完整的连续数字，组合成一个整数压入操作数栈。
+2. **遇到左括号 `(`**：直接压入运算符栈。
+3. **遇到右括号 `)`**：不断弹出运算符栈顶的运算符进行计算，直到遇到左括号 `(` 为止，最后将 `(` 弹出。
+4. **遇到四则运算符**：当栈顶运算符的优先级**大于或等于**当前运算符时，先弹出栈顶运算符并计算，循环此操作；最后将当前运算符压入栈中。
+   - 优先级：`*`, `/` 为 2；`+`, `-` 为 1；栈内的 `(` 优先级设为最低（0），避免被提前弹出。
+5. **遍历结束后**：将运算符栈中剩余的运算符依次弹出并计算。
+6. **注意点**：题目提示中指出除法按照 C++ 的整数除法计算（即**向零取整**截断）。在 Python 中，`//` 是向下取整（如 `-5 // 2 == -3`），因此在 Python 中模拟 C++ 整数除法需要使用 `int(a / b)`。
+
+---
+
+**Python 代码**
+
+WA.py 提交返回 Wrong Answer
+
+```python
+import sys
+
+def precedence(op):
+    if op in ('+', '-'):
+        return 1
+    if op in ('*', '/'):
+        return 2
+    return 0
+
+def apply_op(op, b, a):
+    """注意操作数的顺序：先弹出的是 b，后弹出的是 a，执行 a op b"""
+    if op == '+':
+        return a + b
+    elif op == '-':
+        return a - b
+    elif op == '*':
+        return a * b
+    elif op == '/':
+        # 使用 int(a / b) 保证向零取整（符合 C++ 整数除法规则）
+        return int(a / b)
+    return 0
+
+def evaluate(expr):
+    num_stack = []
+    op_stack = []
+    
+    i = 0
+    n = len(expr)
+    while i < n:
+        ch = expr[i]
+        
+        if ch.isdigit():
+            # 连续解析完整的正整数
+            val = 0
+            while i < n and expr[i].isdigit():
+                val = val * 10 + int(expr[i])
+                i += 1
+            num_stack.append(val)
+            continue  # 跳过末尾的 i += 1
+            
+        elif ch == '(':
+            op_stack.append(ch)
+            
+        elif ch == ')':
+            # 弹出计算直到遇到左括号
+            while op_stack and op_stack[-1] != '(':
+                op = op_stack.pop()
+                b = num_stack.pop()
+                a = num_stack.pop()
+                num_stack.append(apply_op(op, b, a))
+            op_stack.pop()  # 弹出 '('
+            
+        elif ch in ('+', '-', '*', '/'):
+            # 弹出所有优先级大于等于当前运算符的栈顶运算符
+            while op_stack and precedence(op_stack[-1]) >= precedence(ch):
+                op = op_stack.pop()
+                b = num_stack.pop()
+                a = num_stack.pop()
+                num_stack.append(apply_op(op, b, a))
+            op_stack.append(ch)
+            
+        i += 1
+        
+    # 处理剩余的运算符
+    while op_stack:
+        op = op_stack.pop()
+        b = num_stack.pop()
+        a = num_stack.pop()
+        num_stack.append(apply_op(op, b, a))
+        
+    return num_stack[-1]
+
+def main():
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    
+    n = int(input_data[0])
+    for idx in range(1, n + 1):
+        expr = input_data[idx]
+        print(evaluate(expr))
+
+if __name__ == '__main__':
+    main()
+```
+
+---
+
+
+
+### C++ 代码
+
+ac.cpp
+
+```cpp
+#include <iostream>
+#include <string>
+#include <stack>
+#include <cctype>
+
+using namespace std;
+
+// 获取运算符优先级
+int precedence(char op) {
+    if (op == '+' || op == '-') return 1;
+    if (op == '*' || op == '/') return 2;
+    return 0; // '(' 的优先级最低
+}
+
+// 执行一步双目运算
+int applyOp(char op, int b, int a) {
+    switch (op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return a / b; // C++ 默认就是向零取整的整数除法
+    }
+    return 0;
+}
+
+// 计算中缀表达式
+int evaluate(const string& expr) {
+    stack<int> numStack;
+    stack<char> opStack;
+    
+    int n = expr.length();
+    for (int i = 0; i < n; ++i) {
+        char ch = expr[i];
+        
+        if (isdigit(ch)) {
+            // 解析多位连续数字
+            int val = 0;
+            while (i < n && isdigit(expr[i])) {
+                val = val * 10 + (expr[i] - '0');
+                i++;
+            }
+            numStack.push(val);
+            i--; // 因为循环末尾有 ++i，所以这里回退一位
+        } else if (ch == '(') {
+            opStack.push(ch);
+        } else if (ch == ')') {
+            while (!opStack.empty() && opStack.top() != '(') {
+                char op = opStack.top(); opStack.pop();
+                int b = numStack.top(); numStack.pop();
+                int a = numStack.top(); numStack.pop();
+                numStack.push(applyOp(op, b, a));
+            }
+            if (!opStack.empty()) {
+                opStack.pop(); // 弹出 '('
+            }
+        } else if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
+            while (!opStack.empty() && precedence(opStack.top()) >= precedence(ch)) {
+                char op = opStack.top(); opStack.pop();
+                int b = numStack.top(); numStack.pop();
+                int a = numStack.top(); numStack.pop();
+                numStack.push(applyOp(op, b, a));
+            }
+            opStack.push(ch);
+        }
+    }
+    
+    // 计算栈中剩余的运算符
+    while (!opStack.empty()) {
+        char op = opStack.top(); opStack.pop();
+        int b = numStack.top(); numStack.pop();
+        int a = numStack.top(); numStack.pop();
+        numStack.push(applyOp(op, b, a));
+    }
+    
+    return numStack.top();
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    
+    int t;
+    if (cin >> t) {
+        while (t--) {
+            string expr;
+            cin >> expr;
+            cout << evaluate(expr) << "\n";
+        }
+    }
+    return 0;
+}
+```
+
+
+
+
+
+C++ 代码能够 AC 而 Python 代码被判 WA（Wrong Answer），根本原因在于 **C++ 的 32 位整型溢出截断** 以及 **Python 浮点除法的精度丢失**：
+
+**核心原因分析**
+
+1. **32 位整数溢出（主要原因）**：
+   - 题目中说明表达式长度可达 **600**。在长表达式中，连续的加法或乘法很容易超过 32 位有符号整数的最大值（$2^{31}-1 \approx 2.14 \times 10^9$）。
+   - C++ 中使用的 `int` 是 32 位的，运算溢出时会自动按 32 位补码截断（Wrap-around，例如 $100000 \times 100000 = 1410065408$）。后台的判题标程正是用 C++ `int` 实现的，因此判题期望的输出是**溢出截断后的值**。
+   - 而 Python 具有**任意精度大整数**特性，不会溢出截断，算出来的是真实的数学值，从而导致与评测系统期望的 32 位溢出结果不一致，判为 WA。
+
+2. **浮点除法 `int(a / b)` 丢失精度**：
+   - 原代码中 `int(a / b)` 会先将整数转为 Python 的 64 位双精度浮点数（float）。
+   - 浮点数的有效精度仅有 53 位二进制数（约 15~17 位十进制数）。若中间结果较大，转为 float 会直接丢失低位精度；若数值超过 $1.8 \times 10^{308}$ 还会抛出 `OverflowError`。
+   - 正确的做法是使用**纯整数运算**实现向零取整除法，避免浮点数介入。
+
+---
+
+### AC 修正后的 Python 代码
+
+为了与 C++ 评测标准完全保持一致，我们需要用位运算 `& 0xFFFFFFFF` 将每一步运算（包括加、减、乘、除以及解析大数）严格约束在 **32 位有符号整数** 范围内：
+
+Ac.py
+
+```python
+import sys
+
+def to_int32(x):
+    """模拟 C++ 32 位有符号整型的溢出截断"""
+    x = x & 0xFFFFFFFF
+    if x >= 0x80000000:
+        x -= 0x100000000
+    return x
+
+def precedence(op):
+    if op in ('+', '-'):
+        return 1
+    if op in ('*', '/'):
+        return 2
+    return 0
+
+def apply_op(op, b, a):
+    """在 32 位整型范围内进行运算"""
+    if op == '+':
+        return to_int32(a + b)
+    elif op == '-':
+        return to_int32(a - b)
+    elif op == '*':
+        return to_int32(a * b)
+    elif op == '/':
+        # 纯整数向零取整除法（避免转 float 造成精度丢失）
+        res = abs(a) // abs(b)
+        if (a < 0) ^ (b < 0):
+            res = -res
+        return to_int32(res)
+    return 0
+
+def evaluate(expr):
+    num_stack = []
+    op_stack = []
+    
+    i = 0
+    n = len(expr)
+    while i < n:
+        ch = expr[i]
+        
+        if ch.isdigit():
+            val = 0
+            while i < n and expr[i].isdigit():
+                # 解析数字时同样按 C++ 32 位 int 溢出规则处理
+                val = to_int32(val * 10 + (ord(expr[i]) - ord('0')))
+                i += 1
+            num_stack.append(val)
+            continue
+            
+        elif ch == '(':
+            op_stack.append(ch)
+            
+        elif ch == ')':
+            while op_stack and op_stack[-1] != '(':
+                op = op_stack.pop()
+                b = num_stack.pop()
+                a = num_stack.pop()
+                num_stack.append(apply_op(op, b, a))
+            if op_stack:
+                op_stack.pop()  # 弹出 '('
+            
+        elif ch in ('+', '-', '*', '/'):
+            while op_stack and precedence(op_stack[-1]) >= precedence(ch):
+                op = op_stack.pop()
+                b = num_stack.pop()
+                a = num_stack.pop()
+                num_stack.append(apply_op(op, b, a))
+            op_stack.append(ch)
+            
+        i += 1
+        
+    while op_stack:
+        op = op_stack.pop()
+        b = num_stack.pop()
+        a = num_stack.pop()
+        num_stack.append(apply_op(op, b, a))
+        
+    return num_stack[-1]
+
+def main():
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    
+    n = int(input_data[0])
+    for idx in range(1, n + 1):
+        expr = input_data[idx]
+        print(evaluate(expr))
+
+if __name__ == '__main__':
+    main()
 ```
 
 

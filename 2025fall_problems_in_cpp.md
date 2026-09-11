@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-05-18 23:01 GMT+8*
+*Updated 2026-09-11 10:53 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                
+>                                                                                                                                                                                                                   
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                
+>                                                                                                                                                                                                                   
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                
+>                                                                                                                                                                                                                   
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                
+>                                                                                                                                                                                                                   
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                
+>                                                                                                                                                                                                                   
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -4870,6 +4870,267 @@ int main()
     return 0;  
 }
 ```
+
+
+
+## M05443:兔子与樱花
+
+Dijkstra, Floyd-Warshall,http://cs101.openjudge.cn/practice/05443
+
+很久很久之前，森林里住着一群兔子。有一天，兔子们希望去赏樱花，但当他们到了上野公园门口却忘记了带地图。现在兔子们想求助于你来帮他们找到公园里的最短路。
+
+**输入**
+
+输入分为三个部分。
+第一个部分有P+1行（P<30），第一行为一个整数P，之后的P行表示上野公园的地点, 字符串长度不超过20。
+第二个部分有Q+1行（Q<50），第一行为一个整数Q，之后的Q行每行分别为两个字符串与一个整数，表示这两点有直线的道路，并显示二者之间的矩离（单位为米）。
+第三个部分有R+1行（R<20），第一行为一个整数R，之后的R行每行为两个字符串，表示需要求的路线。
+
+**输出**
+
+输出有R行，分别表示每个路线最短的走法。其中两个点之间，用->(矩离)->相隔。
+
+样例输入
+
+```
+6
+Ginza
+Sensouji
+Shinjukugyoen
+Uenokouen
+Yoyogikouen
+Meijishinguu
+6
+Ginza Sensouji 80
+Shinjukugyoen Sensouji 40
+Ginza Uenokouen 35
+Uenokouen Shinjukugyoen 85
+Sensouji Meijishinguu 60
+Meijishinguu Yoyogikouen 35
+2
+Uenokouen Yoyogikouen
+Meijishinguu Meijishinguu
+```
+
+样例输出
+
+```
+Uenokouen->(35)->Ginza->(80)->Sensouji->(60)->Meijishinguu->(35)->Yoyogikouen
+Meijishinguu
+```
+
+
+
+### Floyd-Warshall. C++代码
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_map>
+
+using namespace std;
+
+const int INF = 1e9;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int P;
+    if (!(cin >> P)) return 0;
+
+    unordered_map<string, int> name2id;
+    vector<string> id2name(P);
+    for (int i = 0; i < P; ++i) {
+        cin >> id2name[i];
+        name2id[id2name[i]] = i;
+    }
+
+    vector<vector<int>> dist(P, vector<int>(P, INF));
+    vector<vector<int>> direct_weight(P, vector<int>(P, INF));
+    vector<vector<int>> nxt(P, vector<int>(P, -1));
+
+    for (int i = 0; i < P; ++i) {
+        dist[i][i] = 0;
+        nxt[i][i] = i;
+    }
+
+    int Q;
+    cin >> Q;
+    for (int i = 0; i < Q; ++i) {
+        string u_name, v_name;
+        int w;
+        cin >> u_name >> v_name >> w;
+        int u = name2id[u_name];
+        int v = name2id[v_name];
+
+        if (w < dist[u][v]) {
+            dist[u][v] = dist[v][u] = w;
+            direct_weight[u][v] = direct_weight[v][u] = w;
+            nxt[u][v] = v; // 从 u 到 v 的下一步走 v
+            nxt[v][u] = u; // 从 v 到 u 的下一步走 u
+        }
+    }
+
+    // Floyd-Warshall 核心三层循环
+    for (int k = 0; k < P; ++k) {
+        for (int i = 0; i < P; ++i) {
+            for (int j = 0; j < P; ++j) {
+                if (dist[i][k] != INF && dist[k][j] != INF) {
+                    if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                        // 从 i 到 j 的下一步，改为走从 i 到 k 的下一步
+                        nxt[i][j] = nxt[i][k];
+                    }
+                }
+            }
+        }
+    }
+
+    int R;
+    cin >> R;
+    while (R--) {
+        string s_name, e_name;
+        cin >> s_name >> e_name;
+        int start = name2id[s_name];
+        int end = name2id[e_name];
+
+        // 起点与终点相同
+        if (start == end) {
+            cout << s_name << "\n";
+            continue;
+        }
+
+        // 利用 nxt 数组正向重构路径
+        vector<int> path;
+        int curr = start;
+        path.push_back(curr);
+        while (curr != end) {
+            curr = nxt[curr][end];
+            path.push_back(curr);
+        }
+
+        // 格式化输出
+        cout << id2name[path[0]];
+        for (size_t i = 0; i < path.size() - 1; ++i) {
+            int u = path[i], v = path[i + 1];
+            cout << "->(" << direct_weight[u][v] << ")->" << id2name[v];
+        }
+        cout << "\n";
+    }
+
+    return 0;
+}
+```
+
+
+
+### Dijkstra. C++代码
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+const int INF = 1e9;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int P;
+    if (!(cin >> P)) return 0;
+
+    unordered_map<string, int> name2id;
+    vector<string> id2name(P);
+    for (int i = 0; i < P; ++i) {
+        cin >> id2name[i];
+        name2id[id2name[i]] = i;
+    }
+
+    // 使用邻接矩阵存储边权（方便处理重边）
+    vector<vector<int>> graph(P, vector<int>(P, INF));
+    for (int i = 0; i < P; ++i) graph[i][i] = 0;
+
+    int Q;
+    cin >> Q;
+    for (int i = 0; i < Q; ++i) {
+        string u_name, v_name;
+        int w;
+        cin >> u_name >> v_name >> w;
+        int u = name2id[u_name];
+        int v = name2id[v_name];
+        // 保留最小权重
+        if (w < graph[u][v]) {
+            graph[u][v] = graph[v][u] = w;
+        }
+    }
+
+    int R;
+    cin >> R;
+    while (R--) {
+        string s_name, e_name;
+        cin >> s_name >> e_name;
+        int start = name2id[s_name];
+        int end = name2id[e_name];
+
+        // 起点与终点相同
+        if (start == end) {
+            cout << s_name << "\n";
+            continue;
+        }
+
+        // Dijkstra 求解
+        vector<int> dist(P, INF);
+        vector<int> prev(P, -1);
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+
+        dist[start] = 0;
+        pq.push({0, start});
+
+        while (!pq.empty()) {
+            auto [d, u] = pq.top();
+            pq.pop();
+
+            if (d > dist[u]) continue;
+            if (u == end) break;
+
+            for (int v = 0; v < P; ++v) {
+                if (graph[u][v] != INF && dist[u] + graph[u][v] < dist[v]) {
+                    dist[v] = dist[u] + graph[u][v];
+                    prev[v] = u;
+                    pq.push({dist[v], v});
+                }
+            }
+        }
+
+        // 从终点向前回溯路径
+        vector<int> path;
+        for (int curr = end; curr != -1; curr = prev[curr]) {
+            path.push_back(curr);
+        }
+        reverse(path.begin(), path.end());
+
+        // 格式化输出
+        cout << id2name[path[0]];
+        for (size_t i = 0; i < path.size() - 1; ++i) {
+            int u = path[i], v = path[i + 1];
+            cout << "->(" << graph[u][v] << ")->" << id2name[v];
+        }
+        cout << "\n";
+    }
+
+    return 0;
+}
+```
+
+
 
 
 

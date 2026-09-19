@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-09-11 10:53 GMT+8*
+*Updated 2026-09-19 09:42 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                      
+>                                                                                                                                                                                                                         
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                      
+>                                                                                                                                                                                                                         
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                      
+>                                                                                                                                                                                                                         
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                      
+>                                                                                                                                                                                                                         
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                      
+>                                                                                                                                                                                                                         
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -15224,36 +15224,135 @@ public:
 
 
 
+## M1401.圆和矩形是否有重叠
+
+math, https://leetcode.cn/problems/circle-and-rectangle-overlapping/
+
+给你一个以 `(radius, xCenter, yCenter)` 表示的圆和一个与坐标轴平行的矩形 `(x1, y1, x2, y2)` ，其中 `(x1, y1)` 是矩形左下角的坐标，而 `(x2, y2)` 是右上角的坐标。
+
+如果圆和矩形有重叠的部分，请你返回 `true` ，否则返回 `false` 。
+
+换句话说，请你检测是否 **存在** 点 `(xi, yi)` ，它既在圆上也在矩形上（两者都包括点落在边界上的情况）。
+
+ 
+
+**示例 1 ：**
+
+![img](https://raw.githubusercontent.com/GMyhf/img1/main/sample_4_1728.png)
+
+```
+输入：radius = 1, xCenter = 0, yCenter = 0, x1 = 1, y1 = -1, x2 = 3, y2 = 1
+输出：true
+解释：圆和矩形存在公共点 (1,0) 。
+```
+
+**示例 2 ：**
+
+```
+输入：radius = 1, xCenter = 1, yCenter = 1, x1 = 1, y1 = -3, x2 = 2, y2 = -1
+输出：false
+```
+
+**示例 3 ：**
+
+![img](https://raw.githubusercontent.com/GMyhf/img1/main/sample_2_1728.png)
+
+```
+输入：radius = 1, xCenter = 0, yCenter = 0, x1 = -1, y1 = 0, x2 = 0, y2 = 1
+输出：true
+```
+
+ 
+
+**提示：**
+
+- `1 <= radius <= 2000`
+- `-104 <= xCenter, yCenter <= 10^4`
+- `-104 <= x1 < x2 <= 10^4`
+- `-104 <= y1 < y2 <= 10^4`
 
 
-## M1680.连接连续二进制数字
 
-bit manipulation, https://leetcode.cn/problems/concatenation-of-consecutive-binary-numbers/
+这道题的核心思路是：**在矩形区域内找到一个距离圆心最近的点 $(x, y)$，然后判断该点到圆心的距离是否小于等于半径 $radius$。**
 
+**思路分析**
 
+由于矩形与坐标轴平行，我们可以将 $x$ 轴和 $y$ 轴**独立**开来看：
 
-思路：记录当前数字的二进制长度即可, 用 `(i & (i - 1)) == 0` 判断 `i` 是否为二的幂次
+1. **在 $x$ 轴上**：
+   - 如果圆心 $xCenter < x_1$，矩形上离圆心最近的点其横坐标为 $x_1$，横向距离差为 $x_1 - xCenter$；
+   - 如果 $x_1 \le xCenter \le x_2$，圆心横坐标在矩形范围内，横向距离差为 $0$；
+   - 如果 $xCenter > x_2$，矩形上离圆心最近的点其横坐标为 $x_2$，横向距离差为 $xCenter - x_2$。
 
-```c++
-#include <bits/stdc++.h>
-using namespace std;
+2. **在 $y$ 轴上**同理：
+   - 如果 $yCenter < y_1$，纵向距离差为 $y_1 - yCenter$；
+   - 如果 $y_1 \le yCenter \le y_2$，纵向距离差为 $0$；
+   - 如果 $yCenter > y_2$，纵向距离差为 $yCenter - y_2$。
 
+矩形内离圆心最近的点到圆心的**欧几里得距离的平方**为：
+$$\text{dist}^2 = dx^2 + dy^2$$
+
+只要 $\text{dist}^2 \le radius^2$，就说明该点在圆内或圆上，圆与矩形存在重叠。
+
+> 也可以利用 C++17 的 `std::clamp` 直接求出最近点坐标：
+> $nx = \text{clamp}(xCenter, x_1, x_2)$
+> $ny = \text{clamp}(yCenter, y_1, y_2)$
+
+---
+
+C++ 代码实现
+
+#### 方法一：直接计算各轴距离差（推荐）
+
+```cpp
 class Solution {
 public:
-    int concatenatedBinary(int n) {
-        int len = 0, ans = 0, mod = 1e9 + 7;
-        for (int i = 1; i <= n; i++) {
-            if ((i & (i - 1)) == 0) {
-                len++;
-            }
-            ans = ((long long)ans << len | i) % mod;
+    bool checkOverlap(int radius, int xCenter, int yCenter, int x1, int y1, int x2, int y2) {
+        int dx = 0;
+        if (xCenter < x1) {
+            dx = x1 - xCenter;
+        } else if (xCenter > x2) {
+            dx = xCenter - x2;
         }
-        return ans;
+
+        int dy = 0;
+        if (yCenter < y1) {
+            dy = y1 - yCenter;
+        } else if (yCenter > y2) {
+            dy = yCenter - y2;
+        }
+
+        return dx * dx + dy * dy <= radius * radius;
     }
 };
 ```
 
-> 用时10min
+#### 方法二：使用 `std::clamp`（代码更简洁）
+
+```cpp
+#include <algorithm>
+
+class Solution {
+public:
+    bool checkOverlap(int radius, int xCenter, int yCenter, int x1, int y1, int x2, int y2) {
+        // 矩形内距离圆心最近的点的坐标 (nx, ny)
+        int nx = std::clamp(xCenter, x1, x2);
+        int ny = std::clamp(yCenter, y1, y2);
+
+        int dx = xCenter - nx;
+        int dy = yCenter - ny;
+
+        return dx * dx + dy * dy <= radius * radius;
+    }
+};
+```
+
+---
+
+**复杂度分析**
+
+- **时间复杂度**：$O(1)$，只需要常数次的算术运算和比较。
+- **空间复杂度**：$O(1)$，只使用了几个整型变量。
 
 
 
@@ -15521,8 +15620,6 @@ public:
 
 bit manipulation, https://leetcode.cn/problems/concatenation-of-consecutive-binary-numbers/
 
-
-
 思路：记录当前数字的二进制长度即可, 用 `(i & (i - 1)) == 0` 判断 `i` 是否为二的幂次
 
 ```cpp
@@ -15543,8 +15640,6 @@ public:
     }
 };
 ```
-
-> 用时10min
 
 
 
@@ -15581,7 +15676,6 @@ int main()
 ```
 
 
->共用时5min
 
 
 

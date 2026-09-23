@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-09-19 09:42 GMT+8*
+*Updated 2026-09-23 09:42 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                         
+>                                                                                                                                                                                                                            
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                         
+>                                                                                                                                                                                                                            
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                         
+>                                                                                                                                                                                                                            
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                         
+>                                                                                                                                                                                                                            
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                         
+>                                                                                                                                                                                                                            
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -15613,6 +15613,120 @@ public:
     }
 };
 ```
+
+
+
+## M1658.将 x 减到 0 的最小操作数
+
+sliding window, https://leetcode.cn/problems/minimum-operations-to-reduce-x-to-zero/
+
+给你一个整数数组 `nums` 和一个整数 `x` 。每一次操作时，你应当移除数组 `nums` 最左边或最右边的元素，然后从 `x` 中减去该元素的值。请注意，需要 **修改** 数组以供接下来的操作使用。
+
+如果可以将 `x` **恰好** 减到 `0` ，返回 **最小操作数** ；否则，返回 `-1` 。
+
+ 
+
+**示例 1：**
+
+```
+输入：nums = [1,1,4,2,3], x = 5
+输出：2
+解释：最佳解决方案是移除后两个元素，将 x 减到 0 。
+```
+
+**示例 2：**
+
+```
+输入：nums = [5,6,7,8,9], x = 4
+输出：-1
+```
+
+**示例 3：**
+
+```
+输入：nums = [3,2,20,1,1,3], x = 10
+输出：5
+解释：最佳解决方案是移除后三个元素和前两个元素（总共 5 次操作），将 x 减到 0 。
+```
+
+ 
+
+**提示：**
+
+- `1 <= nums.length <= 10^5`
+- `1 <= nums[i] <= 10^4`
+- `1 <= x <= 10^9`
+
+
+
+这道题如果直接从两头去模拟“移除元素”，由于可以选择从左边取也可以从右边取，分支会比较多。
+
+我们可以采用**逆向思维（正难则反）**：
+
+- 从两端移除元素使元素和等于 $x$，且操作次数最少。
+- **等价于**：在数组中找到一个**和为 $\sum(nums) - x$ 的最长连续子数组**。
+- 假设数组总和为 $S$，目标子数组的和为 $target = S - x$。如果能找到长度为 $max\_len$ 的最长连续子数组，其和为 $target$，那么最小操作数就是 $n - max\_len$。
+
+因为数组中的元素全为正整数（$nums[i] \ge 1$），具有单调性，所以寻找和为 $target$ 的最长连续子数组可以使用**滑动窗口（双指针）**在 $O(n)$ 时间复杂度内解决。
+
+**细节处理**
+
+1. 如果 $target < 0$（即 $x$ 大于数组总和），则不可能实现，直接返回 `-1`。
+2. 如果 $target == 0$（即 $x$ 恰好等于数组总和），需要移除所有元素，答案为 $n$。
+
+**C++ 代码实现**
+
+```cpp
+class Solution {
+public:
+    int minOperations(vector<int>& nums, int x) {
+        long long total_sum = 0;
+        for (int num : nums) {
+            total_sum += num;
+        }
+        
+        long long target = total_sum - x;
+        
+        // 如果 x 大于所有元素之和，无法减到 0
+        if (target < 0) {
+            return -1;
+        }
+        // 如果 x 恰好等于数组总和，必须移除所有元素
+        if (target == 0) {
+            return nums.size();
+        }
+        
+        int n = nums.size();
+        int left = 0;
+        long long current_sum = 0;
+        int max_len = -1; // 记录最长子数组的长度
+        
+        // 滑动窗口寻找和为 target 的最长子数组
+        for (int right = 0; right < n; ++right) {
+            current_sum += nums[right];
+            
+            // 窗口内和过大时，收缩左边界
+            while (left <= right && current_sum > target) {
+                current_sum -= nums[left];
+                left++;
+            }
+            
+            // 找到符合条件的子数组，更新最大长度
+            if (current_sum == target) {
+                max_len = max(max_len, right - left + 1);
+            }
+        }
+        
+        // 如果找不到符合条件的子数组，返回 -1；否则返回两端移除的最少元素个数
+        return max_len == -1 ? -1 : n - max_len;
+    }
+};
+```
+
+**复杂度分析**
+
+- **时间复杂度**：$O(n)$。左右指针 `left` 和 `right` 均单调递增，每个元素最多进出滑动窗口各一次。
+- **空间复杂度**：$O(1)$。只使用了常数个额外的辅助变量。
 
 
 

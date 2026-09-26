@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-09-23 09:42 GMT+8*
+*Updated 2026-09-26 10:03 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                            
+>                                                                                                                                                                                                                               
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                            
+>                                                                                                                                                                                                                               
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                            
+>                                                                                                                                                                                                                               
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                            
+>                                                                                                                                                                                                                               
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                            
+>                                                                                                                                                                                                                               
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -15858,6 +15858,147 @@ public:
     }
 };
 ```
+
+
+
+## M1807.替换字符串中的括号内容
+
+hash table, https://leetcode.cn/problems/evaluate-the-bracket-pairs-of-a-string/
+
+给你一个字符串 `s` ，它包含一些括号对，每个括号中包含一个 **非空** 的键。
+
+- 比方说，字符串 `"(name)is(age)yearsold"` 中，有 **两个** 括号对，分别包含键 `"name"` 和 `"age"` 。
+
+你知道许多键对应的值，这些关系由二维字符串数组 `knowledge` 表示，其中 `knowledge[i] = [keyi, valuei]` ，表示键 `keyi` 对应的值为 `valuei` 。
+
+你需要替换 **所有** 的括号对。当你替换一个括号对，且它包含的键为 `keyi` 时，你需要：
+
+- 将 `keyi` 和括号用对应的值 `valuei` 替换。
+- 如果从 `knowledge` 中无法得知某个键对应的值，你需要将 `keyi` 和括号用问号 `"?"` 替换（不需要引号）。
+
+`knowledge` 中每个键最多只会出现一次。`s` 中不会有嵌套的括号。
+
+请你返回替换 **所有** 括号对后的结果字符串。
+
+ 
+
+**示例 1：**
+
+```
+输入：s = "(name)is(age)yearsold", knowledge = [["name","bob"],["age","two"]]
+输出："bobistwoyearsold"
+解释：
+键 "name" 对应的值为 "bob" ，所以将 "(name)" 替换为 "bob" 。
+键 "age" 对应的值为 "two" ，所以将 "(age)" 替换为 "two" 。
+```
+
+**示例 2：**
+
+```
+输入：s = "hi(name)", knowledge = [["a","b"]]
+输出："hi?"
+解释：由于不知道键 "name" 对应的值，所以用 "?" 替换 "(name)" 。
+```
+
+**示例 3：**
+
+```
+输入：s = "(a)(a)(a)aaa", knowledge = [["a","yes"]]
+输出："yesyesyesaaa"
+解释：相同的键在 s 中可能会出现多次。
+键 "a" 对应的值为 "yes" ，所以将所有的 "(a)" 替换为 "yes" 。
+注意，不在括号里的 "a" 不需要被替换。
+```
+
+ 
+
+**提示：**
+
+- `1 <= s.length <= 10^5`
+- `0 <= knowledge.length <= 10^5`
+- `knowledge[i].length == 2`
+- `1 <= keyi.length, valuei.length <= 10`
+- `s` 只包含小写英文字母和圆括号 `'('` 和 `')'` 。
+- `s` 中每一个左圆括号 `'('` 都有对应的右圆括号 `')'` 。
+- `s` 中每对括号内的键都不会为空。
+- `s` 中不会有嵌套括号对。
+- `keyi` 和 `valuei` 只包含小写英文字母。
+- `knowledge` 中的 `keyi` 不会重复。
+
+
+
+**解题思路**
+
+本题可以通过 **哈希表 + 模拟遍历** 的方式高效解决：
+
+1. **构建哈希表**：
+   - 遍历 `knowledge` 数组，将所有的键值对存入哈希表（如 C++ 中的 `unordered_map<string, string>`），以便在 $O(1)$ 的平均时间内进行查询。
+
+2. **遍历字符串 `s`**：
+   - 使用一个结果字符串 `ans` 保存最终结果。
+   - 使用一个布尔变量 `in_bracket` 标记当前字符是否处于括号内部，以及一个临时字符串 `key` 记录括号内的键名。
+   - 遍历 `s` 中的每个字符 $c$：
+     - 若 $c == \text{'('}$：表示进入括号，设置 `in_bracket = true`，并清空 `key`。
+     - 若 $c == \text{')'}$：表示括号结束，设置 `in_bracket = false`。在哈希表中查找 `key`：
+       - 如果找到对应的值，将该值追加到 `ans`。
+       - 如果未找到，将 `'?'` 追加到 `ans`。
+     - 若 $c$ 是普通英文字母：
+       - 如果处于括号内部（`in_bracket == true`），将 $c$ 追加到 `key` 中。
+       - 如果处于括号外部（`in_bracket == false`），直接将 $c$ 追加到 `ans` 中。
+
+3. **返回结果**：遍历完成后，`ans` 即为替换后的最终字符串。
+
+---
+
+**C++ 代码实现**
+
+```cpp
+class Solution {
+public:
+    string evaluate(string s, vector<vector<string>>& knowledge) {
+        // 1. 将 knowledge 中的键值对存入哈希表
+        unordered_map<string, string> dict;
+        for (const auto& kv : knowledge) {
+            dict[kv[0]] = kv[1];
+        }
+
+        string ans = "";
+        string key = "";
+        bool in_bracket = false;
+
+        // 2. 遍历字符串 s 进行模拟替换
+        for (char c : s) {
+            if (c == '(') {
+                in_bracket = true;
+                key.clear();
+            } else if (c == ')') {
+                in_bracket = false;
+                auto it = dict.find(key);
+                if (it != dict.end()) {
+                    ans += it->second;
+                } else {
+                    ans += '?';
+                }
+            } else {
+                if (in_bracket) {
+                    key += c;
+                } else {
+                    ans += c;
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+```
+
+---
+
+**复杂度分析**
+
+- **时间复杂度**：$O(N + M)$，其中 $N$ 是字符串 `s` 的长度，$M$ 是 `knowledge` 中所有字符串的长度总和。构建哈希表的时间复杂度为 $O(M)$，遍历字符串 `s` 并进行哈希查找的时间复杂度为 $O(N)$。整体为线性时间复杂度。
+- **空间复杂度**：$O(M)$，哈希表存储 `knowledge` 中的所有键值对所需的额外空间（不计返回值字符串）。
 
 
 

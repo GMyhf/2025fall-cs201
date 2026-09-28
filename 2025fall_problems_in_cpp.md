@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-09-26 10:03 GMT+8*
+*Updated 2026-09-28 10:03 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                               
+>                                                                                                                                                                                                                                  
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                               
+>                                                                                                                                                                                                                                  
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                               
+>                                                                                                                                                                                                                                  
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                               
+>                                                                                                                                                                                                                                  
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                               
+>                                                                                                                                                                                                                                  
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -15999,6 +15999,121 @@ public:
 
 - **时间复杂度**：$O(N + M)$，其中 $N$ 是字符串 `s` 的长度，$M$ 是 `knowledge` 中所有字符串的长度总和。构建哈希表的时间复杂度为 $O(M)$，遍历字符串 `s` 并进行哈希查找的时间复杂度为 $O(N)$。整体为线性时间复杂度。
 - **空间复杂度**：$O(M)$，哈希表存储 `knowledge` 中的所有键值对所需的额外空间（不计返回值字符串）。
+
+
+
+## M2139.得到目标值的最少行动次数
+
+greedy, https://leetcode.cn/problems/minimum-moves-to-reach-target-score/
+
+你正在玩一个整数游戏。从整数 `1` 开始，期望得到整数 `target` 。
+
+在一次行动中，你可以做下述两种操作之一：
+
+- **递增**，将当前整数的值加 1（即， `x = x + 1`）。
+- **加倍**，使当前整数的值翻倍（即，`x = 2 * x`）。
+
+在整个游戏过程中，你可以使用 **递增** 操作 **任意** 次数。但是只能使用 **加倍** 操作 **至多** `maxDoubles` 次。
+
+给你两个整数 `target` 和 `maxDoubles` ，返回从 1 开始得到 `target` 需要的最少行动次数。
+
+ 
+
+**示例 1：**
+
+```
+输入：target = 5, maxDoubles = 0
+输出：4
+解释：一直递增 1 直到得到 target 。
+```
+
+**示例 2：**
+
+```
+输入：target = 19, maxDoubles = 2
+输出：7
+解释：最初，x = 1 。
+递增 3 次，x = 4 。
+加倍 1 次，x = 8 。
+递增 1 次，x = 9 。
+加倍 1 次，x = 18 。
+递增 1 次，x = 19 。
+```
+
+**示例 3：**
+
+```
+输入：target = 10, maxDoubles = 4
+输出：4
+解释：
+最初，x = 1 。 
+递增 1 次，x = 2 。 
+加倍 1 次，x = 4 。 
+递增 1 次，x = 5 。 
+加倍 1 次，x = 10 。 
+```
+
+ 
+
+**提示：**
+
+- `1 <= target <= 10^9`
+- `0 <= maxDoubles <= 100`
+
+
+
+这是一道典型的**逆向贪心**问题。
+
+**思路分析**
+
+正向从 `1` 走到 `target` 较难判断何时进行加倍操作，但如果我们**逆向思考**，即从 `target` 变回 `1`：
+
+- **正向加 1** 对应 **逆向减 1**
+- **正向翻倍** 对应 **逆向除以 2**（仅当当前数为偶数时可用）
+
+为了使步数最少，我们应当尽可能多地使用“除以 2”的操作，因为除以 2 能够以最快速度减小数值。因此贪心策略如下：
+
+1. 如果 `maxDoubles == 0`，说明无法再除以 2，剩下的距离只能通过一步步减 1 得到，直接累加 `target - 1` 步后结束循环。
+2. 如果 `target == 1`，说明已经达到目标，直接返回结果。
+3. 如果当前 `target` 是奇数，由于不能直接整除，必须先执行一次减 1 操作（步数 +1，`target` 变为偶数）。
+4. 如果当前 `target` 是偶数且还有除以 2 的机会（`maxDoubles > 0`），则执行一次除以 2 操作（步数 +1，`target /= 2`，`maxDoubles -= 1`）。
+
+**C++ 代码实现**
+
+```cpp
+class Solution {
+public:
+    int minMoves(int target, int maxDoubles) {
+        int moves = 0;
+        
+        while (target > 1) {
+            // 如果加倍次数用尽，只能一步一步减到 1
+            if (maxDoubles == 0) {
+                moves += (target - 1);
+                break;
+            }
+            
+            // 如果是奇数，先减 1
+            if (target % 2 == 1) {
+                moves++;
+                target--;
+            } else {
+                // 如果是偶数且还有加倍次数，直接除以 2
+                moves++;
+                target /= 2;
+                maxDoubles--;
+            }
+        }
+        
+        return moves;
+    }
+};
+```
+
+**复杂度分析**
+
+- **时间复杂度**：$O(\min(\text{maxDoubles}, \log(\text{target})))$。每次除以 2 会让数值减半，在耗尽 `maxDoubles` 或除到 1 之前最多只需大约 $30$ 次除法与减法操作，运行时间在常数级以内。
+- **空间复杂度**：$O(1)$，仅使用了几个整型变量。
 
 
 

@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-09-30 10:03 GMT+8*
+*Updated 2026-10-02 12:25 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                     
+>                                                                                                                                                                                                                                        
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                     
+>                                                                                                                                                                                                                                        
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                     
+>                                                                                                                                                                                                                                        
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                     
+>                                                                                                                                                                                                                                        
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                     
+>                                                                                                                                                                                                                                        
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -14257,6 +14257,92 @@ public:
 
 
 # 力扣中等&挑战
+
+## M22.括号生成
+
+backtracking, https://leetcode.cn/problems/generate-parentheses/
+
+数字 `n` 代表生成括号的对数，请你设计一个函数，用于能够生成所有可能的并且 **有效的** 括号组合。
+
+ 
+
+**示例 1：**
+
+```
+输入：n = 3
+输出：["((()))","(()())","(())()","()(())","()()()"]
+```
+
+**示例 2：**
+
+```
+输入：n = 1
+输出：["()"]
+```
+
+ 
+
+**提示：**
+
+- `1 <= n <= 8`
+
+
+
+这道题是一道经典的回溯（Backtracking）与深度优先搜索（DFS）问题。
+
+**解题思路**
+
+我们可以通过一步步添加括号来构造出合法的括号序列。在每一步选择中，我们必须遵循以下两条规则，以确保最终生成的括号组合是**有效**的：
+
+1. **添加左括号 `'('`**：只要当前左括号的数量还没有达到 `n`，就可以继续添加左括号。
+2. **添加右括号 `')'`**：只有当当前右括号的数量**小于**左括号的数量时，才能添加右括号，否则就会出现右括号多于左括号的不合法情况。
+3. **终止条件**：当当前构建的字符串长度达到 `2 * n` 时，说明一组完整的有效括号组合已经生成完毕，将其加入结果集中。
+
+**C++ 代码实现**
+
+```cpp
+class Solution {
+public:
+    vector<string> generateParenthesis(int n) {
+        vector<string> result;
+        string current;
+        backtrack(n, 0, 0, current, result);
+        return result;
+    }
+
+private:
+    void backtrack(int n, int open, int close, string& current, vector<string>& result) {
+        // 当字符串长度达到 2 * n 时，说明已经生成了一个合法的括号组合
+        if (current.length() == 2 * n) {
+            result.push_back(current);
+            return;
+        }
+
+        // 如果左括号数量小于 n，可以继续添加左括号
+        if (open < n) {
+            current.push_back('(');
+            backtrack(n, open + 1, close, current, result);
+            current.pop_back(); // 回溯
+        }
+
+        // 如果右括号数量小于左括号数量，可以添加右括号
+        if (close < open) {
+            current.push_back(')');
+            backtrack(n, open, close + 1, current, result);
+            current.pop_back(); // 回溯
+        }
+    }
+};
+```
+
+**复杂度分析**
+
+- **时间复杂度**：$O(\frac{4^n}{\sqrt{n}})$。合法的括号序列数量为第 $n$ 个卡特兰数（Catalan number）$C_n = \frac{1}{n+1} \binom{2n}{n} \approx \frac{4^n}{n\sqrt{\pi n}}$。每个解生成需要 $O(n)$ 的时间复制到答案中，因此总时间复杂度渐进为 $O(\frac{4^n}{\sqrt{n}})$。
+- **空间复杂度**：$O(n)$。递归调用栈的最大深度为 $2n$，临时字符串 `current` 的长度也是 $2n$（不计保存返回结果所需的空间）。
+
+
+
+
 
 ## M46.全排列
 

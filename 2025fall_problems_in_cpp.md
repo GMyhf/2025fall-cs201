@@ -1,6 +1,6 @@
 #  Problems in OJ, CF & LeetCode in CPP
 
-*Updated 2026-10-02 12:25 GMT+8*
+*Updated 2026-10-03 11:25 GMT+8*
  *Compiled by Hongfei Yan (2025 Fall)*
 
 
@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                        
+>                                                                                                                                                                                                                                           
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                        
+>                                                                                                                                                                                                                                           
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                        
+>                                                                                                                                                                                                                                           
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                        
+>                                                                                                                                                                                                                                           
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                        
+>                                                                                                                                                                                                                                           
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -16372,6 +16372,169 @@ public:
 	}
 };
 ```
+
+
+
+
+
+## T32.最长有效括号
+
+stack, 双向计数（贪心）, https://leetcode.cn/problems/longest-valid-parentheses/
+
+给你一个只包含 `'('` 和 `')'` 的字符串，找出最长有效（格式正确且连续）括号 子串 的长度。
+
+左右括号匹配，即每个左括号都有对应的右括号将其闭合的字符串是格式正确的，比如 `"(()())"`。
+
+ 
+
+**示例 1：**
+
+```
+输入：s = "(()"
+输出：2
+解释：最长有效括号子串是 "()"
+```
+
+**示例 2：**
+
+```
+输入：s = ")()())"
+输出：4
+解释：最长有效括号子串是 "()()"
+```
+
+**示例 3：**
+
+```
+输入：s = ""
+输出：0
+```
+
+ 
+
+**提示：**
+
+- `0 <= s.length <= 3 * 104`
+- `s[i]` 为 `'('` 或 `')'`
+
+
+
+解决这道题有多种方法，其中**栈（Stack）**和**双向计数（贪心，$O(1)$ 空间）**最为常用和经典。
+
+---
+
+**方法一：栈（推荐，清晰直观）**
+
+**解题思路**
+
+我们使用栈来记录括号的**下标**：
+
+1. 始终让栈底保存**“最后一个没有被匹配的右括号的下标”**（作为有效括号子串的起始基准点）。
+2. 初始化栈，压入 `-1` 作为基准。
+3. 遍历字符串：
+   - 遇到 `'('`：将当前下标压入栈中。
+   - 遇到 `')'`：先将栈顶元素弹出。
+     - 弹出后如果**栈变为空**：说明当前的 `')'` 没有匹配的 `'('`，它成为了新的“未被匹配的右括号”，因此把当前下标压入栈，作为新的基准点。
+     - 弹出后如果**栈不为空**：说明当前的 `')'` 成功与某个 `'('` 匹配，此时以当前位置结尾的有效括号长度为 `i - 栈顶下标`，用其更新最大长度即可。
+
+**C++ 代码实现**
+
+```cpp
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        stack<int> stk;
+        stk.push(-1); // 初始化基准点
+        int max_len = 0;
+
+        for (int i = 0; i < s.length(); ++i) {
+            if (s[i] == '(') {
+                stk.push(i);
+            } else {
+                stk.pop();
+                if (stk.empty()) {
+                    // 当前 ')' 无法被匹配，成为新的基准点
+                    stk.push(i);
+                } else {
+                    // 计算以当前位置为结尾的有效子串长度
+                    max_len = max(max_len, i - stk.top());
+                }
+            }
+        }
+
+        return max_len;
+    }
+};
+```
+
+**复杂度分析**
+
+- **时间复杂度**：$O(n)$，只需遍历一次字符串。
+- **空间复杂度**：$O(n)$，栈最多存放 $n + 1$ 个元素。
+
+---
+
+### 方法二：双向遍历计数法（最优空间 $O(1)$）
+
+#### 解题思路
+
+利用两个计数器 `left` 和 `right` 分别记录 `'('` 和 `')'` 的个数：
+
+1. **从左向右遍历**：
+   - 遇到 `'('` 则 `left++`，遇到 `')'` 则 `right++`。
+   - 当 `left == right` 时，说明找到了一个合法括号子串，长度为 `2 * right`，更新最大值。
+   - 当 `right > left` 时，说明当前右括号过多，已不可能合法，重置 `left = 0, right = 0`。
+2. **问题**：形如 `"(()"` 的情况，`left` 一直大于 `right`，无法触发 `left == right`。
+3. **解决**：再**从右向左遍历一次**：
+   - 规则镜像：当 `left > right` 时，说明当前左括号过多，重置 `left = 0, right = 0`；当 `left == right` 时更新最大值。
+
+**C++ 代码实现**
+
+```cpp
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        int left = 0, right = 0, max_len = 0;
+        int n = s.length();
+
+        // 从左到右遍历
+        for (int i = 0; i < n; ++i) {
+            if (s[i] == '(') {
+                left++;
+            } else {
+                right++;
+            }
+            if (left == right) {
+                max_len = max(max_len, 2 * right);
+            } else if (right > left) {
+                left = right = 0;
+            }
+        }
+
+        left = right = 0;
+        // 从右到左遍历
+        for (int i = n - 1; i >= 0; --i) {
+            if (s[i] == '(') {
+                left++;
+            } else {
+                right++;
+            }
+            if (left == right) {
+                max_len = max(max_len, 2 * left);
+            } else if (left > right) {
+                left = right = 0;
+            }
+        }
+
+        return max_len;
+    }
+};
+```
+
+**复杂度分析**
+
+- **时间复杂度**：$O(n)$，两次线性扫描。
+- **空间复杂度**：$O(1)$，仅需常数额外变量。
 
 
 

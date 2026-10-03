@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                              
+>                                                                                                                                                                                                                                                 
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                              
+>                                                                                                                                                                                                                                                 
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                              
+>                                                                                                                                                                                                                                                 
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                              
+>                                                                                                                                                                                                                                                 
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                              
+>                                                                                                                                                                                                                                                 
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -15381,6 +15381,127 @@ int main()
     return 0;
 }
 ```
+
+
+
+## M678.有效的括号字符串
+
+greedy, https://leetcode.cn/problems/valid-parenthesis-string/
+
+给你一个只包含三种字符的字符串，支持的字符类型分别是 `'('`、`')'` 和 `'*'`。请你检验这个字符串是否为有效字符串，如果是 **有效** 字符串返回 `true` 。
+
+**有效** 字符串符合如下规则：
+
+- 任何左括号 `'('` 必须有相应的右括号 `')'`。
+- 任何右括号 `')'` 必须有相应的左括号 `'('` 。
+- 左括号 `'('` 必须在对应的右括号之前 `')'`。
+- `'*'` 可以被视为单个右括号 `')'` ，或单个左括号 `'('` ，或一个空字符串 `""`。
+
+ 
+
+**示例 1：**
+
+```
+输入：s = "()"
+输出：true
+```
+
+**示例 2：**
+
+```
+输入：s = "(*)"
+输出：true
+```
+
+**示例 3：**
+
+```
+输入：s = "(*))"
+输出：true
+```
+
+ 
+
+**提示：**
+
+- `1 <= s.length <= 100`
+- `s[i]` 为 `'('`、`')'` 或 `'*'`
+
+
+
+这道题可以使用**贪心算法**来解决，时间复杂度为 $O(n)$，空间复杂度为 $O(1)$。
+
+**思路分析**
+
+在遍历字符串的过程中，我们用一个计数器记录**未匹配的左括号数量**。
+由于 `'*'` 可以充当 `'('`、`')'` 或空字符串 `""`，未匹配的左括号数量并不是固定的，而是一个可能的范围 $[minCount, maxCount]$：
+
+- `minCount`：将尽可能多的 `'*'` 视作 `')'` 或 `""` 时，未匹配的左括号的**最小可能数量**。
+- `maxCount`：将尽可能多的 `'*'` 视作 `'('` 时，未匹配的左括号的**最大可能数量**。
+
+**遍历规则：**
+
+1. 遇到 `'('`：
+   - `minCount++`，`maxCount++`
+2. 遇到 `')'`：
+   - `minCount--`，`maxCount--`
+3. 遇到 `'*'`：
+   - 若当作 `'('`，计数 $+1$；若当作 `""`，计数不变；若当作 `')'`，计数 $-1$。
+   - 因此范围扩大：`minCount--`，`maxCount++`。
+4. **过程中的合法性检查：**
+   - 如果 `maxCount < 0`，说明即使把所有 `'*'` 都看作左括号 `'('`，右括号依然多于左括号，无法匹配，直接返回 `false`。
+   - `minCount` 不能小于 0。如果 `minCount < 0`，说明我们把过多的 `'*'` 当作了右括号，此时多余的 `'*'` 应该当作空字符串 `""`，因此将 `minCount` 修正为 `max(minCount, 0)`。
+
+**遍历结束：**
+
+- 如果最终 `minCount == 0`，说明可以使所有括号完全匹配，返回 `true`；否则返回 `false`。
+
+---
+
+**代码实现**
+
+```cpp
+class Solution {
+public:
+    bool checkValidString(string s) {
+        int minCount = 0; // 未匹配左括号的最小可能数量
+        int maxCount = 0; // 未匹配左括号的最大可能数量
+
+        for (char c : s) {
+            if (c == '(') {
+                minCount++;
+                maxCount++;
+            } else if (c == ')') {
+                minCount--;
+                maxCount--;
+            } else { // c == '*'
+                minCount--;
+                maxCount++;
+            }
+
+            // 即使全部 '*' 都当作 '('，右括号依然过多
+            if (maxCount < 0) {
+                return false;
+            }
+
+            // minCount 不能小于 0，多余的 '*' 可以视为空字符
+            minCount = max(minCount, 0);
+        }
+
+        // 最终未匹配左括号数能否恰好为 0
+        return minCount == 0;
+    }
+};
+```
+
+---
+
+**复杂度分析**
+
+- **时间复杂度**：$O(n)$，只需遍历一次字符串，其中 $n$ 为字符串长度。
+- **空间复杂度**：$O(1)$，仅需常数级别的额外变量空间。
+
+
 
 
 

@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                                 
+>                                                                                                                                                                                                                                                    
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                                 
+>                                                                                                                                                                                                                                                    
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                                 
+>                                                                                                                                                                                                                                                    
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                                 
+>                                                                                                                                                                                                                                                    
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                                 
+>                                                                                                                                                                                                                                                    
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -15500,6 +15500,124 @@ public:
 
 - **时间复杂度**：$O(n)$，只需遍历一次字符串，其中 $n$ 为字符串长度。
 - **空间复杂度**：$O(1)$，仅需常数级别的额外变量空间。
+
+
+
+## M856.括号的分数
+
+stack, https://leetcode.cn/problems/score-of-parentheses/
+
+给定一个平衡括号字符串 `S`，按下述规则计算该字符串的分数：
+
+- `()` 得 1 分。
+- `AB` 得 `A + B` 分，其中 A 和 B 是平衡括号字符串。
+- `(A)` 得 `2 * A` 分，其中 A 是平衡括号字符串。
+
+ 
+
+**示例 1：**
+
+```
+输入： "()"
+输出： 1
+```
+
+**示例 2：**
+
+```
+输入： "(())"
+输出： 2
+```
+
+**示例 3：**
+
+```
+输入： "()()"
+输出： 2
+```
+
+**示例 4：**
+
+```
+输入： "(()(()))"
+输出： 6
+```
+
+ 
+
+**提示：**
+
+1. `S` 是平衡括号字符串，且只含有 `(` 和 `)` 。
+2. `2 <= S.length <= 50`
+
+
+
+这道题有多种解法，其中**最简洁且高效**的方法是**统计每个最内层 `()` 的深度贡献法**（时间复杂度 $O(n)$，空间复杂度 $O(1)$）。
+
+---
+
+**解题思路：计算最内层 `()` 的贡献**
+
+根据题目规则：
+
+- `()` 的分数为 $1$。
+- `(A)` 的分数为 $2 \times A$。
+- `A + B` 的分数为 $A + B$。
+
+根据分配律，任何平衡括号字符串最终都可以展开为若干个**最内层的 `()`** 乘以对应的倍数：
+
+- 最外层的 `()` 贡献为 $1 = 2^0$；
+- 被包裹了 $k$ 层的 `()`，贡献为 $2^k$。
+
+例如，对于 `(()(()))`：
+
+- 展开为：`(( )) + (( ( ) ))`
+- 第一个 `()` 在第 1 层（外部有 1 层包裹），贡献为 $2^1 = 2$；
+- 第二个 `()` 在第 2 层（外部有 2 层包裹），贡献为 $2^2 = 4$；
+- 总分即为 $2 + 4 = 6$。
+
+因此，我们只需要：
+
+1. 用一个变量 `depth` 记录当前的括号嵌套深度。
+2. 遍历字符串：
+   - 遇到 `(`，深度增加：`depth++`；
+   - 遇到 `)`，深度减少：`depth--`；
+   - 如果当前 `)` 的前一个字符正好是 `(`（即形如 `...()`），说明找到了一个叶子节点 `()`，将其对应的贡献 $2^{depth}$（即 `1 << depth`）累加到结果中。
+
+---
+
+**C++ 代码实现**
+
+```cpp
+class Solution {
+public:
+    int scoreOfParentheses(string s) {
+        int ans = 0;
+        int depth = 0;
+        
+        for (int i = 0; i < s.length(); ++i) {
+            if (s[i] == '(') {
+                depth++;
+            } else {
+                depth--;
+                // 只有紧邻的前一个字符是 '(' 时，才是一个真正的叶子节点 "()"
+                if (s[i - 1] == '(') {
+                    ans += (1 << depth);
+                }
+            }
+        }
+        
+        return ans;
+    }
+};
+```
+
+---
+
+**复杂度分析**
+
+- **时间复杂度**：$O(n)$，只需遍历一次长度为 $n$ 的字符串。
+- **空间复杂度**：$O(1)$，仅使用了常数个额外变量。
 
 
 

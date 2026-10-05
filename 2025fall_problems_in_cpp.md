@@ -119,7 +119,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                                    
+>                                                                                                                                                                                                                                                       
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << setprecision(5) << pi << endl; // 输出 3.1416
@@ -136,7 +136,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                                    
+>                                                                                                                                                                                                                                                       
 >    int main() {
 >        double pi = 3.14159265358979;
 >        cout << fixed << setprecision(4) << pi << endl; // 输出 3.1416
@@ -153,7 +153,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                                    
+>                                                                                                                                                                                                                                                       
 >    int main() {
 >        int x = 42;
 >        cout << setw(5) << x << endl;  // 输出 "   42"（宽度为5）
@@ -172,7 +172,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                                    
+>                                                                                                                                                                                                                                                       
 >    int main() {
 >        cout << left << setw(10) << "Hello" << endl;  // 输出 "Hello     "
 >        cout << right << setw(10) << "Hello" << endl; // 输出 "     Hello"
@@ -187,7 +187,7 @@ int main() {
 >    #include <iostream>
 >    #include <iomanip>
 >    using namespace std;
->                                                                                                                                                                                                                                                    
+>                                                                                                                                                                                                                                                       
 >    int main() {
 >        cout << setfill('*') << setw(10) << 42 << endl;  // 输出 "******42"
 >        return 0;
@@ -15618,6 +15618,108 @@ public:
 
 - **时间复杂度**：$O(n)$，只需遍历一次长度为 $n$ 的字符串。
 - **空间复杂度**：$O(1)$，仅使用了常数个额外变量。
+
+
+
+## M921.使括号有效的最少添加
+
+greedy, https://leetcode.cn/problems/minimum-add-to-make-parentheses-valid/
+
+只有满足下面几点之一，括号字符串才是有效的：
+
+- 它是一个空字符串，或者
+- 它可以被写成 `AB` （`A` 与 `B` 连接）, 其中 `A` 和 `B` 都是有效字符串，或者
+- 它可以被写作 `(A)`，其中 `A` 是有效字符串。
+
+给定一个括号字符串 `s` ，在每一次操作中，你都可以在字符串的任何位置插入一个括号
+
+- 例如，如果 `s = "()))"` ，你可以插入一个开始括号为 `"(()))"` 或结束括号为 `"())))"` 。
+
+返回 *为使结果字符串 `s` 有效而必须添加的最少括号数*。
+
+ 
+
+**示例 1：**
+
+```
+输入：s = "())"
+输出：1
+```
+
+**示例 2：**
+
+```
+输入：s = "((("
+输出：3
+```
+
+ 
+
+**提示：**
+
+- `1 <= s.length <= 1000`
+- `s` 只包含 `'('` 和 `')'` 字符。
+
+
+
+这道题可以通过**贪心**的思想来解决，只需要维护两个变量，不需要使用栈。
+
+**解题思路**
+
+我们在遍历字符串的过程中，需要关注两类不合法的括号：
+
+1. **多余的右括号 `')'`**：如果在遇到 `')'` 时，前面没有未匹配的 `'('`，说明这个右括号无法被闭合，必须在它前面添加一个 `'('`。
+2. **多余的左括号 `'('`**：遍历结束后，所有尚未被匹配的 `'('`，都必须在末尾添加对应的 `')'`。
+
+因此，我们可以维护两个计数器：
+
+- `open`：当前尚未匹配的左括号 `'('` 的数量。
+- `add`：为了匹配多余的右括号，需要添加的左括号数量。
+
+**遍历逻辑：**
+
+- 当遇到 `'('` 时：未匹配的左括号数加 1（`open++`）。
+- 当遇到 `')'` 时：
+  - 如果此时有未匹配的左括号（`open > 0`），说明这个右括号可以与之前的左括号配对，抵消一个（`open--`）。
+  - 如果此时没有未匹配的左括号（`open == 0`），说明右括号多余了，必须添加一个 `'('` 来匹配它（`add++`）。
+
+遍历结束后，剩下的 `open` 个左括号都需要在后面补上 `')'`，因此最终需要添加的最少括号总数为 `add + open`。
+
+---
+
+**代码实现**
+
+```cpp
+class Solution {
+public:
+    int minAddToMakeValid(string s) {
+        int add = 0;   // 需要补充的左括号数量
+        int open = 0;  // 当前未匹配的左括号数量
+
+        for (char c : s) {
+            if (c == '(') {
+                open++;
+            } else { // c == ')'
+                if (open > 0) {
+                    open--; // 成功匹配一对括号
+                } else {
+                    add++;  // 缺少左括号，需要添加一个 '('
+                }
+            }
+        }
+
+        // 最终结果 = 补充的左括号数量 + 剩余未匹配的左括号所需的右括号数量
+        return add + open;
+    }
+};
+```
+
+---
+
+**复杂度分析**
+
+- **时间复杂度**：$\mathcal{O}(n)$，其中 $n$ 为字符串 `s` 的长度，只需要遍历一次字符串。
+- **空间复杂度**：$\mathcal{O}(1)$，仅使用了常数个额外变量。
 
 
 
